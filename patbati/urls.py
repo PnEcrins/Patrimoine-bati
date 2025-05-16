@@ -19,6 +19,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 from rest_framework.reverse import reverse_lazy
+from django.contrib.auth import views as auth_views
+
 
 
 admin.autodiscover()
@@ -30,6 +32,6 @@ urlpatterns = [
     path('paperclip/', include('paperclip.urls')),
     path("admin/", admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
-    # path('login/', auth_views.LoginView.as_view(), name='login'),
-    # path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/'}, name='logout',),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/'}, name='logout',),
 ]
