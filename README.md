@@ -1,2 +1,4 @@
-# Patrimoine-bati
-Application web de gestion de l'inventaire du patrimoine bâti du PNE
+Mapentity starter
+-----------------
+
+Ce projet fourni un template d'installation pour démarer une application basée sur la librairie de CRUD géographique mapentity : [text](https://github.com/makinacorpus/django-mapentity)
