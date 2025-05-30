@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'leaflet',
     'patbati.mapentitycommon',
     'patbati.bati',
+    'authent',
 ]
 
 MIDDLEWARE = [
@@ -133,9 +134,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': "patbati",
-        'USER':"geonatadmin",
-        'PASSWORD': "monpassachanger",
+        'NAME': "patribat",
+        'USER':"postgres",
+        'PASSWORD': "postgres",
         'HOST': "localhost",
         'PORT': 5432,
 
@@ -170,5 +171,18 @@ LEAFLET_CONFIG = {
     # 'SPATIAL_EXTENT': (1.3, 43.7, 1.5, 43.5),
 }
 
-from patbati import settings_local
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.BCryptPasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
+
+ENV = os.getenv('ENV', 'prod')
+# Load custom settings file
+if ENV != "tests":
+    with open("./patbati/local_settings.py") as f:
+        exec(f.read())
