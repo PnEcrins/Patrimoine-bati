@@ -1,19 +1,70 @@
 import django
 from django.db import models
-
-# Create your models here.
-
-
-from django.contrib.gis.db import models
+from django.contrib.gis.db import models as gis_models
 from mapentity.models import MapEntityMixin
 
-# ancienement table: identification
+# Nomenclature models for ref_nomenclatures schema
+class NomenclatureType(models.Model):
+    id_type = models.AutoField(primary_key=True)
+    label = models.CharField(max_length=255)
+    definition = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        db_table = 'ref_nomenclatures"."bib_nomenclatures_types'
+        managed = False
+
+    def __str__(self):
+        return self.label
+
+class Nomenclature(models.Model):
+    id_nomenclature = models.AutoField(primary_key=True)
+    id_type = models.ForeignKey(NomenclatureType, db_column='id_type', on_delete=models.CASCADE)
+    label = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        db_table = 'ref_nomenclatures"."t_nomenclatures'
+        managed = False
+
+    def __str__(self):
+        return self.label
+
+# Main Bati model
 class Bati(MapEntityMixin, models.Model):
     id = models.AutoField(primary_key=True) # indexBatiment
-    codepem = models.ForeignKey('Implantation', on_delete=models.CASCADE, blank=True, null=True) # codepem
-    codeclasse = models.ForeignKey('ClasseArchitecturale', on_delete=models.CASCADE, blank=True, null=True) # codeclasse
-    codefaitage = models.ForeignKey('Faitage', on_delete=models.CASCADE, blank=True, null=True) # codefaitage
-    codeinsee = models.ForeignKey('Commune', on_delete=models.CASCADE, blank=True, null=True) # codeinsee
+
+    # code_classe / classe archi
+    code_classe = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'classe_archi'},
+        related_name='batiments_classe'
+    )
+
+    # codepem / Implanation 
+    codepem = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'implantation'},
+        related_name='batiments_codepem'
+    )
+    
+    # codefaitage
+    codefaitage = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'faitage'},
+        related_name='batiments_faitage'
+    )
+
+    #@TODO : Commune --> ref Geo
+
     appelation = models.CharField(max_length=200, blank=True, null=True) # appellation
     indivision = models.BooleanField(default=False, null=True) # indivision
     proprietaire = models.CharField(max_length=100, blank=True, null=True) # propriétaire
@@ -24,66 +75,77 @@ class Bati(MapEntityMixin, models.Model):
     y = models.FloatField(blank=True, null=True) # y
     situation_geo = models.CharField(max_length=200, blank=True, null=True) # description de la situation géographique
     denivelle = models.FloatField(blank=True, null=True) # dénivellé
-    exposition = models.ForeignKey('Exposition', on_delete=models.CASCADE, blank=True, null=True) # exposition
+
+    # secteur
+    secteur = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'secteur'},
+        related_name='batiments_secteur'
+    )
+    
+    # exposition
+    exposition = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'exposition'},
+        related_name='batiments_exposition'
+    ) 
+    
     pente = models.FloatField(blank=True, null=True) # pente
     capacite = models.FloatField(blank=True, null=True) # capacité
     date_insert = models.DateTimeField(default=django.utils.timezone.now, blank=True, null=True) # date d'insertion
     date_update = models.DateTimeField(default=django.utils.timezone.now, blank=True, null=True) # date de mise à jour
     bat_suppr = models.BooleanField(default=False, null=True) # bâtiment supprimé
-    notepatri = models.ForeignKey('Notepatri', on_delete=models.CASCADE, blank=True, null=True) # notepatri
+
+    # notepatri 
+    notepatri = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'note_patri'},
+        related_name='batiments_notepatri'
+    )
+    
     patrimonialite = models.CharField(max_length=500, blank=True, null=True) # patrimonialité
     info_risquenat = models.CharField(max_length=500, blank=True, null=True) # info_risquenat
     info_masque = models.CharField(max_length=500, blank=True, null=True) # info_masque
     ancien_index = models.FloatField(blank=True, null=True) # ancien_index
     remarque = models.CharField(max_length=500, blank=True, null=True) # remarque
-    codeconservation = models.ForeignKey('CodeConservation', on_delete=models.CASCADE, blank=True, null=True) # codeconservation
+
+    # codeconservation
+    codeconservation = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'conservation'},
+        related_name='batiments_conservation'
+    ) 
+    
     valide = models.BooleanField(default=False, null=True) # validé
-    geom = models.PointField(blank=True, null=True) # geom
+    geom = gis_models.PointField(blank=True, null=True) # geom
 
-class Implantation(models.Model):
-    __tablename__ = 'bib_codepem'
-    codepem = models.AutoField(primary_key=True)
-    pem = models.CharField(max_length=80)  
+    def appelation_link(self):
+        return f'<a data-pk="{self.pk}" href="{self.get_detail_url()}" title="{self.appelation}">{self.appelation}</a>'
 
-class ClasseArchitecturale(models.Model):
-    __tablename__ = 'bib_classe_archi'
-    codeclasse = models.AutoField(primary_key=True)
-    classe = models.CharField(max_length=100)
-    classe_decrite = models.CharField(max_length=300, blank=True, null=True)
+    @property
+    def code_classe_label(self):
+        return self.code_classe.label if self.code_classe else ""
 
-class Faitage(models.Model):
-    __tablename__ = 'bib_faitage'
-    codefaitage = models.AutoField(primary_key=True)
-    faitage = models.CharField(max_length=100)
+    @property
+    def notepatri_label(self):
+        return self.notepatri.label if self.notepatri else ""
 
-class Commune(models.Model):
-    __tablename__ = 'bib_commune'
-    codeinsee = models.AutoField(primary_key=True)
-    codecanton = models.ForeignKey('Canton', on_delete=models.CASCADE, blank=True, null=True) # codecanton
-    codesecteur = models.ForeignKey('Secteur', on_delete=models.CASCADE, blank=True, null=True) # codesecteur
-    commune = models.CharField(max_length=100)
+    @property
+    def codeconservation_label(self):
+        return self.codeconservation.label if self.codeconservation else ""
 
-class Canton(models.Model):
-    __tablename__ = 'bib_canton'
-    codecanton = models.AutoField(primary_key=True)
-    canton = models.CharField(max_length=80)
-
-class Secteur(models.Model):
-    __tablename__ = 'bib_secteur'
-    codesecteur = models.AutoField(primary_key=True)
-    secteur = models.CharField(max_length=80)
-
-class Exposition(models.Model):
-    __tablename__ = 'bib_exposition'
-    id = models.AutoField(primary_key=True)
-    exposition = models.CharField(max_length=80)
-
-class Notepatri(models.Model):
-    __tablename__ = 'bib_notepatri'
-    id = models.AutoField(primary_key=True)
-    notepatri = models.FloatField(blank=True, null=True)
-
-class CodeConservation(models.Model):
-    __tablename__ = 'bib_codeconservation'
-    id = models.AutoField(primary_key=True)
-    conservation = models.CharField(max_length=80)
+    @property
+    def secteur_label(self):
+        return self.secteur.label if self.secteur else ""

@@ -16,7 +16,16 @@ def home(request):
 
 class BatiList(MapEntityList):
     model = Bati
-    columns = ["id", "appelation"]
+    columns = [
+        "id",
+        "valide",
+        "appelation",
+        "code_classe",
+        "notepatri",
+        "codeconservation",
+        "secteur",
+        "date_update"
+    ]
 
 class BatiDetail(MapEntityDetail):
     model = Bati
