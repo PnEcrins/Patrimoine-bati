@@ -10,5 +10,5 @@ class BatiSerializer(serializers.ModelSerializer):
 
 class BatiGeojsonSerializer(MapentityGeojsonModelSerializer):
     class Meta(MapentityGeojsonModelSerializer.Meta):
-        fields = ["id", "name"]
+        fields = ["id", "appelation"]
         model = Bati

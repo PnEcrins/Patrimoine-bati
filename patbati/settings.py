@@ -184,8 +184,8 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
-ENV = os.getenv('ENV', 'prod')
-# Load custom settings file
-if ENV != "tests":
-    with open("./patbati/local_settings.py") as f:
-        exec(f.read())
+# ENV = os.getenv('ENV', 'prod')
+# # Load custom settings file
+# if ENV != "tests":
+#     with open("./patbati/local_settings.py") as f:
+#         exec(f.read())

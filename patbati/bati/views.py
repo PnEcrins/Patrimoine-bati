@@ -16,7 +16,7 @@ def home(request):
 
 class BatiList(MapEntityList):
     model = Bati
-    columns = ["id", "name"]
+    columns = ["id", "appelation"]
 
 class BatiDetail(MapEntityDetail):
     model = Bati
