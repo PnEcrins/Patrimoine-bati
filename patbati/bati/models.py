@@ -1,4 +1,5 @@
 import django
+from django.conf import settings
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 from mapentity.models import MapEntityMixin
@@ -32,6 +33,7 @@ class Nomenclature(models.Model):
 # Main Bati model
 class Bati(MapEntityMixin, models.Model):
     id = models.AutoField(primary_key=True) # indexBatiment
+    valide = models.BooleanField(default=False, null=True) # validé
 
     # code_classe / classe archi
     code_classe = models.ForeignKey(
@@ -85,6 +87,16 @@ class Bati(MapEntityMixin, models.Model):
         limit_choices_to={'id_type__label': 'secteur'},
         related_name='batiments_secteur'
     )
+
+    # protection
+    protection = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'protection'},
+        related_name='batiments_protection'
+    )
     
     # exposition
     exposition = models.ForeignKey(
@@ -113,10 +125,7 @@ class Bati(MapEntityMixin, models.Model):
     )
     
     patrimonialite = models.CharField(max_length=500, blank=True, null=True) # patrimonialité
-    info_risquenat = models.CharField(max_length=500, blank=True, null=True) # info_risquenat
-    info_masque = models.CharField(max_length=500, blank=True, null=True) # info_masque
     ancien_index = models.FloatField(blank=True, null=True) # ancien_index
-    remarque = models.CharField(max_length=500, blank=True, null=True) # remarque
 
     # codeconservation
     codeconservation = models.ForeignKey(
@@ -127,24 +136,34 @@ class Bati(MapEntityMixin, models.Model):
         limit_choices_to={'id_type__label': 'conservation'},
         related_name='batiments_conservation'
     ) 
-    
-    valide = models.BooleanField(default=False, null=True) # validé
+
+    # masques
+    masques = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'masque'},
+        related_name='batiments_info_masque'
+    )
+
+    commentaire_masque = models.CharField(max_length=500, blank=True, null=True) # info_masque
+
+    # risquenat
+    risquenat = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__label': 'risquenat'},
+        related_name='batiments_risquenat'
+    )
+
+    remarque_risque = models.CharField(max_length=500, blank=True, null=True) # remarque
     geom = gis_models.PointField(blank=True, null=True) # geom
 
     def appelation_link(self):
         return f'<a data-pk="{self.pk}" href="{self.get_detail_url()}" title="{self.appelation}">{self.appelation}</a>'
-
-    @property
-    def code_classe_label(self):
-        return self.code_classe.label if self.code_classe else ""
-
-    @property
-    def notepatri_label(self):
-        return self.notepatri.label if self.notepatri else ""
-
-    @property
-    def codeconservation_label(self):
-        return self.codeconservation.label if self.codeconservation else ""
 
     @property
     def secteur_label(self):

@@ -1,0 +1,164 @@
+{% extends "mapentity/mapentity_detail_attributes.html" %} {% load i18n
+mapentity_tags %} {% block attributes %}
+
+<!-- Table renseignements -->
+<table class="table-striped table-bordered table">
+  <thead>
+    <tr>
+      <th colspan="2" class="text-center">Renseignements</th>
+    </tr>
+  </thead>
+  <tr>
+    <th>Nom</th>
+    <td>{{ object.appelation|default:object }}</td>
+  </tr>
+  <tr>
+    <th>Nouveau numéro</th>
+    <td>{{ object.id|default:"-" }}</td>
+  </tr>
+  <tr>
+    <th>Ancien numéro</th>
+    <td>{{ object.ancien_index }}</td>
+  </tr>
+  <tr>
+    <th>Valeur patrimoniale</th>
+    <td>{{ object.notepatri_label }}</td>
+  </tr>
+  <tr>
+    <th>Patrimonialité</th>
+    <td>{{ object.patrimonialite }}</td>
+  </tr>
+  <tr>
+    <th>Type architectural</th>
+    <td>{{ object.code_classe_label }}</td>
+  </tr>
+  <tr>
+    <th>Propriétaire</th>
+    <td>{{ object.proprietaire }}</td>
+  </tr>
+  <tr>
+    <th>Bâtiment en indivision</th>
+    <td>{{ object.indivision|yesno:"Oui,Non" }}</td>
+  </tr>
+  <tr>
+    <th>Règlementation</th>
+    <td>{{ object.protection.label }}</td>
+  </tr>
+  <tr>
+    <th>Capacité</th>
+    <td>{{ object.capacite|default:"-" }}</td>
+  </tr>
+  <tr>
+    <th>Date d'insertion</th>
+    <td>{{ object.date_insert }}</td>
+  </tr>
+  <tr>
+    <th>Date de mise à jour</th>
+    <td>{{ object.date_update }}</td>
+  </tr>
+  <tr>
+    <th>Bâtiment supprimé</th>
+    <td>{{ object.bat_suppr|yesno:"Oui,Non" }}</td>
+  </tr>
+  <tr>
+    <th>Conservation</th>
+    <td>{{ object.codeconservation_label }}</td>
+  </tr>
+</table>
+
+<br />
+
+<!-- Table géographie -->
+<table class="table-striped table-bordered table">
+  <thead>
+    <tr>
+      <th colspan="2" class="text-center">Géographie</th>
+    </tr>
+  </thead>
+  <tr>
+    <th>Secteur</th>
+    <td>{{ object.secteur_label }}</td>
+  </tr>
+  <tr>
+    <th>Lieu-dit</th>
+    <td>{{ object.lieu_dit }}</td>
+  </tr>
+  <tr>
+    <th>Cadastre</th>
+    <td>{{ object.cadastre }}</td>
+  </tr>
+  <tr>
+    <th>Coordonnée X</th>
+    <td>{{ object.x }}</td>
+  </tr>
+  <tr>
+    <th>Coordonnée Y</th>
+    <td>{{ object.y }}</td>
+  </tr>
+  <tr>
+    <th>Altitude</th>
+    <td>{{ object.altitude }} m</td>
+  </tr>
+  <tr>
+    <th>Dénivelé</th>
+    <td>{{ object.denivelle }}</td>
+  </tr>
+</table>
+<br />
+
+<!-- Table Situation -->
+<table class="table-striped table-bordered table">
+  <thead>
+    <tr>
+      <th colspan="2" class="text-center">Situation</th>
+    </tr>
+  </thead>
+  <tr>
+    <th>Implantation</th>
+    <td>{{ object.codepem.label }}</td>
+  </tr>
+  <tr>
+    <th>Faitage</th>
+    <td>{{ object.codefaitage.label }}</td>
+  </tr>
+  <tr>
+    <th>Situation géographique</th>
+    <td>{{ object.situation_geo }}</td>
+  </tr>
+  <tr>
+    <th>Exposition</th>
+    <td>{{ object.exposition.label }}</td>
+  </tr>
+  <tr>
+    <th>Pente</th>
+    <td>{{ object.pente }}</td>
+  </tr>
+</table>
+<br />
+
+<!-- Table Contexte Naturel -->
+<table class="table-striped table-bordered table">
+  <thead>
+    <tr>
+      <th colspan="2" class="text-center">Contexte naturel</th>
+    </tr>
+  </thead>
+  <tr>
+    <th>Risque Naturel</th>
+    <td>{{ object.risquenat|default:"-" }}</td>
+  </tr>
+  <tr>
+    <th>Remarque risque naturel</th>
+    <td>{{ object.remarque_risque|default:"-" }}</td>
+  </tr>
+  <tr>
+    <th>Masques</th>
+    <td>{{ object.masques|default:"-" }}</td>
+  </tr>
+  <tr>
+    <th>Commentaire Masque</th>
+    <td>{{ object.commentaire_masque }}</td>
+  </tr>
+</table>
+
+{{ block.super }} {% endblock attributes %}
