@@ -9,6 +9,7 @@ class NomenclatureType(models.Model):
     id_type = models.AutoField(primary_key=True)
     label = models.CharField(max_length=255)
     definition = models.CharField(max_length=255, blank=True, null=True)
+    code = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         db_table = 'ref_nomenclatures"."bib_nomenclatures_types'
@@ -41,17 +42,17 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'classe_archi'},
+        limit_choices_to={'id_type__code': 'CL_ARCHI'},
         related_name='batiments_classe'
     )
 
-    # codepem / Implanation 
+    # codepem / Implantation 
     codepem = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'implantation'},
+        limit_choices_to={'id_type__code': 'IMPLA'},
         related_name='batiments_codepem'
     )
     
@@ -61,7 +62,7 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'faitage'},
+        limit_choices_to={'id_type__code': 'FAITAGE'},
         related_name='batiments_faitage'
     )
 
@@ -84,7 +85,7 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'secteur'},
+        limit_choices_to={'id_type__code': 'SECTEUR'},
         related_name='batiments_secteur'
     )
 
@@ -94,7 +95,7 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'protection'},
+        limit_choices_to={'id_type__code': 'PROT'},
         related_name='batiments_protection'
     )
     
@@ -104,7 +105,7 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'exposition'},
+        limit_choices_to={'id_type__code': 'EXPO'},
         related_name='batiments_exposition'
     ) 
     
@@ -120,7 +121,7 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'note_patri'},
+        limit_choices_to={'id_type__code': 'NOTE_PAT'},
         related_name='batiments_notepatri'
     )
     
@@ -133,7 +134,7 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'conservation'},
+        limit_choices_to={'id_type__code': 'CONSERVATION'},
         related_name='batiments_conservation'
     ) 
 
@@ -143,7 +144,7 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'masque'},
+        limit_choices_to={'id_type__code': 'MASQUE'},
         related_name='batiments_info_masque'
     )
 
@@ -155,7 +156,7 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__label': 'risquenat'},
+        limit_choices_to={'id_type__code': 'RISQUE'},
         related_name='batiments_risquenat'
     )
 

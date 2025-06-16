@@ -21,6 +21,7 @@ class BatiList(MapEntityList):
         "valide",
         "appelation",
         "secteur",
+        "codeconservation",
         "date_update"
     ]
 
