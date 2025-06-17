@@ -1,8 +1,5 @@
-console.log("test")
-
 function ChangeColors(e, data) {
     window.objectsLayer.options.style = setColor
-    console.log(data)
 }
 
 function setColor(feature) {

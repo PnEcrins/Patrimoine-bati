@@ -168,4 +168,4 @@ class Bati(MapEntityMixin, models.Model):
 
     @property
     def secteur_label(self):
-        return self.secteur.label if self.secteur else ""
+        return self.secteur.label if self.secteur else "" 
