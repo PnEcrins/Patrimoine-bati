@@ -23,7 +23,8 @@ class BatiList(MapEntityList):
         "valide",
         "appelation",
         "secteur",
-        "codeconservation",
+        "notepatri",
+        "conservation",
         "date_update"
     ]
 

@@ -36,7 +36,7 @@ class Bati(MapEntityMixin, models.Model):
     valide = models.BooleanField(default=False, null=True) # validé
 
     # code_classe / classe archi
-    code_classe = models.ForeignKey(
+    classe = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
         blank=True,
@@ -46,7 +46,7 @@ class Bati(MapEntityMixin, models.Model):
     )
 
     # codepem / Implantation 
-    codepem = models.ForeignKey(
+    implantation = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
         blank=True,
@@ -56,7 +56,7 @@ class Bati(MapEntityMixin, models.Model):
     )
     
     # codefaitage
-    codefaitage = models.ForeignKey(
+    faitage = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
         blank=True,
@@ -128,7 +128,7 @@ class Bati(MapEntityMixin, models.Model):
     ancien_index = models.FloatField(blank=True, null=True) # ancien_index
 
     # codeconservation
-    codeconservation = models.ForeignKey(
+    conservation = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
         blank=True,

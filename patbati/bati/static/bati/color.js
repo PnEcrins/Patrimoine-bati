@@ -1,4 +1,4 @@
-function ChangeColors(e, data) {
+function changeColors(e, data) {
     window.objectsLayer.options.style = setColor
 }
 
@@ -11,7 +11,7 @@ function setColor(feature) {
     }
 }
 
-function InitReportStatusLegend(e, data) {
+function initReportStatusLegend(e, data) {
     if (data.modelname != 'bati')
         return;
     var map = data.map;
@@ -63,5 +63,5 @@ function InitReportStatusLegend(e, data) {
     map.addLayer(control); //init as visible
 }
 
-$(window).on('entity:map:list', ChangeColors)
-$(window).on('entity:map:list', InitReportStatusLegend);
+$(window).on('entity:map:list', changeColors)
+$(window).on('entity:map:list', initReportStatusLegend);

@@ -6,7 +6,8 @@ from .models import Bati
 class BatiSerializer(serializers.ModelSerializer):
     appelation = serializers.CharField(source='appelation_link')
     secteur = serializers.CharField(source='secteur_label')
-    codeconservation = serializers.CharField()
+    conservation = serializers.CharField()
+    notepatri = serializers.CharField()
     class Meta:
         fields = "__all__"
         model = Bati
