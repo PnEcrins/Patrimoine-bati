@@ -160,4 +160,38 @@ mapentity_tags %} {% block attributes %}
   </tr>
 </table>
 
+<br />
+
+<table class="table-striped table-bordered table">
+  <thead>
+    <tr>
+      <th colspan="3" class="text-center">Liste des enquêtes</th>
+    </tr>
+    <tr>
+      <th>Personne</th>
+      <th>Date enquête</th>
+      <th>Date rédaction</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for enquete in object.batiments_id_bat.all %}
+    <tr>
+      <td>{{ enquete.personne }}</td>
+      <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
+      <td>{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3" class="text-center">Aucune enquête associée</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a
+  href="{% url 'bati:enquetes_add' bati_pk=object.pk %}"
+  class="btn btn-success mb-2"
+>
+  Ajouter une enquête
+</a>
 {{ block.super }} {% endblock attributes %}

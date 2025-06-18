@@ -1,0 +1,7 @@
+{% extends "mapentity/mapentity_detail.html" %} {% block content %}
+<h2>Nouvelle enquête pour {{ view.bati }}</h2>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>
+{% endblock %}

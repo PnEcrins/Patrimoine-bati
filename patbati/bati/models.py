@@ -1,5 +1,4 @@
 import django
-from django.conf import settings
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 from mapentity.models import MapEntityMixin
@@ -169,3 +168,30 @@ class Bati(MapEntityMixin, models.Model):
     @property
     def secteur_label(self):
         return self.secteur.label if self.secteur else "" 
+
+class Enquetes(models.Model):
+    idenquete = models.AutoField(primary_key=True)
+    personne = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__code': 'PERSONNES'},
+        related_name='batiments_personnes_enquetes'
+    )
+    id_bat = models.ForeignKey(
+        Bati,
+        db_column='id_bat',
+        on_delete=models.CASCADE,
+        related_name='batiments_id_bat'
+    )
+    date_enquete = models.DateTimeField(default=django.utils.timezone.now, blank=True, null=True)
+    date_redaction = models.DateTimeField(default=django.utils.timezone.now, blank=True, null=True)
+
+    def get_list_url(cls):
+        from django.urls import reverse
+        return reverse('bati:bati_list')
+
+    def get_detail_url(self):
+        # Return the detail page of the related Bati
+        return self.id_bat.get_detail_url()

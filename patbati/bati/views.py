@@ -5,8 +5,10 @@ from mapentity.views.generic import (
     MapEntityDelete
 )
 from mapentity.views.api import MapEntityViewSet
-from .models import Bati
+from patbati.bati.forms import EnquetesForm
+from .models import Bati, Enquetes
 from .serializers import BatiSerializer, BatiGeojsonSerializer
+from django.views.generic.edit import CreateView
 
 # Create your views here.
 
@@ -42,3 +44,19 @@ class BatiViewSet(MapEntityViewSet):
     # filterset_class = DummyModelFilterSet
 
     queryset = Bati.objects.all()
+
+class EnquetesCreate(CreateView):
+    model = Enquetes
+    form_class = EnquetesForm
+    template_name = "bati/enquetes_form.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.bati = Bati.objects.get(pk=kwargs['bati_pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.id_bat = self.bati
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.bati.get_detail_url()
