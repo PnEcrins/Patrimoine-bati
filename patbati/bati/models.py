@@ -19,6 +19,7 @@ class Nomenclature(models.Model):
     id_type = models.ForeignKey(NomenclatureType, db_column='id_type', on_delete=models.CASCADE)
     label = models.CharField(max_length=255)
     description = models.CharField(max_length=255, blank=True, null=True)
+    parentId = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.label
