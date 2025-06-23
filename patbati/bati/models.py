@@ -16,7 +16,7 @@ class NomenclatureType(models.Model):
 
 class Nomenclature(models.Model):
     id_nomenclature = models.AutoField(primary_key=True)
-    id_type = models.ForeignKey(NomenclatureType, db_column='id_type', on_delete=models.CASCADE)
+    type = models.ForeignKey(NomenclatureType, db_column='id_type', on_delete=models.CASCADE)
     label = models.CharField(max_length=255)
     description = models.CharField(max_length=255, blank=True, null=True)
     parentId = models.IntegerField(blank=True, null=True)
@@ -40,6 +40,7 @@ class Bati(MapEntityMixin, models.Model):
     )
 
     # codepem / Implantation 
+    # TODO : a enlever l'implantion doit être danns ref_geo
     implantation = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
@@ -82,7 +83,8 @@ class Bati(MapEntityMixin, models.Model):
         related_name='batiments_secteur'
     )
 
-    # protection
+    # protection = zone coeur 
+    # TODO a connecter au ref_geo
     protection = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
@@ -144,11 +146,8 @@ class Bati(MapEntityMixin, models.Model):
     commentaire_masque = models.CharField(max_length=500, blank=True, null=True) # info_masque
 
     # risquenat
-    risquenat = models.ForeignKey(
+    risques_nat = models.ManyToManyField(
         Nomenclature,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
         limit_choices_to={'id_type__code': 'RISQUE'},
         related_name='batiments_risquenat'
     )
@@ -351,17 +350,32 @@ class ElementPaysager(models.Model):
         limit_choices_to={'id_type__code': 'CONSERVATION'},
         related_name="elem_paysager_conservation"
     )
+    type = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'ELEM_PAYS'},
+        related_name="elem_paysager_type"
+    )
     commentaire = models.TextField(null=True, verbose_name="Commentaire")
     est_remarquable = models.BooleanField(null=False, default=False, verbose_name="Remarquable")
 
-class Illustrations(models.Model):
+class AuteurPhoto(models.Model):
+    nom = models.CharField(100)
+    prenom = models.CharField(100)
+    descriptif = models.TextField(100)
+
+# TODO aggreger AuteurPhoto + User pour la liste des auteur des illustrations
+
+class Illustration(models.Model):
     bati = models.ForeignKey(
         "Bati",
         on_delete=models.CASCADE,
         null=False,
         related_name="illustrations",
     )
-    type_illustration = models.ForeignKey(
+    type = models.ForeignKey(
         "Nomenclature",
         on_delete=models.PROTECT,
         null=True,
@@ -370,8 +384,8 @@ class Illustrations(models.Model):
     )
     auteur = models.ForeignKey (
         User,
-        on_delete=models.DO_NOTHING,
-        null=True,
+        on_delete=models.PROTECT,
+        null=False,
         related_name="ilustration_auteur"
     ) 
     fichier_src = models.ImageField(null=False, verbose_name="fichier source")
