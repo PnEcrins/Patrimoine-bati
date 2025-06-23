@@ -2,6 +2,7 @@ import django
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 from mapentity.models import MapEntityMixin
+from django.contrib.auth.models import User
 
 # Nomenclature models for ref_nomenclatures schema
 class NomenclatureType(models.Model):
@@ -9,10 +10,6 @@ class NomenclatureType(models.Model):
     label = models.CharField(max_length=255)
     definition = models.CharField(max_length=255, blank=True, null=True)
     code = models.CharField(max_length=50, blank=True, null=True)
-
-    class Meta:
-        db_table = 'ref_nomenclatures"."bib_nomenclatures_types'
-        managed = False
 
     def __str__(self):
         return self.label
@@ -22,10 +19,6 @@ class Nomenclature(models.Model):
     id_type = models.ForeignKey(NomenclatureType, db_column='id_type', on_delete=models.CASCADE)
     label = models.CharField(max_length=255)
     description = models.CharField(max_length=255, blank=True, null=True)
-
-    class Meta:
-        db_table = 'ref_nomenclatures"."t_nomenclatures'
-        managed = False
 
     def __str__(self):
         return self.label
@@ -162,6 +155,8 @@ class Bati(MapEntityMixin, models.Model):
     remarque_risque = models.CharField(max_length=500, blank=True, null=True) # remarque
     geom = gis_models.PointField(blank=True, null=True) # geom
 
+    remarque_generale = models.TextField(null=True)
+
     def appelation_link(self):
         return f'<a data-pk="{self.pk}" href="{self.get_detail_url()}" title="{self.appelation}">{self.appelation}</a>'
 
@@ -179,11 +174,11 @@ class Enquetes(models.Model):
         limit_choices_to={'id_type__code': 'PERSONNES'},
         related_name='batiments_personnes_enquetes'
     )
-    id_bat = models.ForeignKey(
+    bati = models.ForeignKey(
         Bati,
         db_column='id_bat',
         on_delete=models.CASCADE,
-        related_name='batiments_id_bat'
+        related_name='enquetes'
     )
     date_enquete = models.DateTimeField(default=django.utils.timezone.now, blank=True, null=True)
     date_redaction = models.DateTimeField(default=django.utils.timezone.now, blank=True, null=True)
@@ -236,3 +231,158 @@ class Travaux(models.Model):
     )
     autorisation = models.BooleanField(null=True)
     subvention_pne = models.IntegerField(null=True)
+
+class Structure(models.Model):
+    bati = models.ForeignKey(
+        "Bati",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="structure",
+    )
+    conservation = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'CONSERVATION'},
+        related_name="structure_conservation"
+    )
+    materiaux_principal = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'MAT_GE'},
+        related_name="structure_mat_princip",
+        verbose_name="Materiau principal"
+
+    )
+    type = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'STRUCT'},
+        related_name="structure_struct",
+        verbose_name="Type de structure"
+    )
+    mise_en_oeuvre = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'MEOEUVRE'},
+        related_name="structure_me",
+        verbose_name="Mise en oeuvre"
+    )
+    info_structure = models.TextField(null=True)
+    est_remarquable = models.BooleanField(null=False, default=False, verbose_name="Structure remarquable")
+
+    
+
+class SecondOeuvre(models.Model):
+    bati = models.ForeignKey(
+        "Bati",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="second_oeuvre",
+    )
+    type = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'TYPE_SO'},
+        related_name="structure_second_oeuvre",
+        verbose_name="Type de second oeuvre"
+    )
+    conservation = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'CONSERVATION'},
+        related_name="second_oeuvre_conservation"
+    )
+    commentaire = models.TextField(null=True, verbose_name="Commentaire")
+    est_remarquable = models.BooleanField(null=False, default=False, verbose_name="Remarquable")
+
+
+class Equipement(models.Model):
+    bati = models.ForeignKey(
+        "Bati",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="equipements",
+    )
+    type = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'TYPE_EQUIP'},
+        related_name="equipement_type",
+        verbose_name="Type d'équipement"
+    )
+    conservation = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'CONSERVATION'},
+        related_name="equipement_conservation"
+    )
+    commentaire = models.TextField(null=True, verbose_name="Commentaire")
+    est_remarquable = models.BooleanField(null=False, default=False, verbose_name="Remarquable")
+
+class ElementPaysager(models.Model):
+    bati = models.ForeignKey(
+        "Bati",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="elements_paysagers",
+    )
+    conservation = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'CONSERVATION'},
+        related_name="elem_paysager_conservation"
+    )
+    commentaire = models.TextField(null=True, verbose_name="Commentaire")
+    est_remarquable = models.BooleanField(null=False, default=False, verbose_name="Remarquable")
+
+class Illustrations(models.Model):
+    bati = models.ForeignKey(
+        "Bati",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="illustrations",
+    )
+    type_illustration = models.ForeignKey(
+        "Nomenclature",
+        on_delete=models.PROTECT,
+        null=True,
+        limit_choices_to={'id_type__code': 'TYPE_ILLUSTRATION'},
+        related_name="illustration_type",
+    )
+    auteur = models.ForeignKey (
+        User,
+        on_delete=models.DO_NOTHING,
+        null=True,
+        related_name="ilustration_auteur"
+    ) 
+    fichier_src = models.ImageField(null=False, verbose_name="fichier source")
+    date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
+    indexjaris = models.IntegerField(null=True, verbose_name="index photothèque")
+
+class DocumentAttache(models.Model):
+    bati = models.ForeignKey(
+        "Bati",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="documents_attaches",
+    )
+    fichier_src = models.FileField(null=False, verbose_name="document")
+    date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
