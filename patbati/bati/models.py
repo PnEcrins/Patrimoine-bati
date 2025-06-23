@@ -188,3 +188,44 @@ class Enquetes(models.Model):
     def get_detail_url(self):
         # Return the detail page of the related Bati
         return self.id_bat.get_detail_url()
+
+class DemandeTravaux(models.Model):
+    bati = models.ForeignKey(
+        "Bati",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="demandes_travaux",
+    )
+    demande_dep = models.BooleanField(null=False, default=False)
+    autorisation_p = models.BooleanField(null=True, default=False)
+    date_permis = models.DateField(null=True)
+    date_demande_permis = models.DateField(null=True)
+    num_permis = models.CharField()
+
+class Travaux(models.Model):
+    date = models.DateField()
+    demande = models.ForeignKey(
+        DemandeTravaux,
+        null=False,
+        related_name="travaux",
+        on_delete=models.CASCADE,
+    )
+    usage = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'USAGE_TRAVAUX'},
+        related_name="usage_travaux"
+    )
+    nature = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'NATURE_TRAVAUX'},
+        related_name="nature_travaux"
+
+    )
+    autorisation = models.BooleanField(null=True)
+    subvention_pne = models.IntegerField(null=True)

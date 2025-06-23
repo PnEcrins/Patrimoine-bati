@@ -1,20 +1,21 @@
 from django.http import HttpResponse
+from django.views.generic.edit import CreateView
 from mapentity.views.generic import (
     MapEntityList, MapEntityDetail,
     MapEntityFormat, MapEntityCreate, MapEntityUpdate, MapEntityDocument,
     MapEntityDelete
 )
 from mapentity.views.api import MapEntityViewSet
-from patbati.bati.forms import EnquetesForm
+from patbati.bati.forms import EnquetesForm, DemandeTravauxFormSet, BatiForm
 from .models import Bati, Enquetes
 from .serializers import BatiSerializer, BatiGeojsonSerializer
-from django.views.generic.edit import CreateView
-
+from patbati.mapentitycommon.forms import FormsetMixin
 # Create your views here.
 
 
 def home(request):
     return HttpResponse("YEP")
+
 
 class BatiList(MapEntityList):
     model = Bati
@@ -31,8 +32,19 @@ class BatiList(MapEntityList):
 class BatiDetail(MapEntityDetail):
     model = Bati
 
+
+# class BatiCreate(FormsetMixin, MapEntityCreate):
+#     model = Bati
+#     context_name = 'demande_travaux_formset'
+#     form_class = BatiForm
+#     formset_class = DemandeTravauxFormSet
+
+
 class BatiCreate(MapEntityCreate):
     model = Bati
+    form_class = BatiForm
+
+
 
 class BatiFormat(MapEntityFormat, BatiList):
     pass
@@ -41,8 +53,6 @@ class BatiViewSet(MapEntityViewSet):
     model = Bati
     serializer_class = BatiSerializer
     geojson_serializer_class = BatiGeojsonSerializer
-    # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
-    # filterset_class = DummyModelFilterSet
 
     queryset = Bati.objects.all()
 
