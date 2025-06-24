@@ -235,7 +235,7 @@ class Command(BaseCommand):
 
 
 
-# TODO : rel_matfins_finition, rel_matge_meo, rel_protection, rel_recommande, rel_remplace, rel_so_mat_fins, rel_structures_matfin
+# TODO : rel_matfins_finition, rel_matge_meo, rel_protection, rel_recommande, rel_remplace, rel_so_mat_fins, rel_structures_matfin, rel_masque
 
  
 
