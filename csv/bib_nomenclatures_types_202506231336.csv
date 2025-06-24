@@ -5,14 +5,14 @@
 15,finition,,FIN
 16,implantation,,IMPLA
 17,masque,,MASQUE
-20,nature,,NAT
+20,nature,,NATURE_TRAVAUX
 21,personnes,,PERSONNES
 22,perspective,,PERSP
 23,protection,,PROT
 24,risquenat,risque naturel,RISQUE
 25,structure,,STRUCT
 26,type_equipement,type d'équipement,TYPE_EQUIP
-28,usage,,USAGE
+28,usage,,USAGE_TRAVAUX
 7,classe_archi,classe architecturale,CL_ARCHI
 13,note_patri,,NOTE_PAT
 29,equipement,,EQUIP

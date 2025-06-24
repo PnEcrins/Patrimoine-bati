@@ -34,8 +34,7 @@ class Bati(MapEntityMixin, models.Model):
     classe = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
-        blank=True,
-        null=True,
+        null=False,
         limit_choices_to={'id_type__code': 'CL_ARCHI'},
         related_name='batiments_classe'
     )
@@ -99,7 +98,6 @@ class Bati(MapEntityMixin, models.Model):
     exposition = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
-        blank=True,
         null=True,
         limit_choices_to={'id_type__code': 'EXPO'},
         related_name='batiments_exposition'
@@ -115,7 +113,6 @@ class Bati(MapEntityMixin, models.Model):
     notepatri = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
-        blank=True,
         null=True,
         limit_choices_to={'id_type__code': 'NOTE_PAT'},
         related_name='batiments_notepatri'
@@ -128,7 +125,6 @@ class Bati(MapEntityMixin, models.Model):
     conservation = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
-        blank=True,
         null=True,
         limit_choices_to={'id_type__code': 'CONSERVATION'},
         related_name='batiments_conservation'
@@ -206,7 +202,7 @@ class DemandeTravaux(models.Model):
     num_permis = models.CharField()
 
 class Travaux(models.Model):
-    date = models.DateField()
+    date = models.DateField(null=False)
     demande = models.ForeignKey(
         DemandeTravaux,
         null=False,
@@ -321,7 +317,7 @@ class Equipement(models.Model):
         on_delete=models.CASCADE,
         blank=False,
         null=False,
-        limit_choices_to={'id_type__code': 'TYPE_EQUIP'},
+        limit_choices_to={'id_type__code': 'EQUIP'},
         related_name="equipement_type",
         verbose_name="Type d'équipement"
     )
@@ -386,12 +382,12 @@ class Illustration(models.Model):
     auteur = models.ForeignKey (
         User,
         on_delete=models.PROTECT,
-        null=False,
+        null=True,
         related_name="ilustration_auteur"
     ) 
     fichier_src = models.ImageField(null=False, verbose_name="fichier source")
     date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
-    indexjaris = models.IntegerField(null=True, verbose_name="index photothèque")
+    indexajaris = models.IntegerField(null=True, verbose_name="index photothèque")
 
 class DocumentAttache(models.Model):
     bati = models.ForeignKey(

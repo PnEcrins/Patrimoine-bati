@@ -1,3 +1,4 @@
+from datetime import datetime
 from collections import namedtuple
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
@@ -39,7 +40,7 @@ def namedtuplefetchall(cursor):
 
 def get_nomenclature(label, code_id_type):
     try:
-        Nomenclature.objects.get(label=label, id_type__code=code_id_type)
+        return Nomenclature.objects.get(label=label, id_type__code=code_id_type)
     except Nomenclature.DoesNotExist as e:
         print(f"Not found for {label}- type {code_id_type} ")
 
@@ -65,16 +66,22 @@ class Command(BaseCommand):
 
 
             # BATI
-            sqlquery = "SELECT * FROM patbati.identification"
+            sqlquery = """
+                SELECT * 
+                FROM patbati.identification
+                JOIN patbati.bib_classe_archi USING(codeclasse)
+                LEFT JOIN patbati.bib_faitage USING(codefaitage)
+                LEFT JOIN patbati.bib_exposition ON patbati.identification.exposition = patbati.bib_exposition.indexexposition
+                LEFT JOIN patbati.bib_notepatri ON patbati.identification.notepatri = patbati.bib_notepatri.indexnotepatri
+                LEFT JOIN patbati.bib_conservation USING(codeconservation)
+            """
             cursor.execute(sqlquery)
             result = namedtuplefetchall(cursor)
             for r in result:
-                print(r.valide)
-
                 bati = Bati(
                     valide=r.valide,
-                    classe=get_nomenclature(r.codeclasse, "CL_ARCHI"),
-                    faitage=get_nomenclature(r.codefaitage, "FAITAGE"),
+                    classe=get_nomenclature(r.classe, "CL_ARCHI"),
+                    faitage=get_nomenclature(r.faitage, "FAITAGE"),
                     appelation=r.appelation,
                     indivision=r.indivision,
                     proprietaire=r.proprietaire,
@@ -84,17 +91,16 @@ class Command(BaseCommand):
                     situation_geo=r.situationgeo,
                     denivelle=r.denivelle,
                     # todo secteur dans ref_geo,
-                    exposition=get_nomenclature(r.exposition, "EXPO"),
+                    exposition=get_nomenclature(r.nomexposition, "EXPO"),
                     pente=r.pente,
                     capacite=r.capacite,
                     date_insert=r.date_insert,
                     date_update=r.date_update,
                     bat_suppr=r.bat_suppr,
-                    notepatri=get_nomenclature(r.notepatri, "NOTE_PAT"),
+                    notepatri=get_nomenclature(r.valnotepatri, "NOTE_PAT"),
                     patrimonialite=r.patrimonialite,
                     conservation=get_nomenclature(r.codeconservation, "CONSERVATION"),
                     ancien_index=r.indexbatiment,
-                    masques=get_nomenclature(r.info_masque, "MASQUE"),
                     commentaire_masque=r.info_masque,
                     remarque_risque=r.info_risquenat,
                     geom=r.the_geom,
@@ -134,16 +140,20 @@ class Command(BaseCommand):
 
                     # Travaux
                     travaux_sql = (
-                        "SELECT * FROM patbati.travaux where indexdemande = %s"
+                        """SELECT * FROM patbati.travaux
+                            JOIN patbati.bib_nature nat USING (codenature)
+                            JOIN patbati.bib_usage us using(codeusage)
+                             where indexdemande = %s
+                        """
                     )
                     cursor.execute(travaux_sql, [dem.indexdemande])
                     travaux = namedtuplefetchall(cursor)
                     for tr in travaux:
                         travaux = Travaux(
                             demande=demande,
-                            date=tr.date_travaux,
-                            usage=get_nomenclature(tr.codeusage, "USAGE_TRAVAUX"),
-                            nature=get_nomenclature(tr.codenature, "NATURE_TRAVAUX"),
+                            date=tr.date_travaux or datetime(1800,1,1),
+                            usage=get_nomenclature(tr.usage, "USAGE_TRAVAUX"),
+                            nature=get_nomenclature(tr.nature, "NATURE_TRAVAUX"),
                             autorisation=tr.autorisation,
                             subvention_pne=tr.subvention_pne,
                         )
@@ -151,16 +161,20 @@ class Command(BaseCommand):
 
                 # EQUIPEMENTS
                 equipements_sql = (
-                    "SELECT * FROM patbati.demande where indexbatiment = %s"
+                    """SELECT * FROM patbati.equipements 
+                        JOIN patbati.bib_conservation USING(codeconservation)
+                        JOIN patbati.bib_equipement USING(codeequipement)
+                        WHERE indexbatiment = %s
+                    """
                 )
                 cursor.execute(equipements_sql, [r.indexbatiment])
                 equipements = namedtuplefetchall(cursor)
                 for eq in equipements:
                     equipement = Equipement(
                         bati=bati,
-                        type=get_nomenclature(eq.codeequipement, "TYPE_EQUIP"),
+                        type=get_nomenclature(eq.equipement, "EQUIP"),
                         conservation=get_nomenclature(
-                            eq.codeconservation, "CONSERVATION"
+                            eq.conservation, "CONSERVATION"
                         ),
                         commentaire=eq.info_equip,
                         est_remarquable=eq.equipement_rem,
@@ -169,7 +183,13 @@ class Command(BaseCommand):
 
                 # ELEMENTS PAYSAGERS
                 elmt_paysage_sql = (
-                    "SELECT * FROM patbati.elements_paysagers where indexbatiment = %s"
+                    """SELECT * 
+                        FROM patbati.elements_paysagers 
+                        JOIN patbati.bib_conservation USING(codeconservation)
+                        JOIN patbati.bib_element_paysager USING(codeep)
+                        WHERE indexbatiment = %s
+
+                    """
                 )
                 cursor.execute(elmt_paysage_sql, [r.indexbatiment])
                 elements_paysagers = namedtuplefetchall(cursor)
@@ -177,9 +197,9 @@ class Command(BaseCommand):
                     element = ElementPaysager(
                         bati=bati,
                         conservation=get_nomenclature(
-                            el.codeconservation, "CONSERVATION"
+                            el.conservation, "CONSERVATION"
                         ),
-                        type=get_nomenclature(el.codeep, "ELEM_PAYS"),
+                        type=get_nomenclature(el.elements_paysagers, "ELEM_PAYS"),
                         commentaire=el.info_ep,
                         est_remarquable=el.ep_rem
 
@@ -188,20 +208,28 @@ class Command(BaseCommand):
 
                 
                 illustrations_sql = (
-                    "SELECT * FROM patbati.illustration ill JOIN patbati.bib_personnes USING(codepersonne) where indexbatiment = %s"
+                    """SELECT * FROM patbati.illustration ill 
+                    LEFT JOIN patbati.bib_personnes USING(codepersonne) 
+                    where indexbatiment = %s
+                    """
                 )
                 cursor.execute(illustrations_sql, [r.indexbatiment])
                 illustrations = namedtuplefetchall(cursor)
                 for ill in illustrations:
-                    auteur = AuteurPhoto.objects.get(nom__contains=r.personne)
+
                     illustration = Illustration(
                         bati=bati,
-                        auteur=auteur,
                         # TODO convertir les binaires en fichiers
                         fichier_src="test",
                         date=ill.date_illustration,
-                        indexjaris=ill.indexjaris
+                        indexajaris=ill.indexajaris
                     )
+                    if ill.personne:
+                        try:
+                            auteur = AuteurPhoto.objects.get(nom__contains=ill.personne)
+                            illustration.auteur = auteur
+                        except AuteurPhoto.DoesNotExist:
+                            pass
                     illustration.save()
 
                 # Documents attachés 
@@ -221,14 +249,17 @@ class Command(BaseCommand):
 
                 # PERSPECTIVES
                 perspectives_sql = (
-                    "SELECT * FROM patbati.rel_ident_perspective where indexbatiment = %s"
+                    """SELECT * FROM patbati.rel_ident_perspective 
+                        JOIN patbati.bib_perspective USING(codeperspective)
+                        where indexbatiment = %s
+                    """
                 )
                 cursor.execute(perspectives_sql, [r.indexbatiment])
                 perspectives = namedtuplefetchall(cursor)
                 for r in perspectives:
                     persp = Perspective(
                         bati=bati,
-                        perspective=get_nomenclature(r.codeperspective, "PERSP")
+                        perspective=get_nomenclature(r.perspective, "PERSP")
                     )
                     persp.save()
 
