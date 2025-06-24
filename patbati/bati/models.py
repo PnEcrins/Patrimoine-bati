@@ -161,6 +161,9 @@ class Bati(MapEntityMixin, models.Model):
     def secteur_label(self):
         return self.secteur.label if self.secteur else "" 
 
+    def __str__(self):
+        return self.appelation if self.appelation else f"Bâtiment {self.id}"
+
 class Enquetes(models.Model):
     idenquete = models.AutoField(primary_key=True)
     personne = models.ForeignKey(
