@@ -132,16 +132,6 @@ class Bati(MapEntityMixin, models.Model):
         null=True,
         limit_choices_to={'id_type__code': 'CONSERVATION'},
         related_name='batiments_conservation'
-    ) 
-
-    # perspective
-    perspective = models.ForeignKey(
-        Nomenclature,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        limit_choices_to={'id_type__code': 'PERSP'},
-        related_name='batiments_perspective'
     )
 
     # masques
@@ -425,7 +415,7 @@ class Perspective(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        limit_choices_to={'id_type__code': 'PERSPECTIVE'},
+        limit_choices_to={'id_type__code': 'PERSP'},
         related_name='perspective_bati'
     )
     date = models.DateField(null=True)

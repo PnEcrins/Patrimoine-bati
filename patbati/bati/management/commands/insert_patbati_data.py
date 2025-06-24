@@ -104,16 +104,16 @@ class Command(BaseCommand):
 
                 # get risques
                 # les nomenclatures doivent êtres remplies
-                # risque_query = """
-                #     SELECT * FROM patbati.rel_risquenat rel
-                #     JOIN patbati.bib_risquenat bib USING(coderisque)
-                #     WHERE indexbatiment = %s
-                # """
-                # cursor.execute(risque_query,  [r.indexbatiment])
-                # risques = namedtuplefetchall(cursor)
-                # bati.risques_nat.set(
-                #     [get_nomenclature(risque.risque, 'RISQUE') for risque in risques]
-                # )
+                risque_query = """
+                    SELECT * FROM patbati.rel_risquenat rel
+                    JOIN patbati.bib_risquenat bib USING(coderisque)
+                    WHERE indexbatiment = %s
+                """
+                cursor.execute(risque_query,  [r.indexbatiment])
+                risques = namedtuplefetchall(cursor)
+                bati.risques_nat.set(
+                    [get_nomenclature(risque.risque, 'RISQUE') for risque in risques]
+                )
 
                 # Demande de travaux
                 dem_travaux_sql = (
@@ -148,10 +148,6 @@ class Command(BaseCommand):
                             subvention_pne=tr.subvention_pne,
                         )
                         travaux.save()
-                        # add travaux to demande
-                        # demande.travaux.add(travaux, bulk=False)
-                    # add demandes to bati
-                    # bati.demandes_travaux.add(demande, bulk=False)
 
                 # EQUIPEMENTS
                 equipements_sql = (
@@ -232,7 +228,7 @@ class Command(BaseCommand):
                 for r in perspectives:
                     persp = Perspective(
                         bati=bati,
-                        perspective=get_nomenclature(r.codeperspective, "PERSPECTIVE")
+                        perspective=get_nomenclature(r.codeperspective, "PERSP")
                     )
                     persp.save()
 
