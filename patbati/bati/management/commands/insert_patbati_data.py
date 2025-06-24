@@ -37,11 +37,11 @@ def namedtuplefetchall(cursor):
     return [nt_result(*row) for row in cursor.fetchall()]
 
 
-def get_nomenclature(label, code_type):
+def get_nomenclature(label, code_id_type):
     try:
-        Nomenclature.objects.get(label=label, type__code=code_type)
+        Nomenclature.objects.get(label=label, id_type__code=code_id_type)
     except Nomenclature.DoesNotExist as e:
-        print(f"Not found for {label}- type {code_type} ")
+        print(f"Not found for {label}- type {code_id_type} ")
 
 
 class Command(BaseCommand):
@@ -56,8 +56,9 @@ class Command(BaseCommand):
             for pers in result:
                 prenom, nom = pers.personne.split(" ")
                 user = AuteurPhoto(
-                    username=f"{prenom}.{nom}",
-                    descriptif=pers.descriptif
+                    nom=nom,
+                    prenom=prenom,
+                    descriptif=pers.descriptif,
                 )
                 user.save()
 
@@ -180,7 +181,7 @@ class Command(BaseCommand):
                     element = ElementPaysager(
                         bati=bati,
                         conservation=get_nomenclature(
-                            eq.codeconservation, "CONSERVATION"
+                            el.codeconservation, "CONSERVATION"
                         ),
                         type=get_nomenclature(el.codeep, "ELEM_PAYS"),
                         commentaire=el.info_ep,

@@ -1,0 +1,378 @@
+"id_nomenclature","id_type","label","description","parentid"
+56,9,Très bon état,,
+57,9,Bon état,,
+58,9,Mauvais état,,
+59,9,Très mauvais état,,
+60,9,Pas noté,,
+61,10,"15 minutes",,
+62,10,"30 minutes",,
+63,10,Accès direct,,
+64,10,"45 minutes",,
+65,10,"1 h 30",,
+66,10,"2 h",,
+67,10,"2 h 30",,
+68,10,"3 h",,
+69,10,"1 heure",,
+70,10,Plus de 3 h,,
+71,11,Perpendiculaire aux courbes de niveau,,
+72,11,Parallèle aux courbes de niveau,,
+73,12,Nord,,
+75,12,Nord,,
+76,12,Nord Est,,
+77,12,Est,,
+78,12,Sud Est,,
+79,12,Sud,,
+80,12,Sud Ouest,,
+81,12,Ouest,,
+82,12,Nord Ouest,,
+83,13,"1",valeur de la note patri,
+84,13,"2",valeur de la note patri,
+85,13,"3",valeur de la note patri,
+86,13,"4",valeur de la note patri,
+87,13,"5",valeur de la note patri,
+88,13,"6",valeur de la note patri,
+89,14,Vallouise,,
+90,14,Embrunais,,
+91,14,Champsaur,,
+29,7,mur et toit /traditionnel / avec,"Mur et toit distincts, bâtiment traditionnel avec protection contre les avalanches",
+31,7,mur-toit / contemporain / avec,"Mur et toit confondus, construit avec apport de matériaux et mécanisation, présence de protection contre les avalanches",
+32,7,mur-toit / archaïque / avec,"Mur et toit confondus, construit avec des matériaux locaux, présence de protection contre les avalanches",
+33,7,mur-toit / archaïque / sans,"Mur et toit confondus, construit avec des matériaux locaux, sans protection contre les avalanches",
+34,7,mur-toit / contemporain / sans,"Mur et toit confondus, construit avec apport de matériaux et mécanisation, sans protection contre les avalanches",
+35,7,mur et toit / traditionnel / sans,"Mur et toit distincts, bâtiment traditionnel sans protection contre les avalanches",
+36,7,mur et toit / contemporain / avec,"Mur et toit distincts,***  avec protection contre les avalanches",
+37,7,mur et toit / contemporain / sans,"Mur et toit distincts,***  sans protection contre les avalanches",
+38,7,mur et toit / archaïque / sans,"Mur et toit distincts,***  sans protection contre les avalanches",
+39,7,mur et toit / archaïque / avec,"Mur et toit distincts,***  avec protection contre les avalanches",
+40,7,maison agricole avec,avec protection contre les avalanches,
+41,7,maison agricole sans,sans protection contre les avalanches,
+42,7,mur et dalle,mur et dalle,
+92,14,Valgaudemar,,
+93,14,Valbonnais,,
+94,14,Oisans,,
+95,14,Briançonnais,,
+96,15,Appareillé,,
+97,15,Balayé,,
+98,15,Banché,,
+99,15,Bouchardé,,
+100,15,Brut,,
+101,15,Ciré,,
+102,15,Cloué,,
+103,15,Collé,,
+104,15,Coulé,,
+105,15,Ecorcé,,
+106,15,Equarri,,
+107,15,Gros,,
+108,15,Joints larges,,
+109,15,Joints sérrés ,,
+110,15,Lais ,,
+111,15,Lazuré,,
+112,15,Opus incertum,,
+113,15,Panneaux rigides,,
+114,15,Peint,,
+115,15,Planches clouées,,
+116,15,Posé,,
+117,15,Posé en fougères,,
+118,15,Projeté,,
+119,15,Recoupé,,
+120,15,Stabilisée,,
+121,15,Sur chape maigre,,
+122,15,Sur lambourdes,,
+123,15,Taillé,,
+124,15,Taloché,,
+125,15,Traité,,
+126,15,Vernis,,
+127,15,Vrac,,
+128,16,Posée,,
+129,16,Encastrée,,
+130,17,Forêt,,
+131,17,Arbre,,
+132,17,Rocher,,
+133,17,Montagne,,
+134,17,Edifice,,
+135,17,Bâtiment voisin,,
+136,18,Pierre,,
+137,18,Bois,,
+138,18,Métal,,
+139,18,Mixte,,
+140,18,Béton,,
+141,18,Terre,,
+142,18,Végétaux,,
+143,18,Produits bitumineux,,
+144,18,Liants,,
+145,19,Aggloméré de ciment,,
+146,19,Ardoises,,
+147,19,Bac acier,,
+148,19,Bardeaux,,
+149,19,Béton banché,,
+150,19,Callade,,
+151,19,Bois massif,,
+152,19,Brique,,
+153,19,Chaume,,
+154,19,Dalle,,
+155,19,Empierrement,,
+156,19,Fermette,,
+157,19,Fibro ciment en tuiles,,
+158,19,Fibro ciment ondulé,,
+159,19,Hourdis,,
+160,19,Lauze,,
+161,19,Ossature bois,,
+162,19,Pierres maçonnées,,
+163,19,Pierres sèches,,
+164,19,Pierres taillées/appareillées,,
+165,19,Pierre/ciment banché,,
+166,19,Pisé,,
+167,19,Plancher,,
+168,19,Poteau poutre,,
+169,19,Poutres coulées,,
+170,19,Poutres préfabriquées,,
+171,19,Rouleaux,,
+172,19,Tôle ondulée,,
+173,19,Torchis,,
+499,36,Photo site,"2",
+500,36,Photo facade Nord,"3",
+501,36,Photo facade Est,"4",
+174,19,Traditionnelle,,
+175,19,Triangulée,,
+176,19,Tuiles,,
+177,19,Tuiles écailles,,
+178,19,Tuiles mécaniques,,
+179,19,Tuiles romanes,,
+180,19,Voûte,,
+181,19,Zinc joints debout,,
+182,19,Terre stabilisée,,
+183,19,Plâtre gros,,
+184,19,Chaux,,
+185,19,Dallage,,
+186,19,Pavage,,
+187,19,Chape en ciment,,
+188,19,Pierres appareillées mortier,,
+189,20,Abandon,,
+190,20,Entretien,,
+191,20,Restauration,,
+192,20,Réhabilitation,,
+193,20,Construction neuve,,
+194,21,Yves Baret,Architecte,
+195,21,Julien-Pierre Guilloux,Géomaticien,
+196,21,Sylvestre Garin,Architecte,
+197,21,Manuel Meester,Architecte,
+198,21,Clotilde Hogrel,Architecte,
+199,21,Julie Burlet,Architecte stage 2010,
+200,21,Céline Pilon,Architecte stage novembre 2011 + CDD 2012,
+201,21,Véronique Leloup,Architecte stage 2012,
+202,21,Nathalie Mermier,Stagiaire 1994,
+203,21,Laurine Baudet,Etudiante architecte ENSAM stage 2019,
+204,21,Frédéric Sabatier,chargé de mission,
+205,22,Abandon,,
+206,22,Destruction,,
+207,22,Entretien,,
+208,22,Réhabilitation,,
+209,22,Rénovation,,
+210,22,Restauration,,
+211,22,Construction neuve,,
+212,22,Dépose,,
+213,23,Cœur du Parc national,,
+214,23,Réserve naturelle,,
+215,23,Site inscrit,,
+216,23,Site classé,,
+217,23,Site Natura 2000,,
+218,23,Aire d'Adhésion,,
+219,23,Aire Optimale d'Adhésion,,
+220,24,Crue torrentielle,,
+221,24,Glissement de terrain,,
+222,24,Chute de pierres,,
+223,24,Avalanche,,
+224,25,Terre plein,,
+225,25,Structure porteuse verticale,,
+226,25,Structure porteuse horizontale,,
+227,25,Charpente,,
+228,25,Couverture,,
+229,25,Balcon,,
+230,25,Escalier,,
+231,25,Galerie,,
+234,26,Chauffage,,
+235,26,Cuisine,,
+236,26,Sanitaire,,
+237,26,Electricité,,
+246,28,Abri à sel,,
+247,28,Cabane pastorale,,
+248,28,Refuge,,
+249,28,Abri pour randonneurs,,
+250,28,Habitation,,
+260,29,Photovoltaïque,"4","237"
+261,29,Eolien,"4","237"
+262,29,Assainissement autonome,"3","236"
+263,29,Groupe électrogène,"4","237"
+264,29,Raccordé au réseau électrique,"4","237"
+265,29,Chauffage solaire,"1","234"
+266,29,Turbine électrique,"4","237"
+267,29,Chauffe-eau gaz,"1","234"
+268,29,Chauffage bouteille de gaz,"1","234"
+280,30,Cours d'eau,N,"297"
+281,30,Rocher,N,"297"
+283,30,Lac,N,"297"
+284,30,Allée plantée,C,"296"
+285,30,Pierrier,N,"297"
+286,30,Clapier,C,"296"
+287,30,Bâtiment,C,"296"
+288,30,Terrasse de cultures,C,"296"
+289,30,Jas,C,"296"
+290,30,Terrasse (du bâtiment),C,"296"
+291,30,Site (dans son ensemble),C,"296"
+292,30,Abris sous roche,C,"296"
+293,30,Arbre,N,"297"
+251,29,Cheminée,"1","234"
+252,29,Poêle,"1","234"
+253,29,Chauffage central,"1","234"
+254,29,Cuisine eau potable,"2","235"
+255,29,Cuisine eau non potable,"2","235"
+256,29,WC fosse,"3","236"
+257,29,WC chimique,"3","236"
+258,29,WC eau,"3","236"
+259,29,WC sec,"3","236"
+269,29,Douche,"3","236"
+270,29,Récupération des eaux pluviales,"3","236"
+271,29,captage et conduite AEP,"3","236"
+272,29,Gazinière,"2","235"
+294,30,Ruine,C,"296"
+295,30,"Croix, oratoire",C,"296"
+314,32,Fer,Métal,"399"
+273,30,Puits,C,"296"
+274,30,Four,C,"296"
+275,30,Fontaine,C,"296"
+276,30,Canal,C,"296"
+277,30,Parc,C,"296"
+296,31,C,construit,
+297,31,N,naturel,
+278,30,Cheminée,C,"296"
+279,30,Potager,C,"296"
+282,30,Pont,C,"296"
+308,32,Chanvre,Végétal,"401"
+302,32,Bois debout,Bois,"395"
+309,32,Châtaignier,Bois,"395"
+298,32,Acier,Métal,"399"
+306,32,Calcaire,Minéral,"397"
+307,32,Céramique,Minéral,"397"
+311,32,Chaux/Platre,Minéral,"397"
+312,32,Chêne,Bois,"395"
+313,32,Ciment,Minéral,"397"
+304,32,Brique d'adobe,Minéral,"397"
+303,32,Bois/béton,Mixte,"398"
+301,32,Bois,Bois,"395"
+341,32,Pin,Bois,"395"
+348,32,Poutres solives,Bois,"395"
+351,32,Sapin,Bois,"395"
+322,32,Laine de mouton,Animal,"396"
+344,32,Plume,Animal,"396"
+352,32,Schiste,Minéral,"397"
+354,32,Terre,Minéral,"397"
+498,36,Photo par accès itinéraire,"1",
+502,36,Photo facade Sud,"5",
+503,36,Photo facade Ouest,"6",
+504,36,Photo avec une personne,"7",
+505,36,Photo d'un détail,"8",
+506,36,Photo d'intérieur,"9",
+507,36,Photo de l'ancien bâtiment,"10",
+508,36,Masque,"11",
+509,36,Croquis,"12",
+510,36,Plan masse,"13",
+511,36,Plan bâtiment,"14",
+512,36,Coupe,"15",
+513,36,Elévation,"16",
+320,32,Hêtre,Bois,"395"
+321,32,Laine de bois,Bois,"395"
+325,32,Lamellée collée,Bois,"395"
+326,32,Lattis,Bois,"395"
+327,32,Liège,Bois,"395"
+329,32,Mélèze,Bois,"395"
+355,32,Terre cuite,Minéral,"397"
+356,32,Torchis,Minéral,"397"
+357,32,Tuff,Minéral,"397"
+305,32,Brique en terre cuite,Minéral,"397"
+310,32,Chaux,Minéral,"397"
+315,32,Fermacell,Minéral,"397"
+316,32,Gênoise,Minéral,"397"
+317,32,Granit,Minéral,"397"
+318,32,Grès,Minéral,"397"
+319,32,Grès cérame,Minéral,"397"
+323,32,Laine de roche,Minéral,"397"
+324,32,Laine de verre,Minéral,"397"
+339,32,Pierre,Minéral,"397"
+343,32,Platre,Minéral,"397"
+349,32,Remplissage colaborant,Minéral,"397"
+333,32,Ouate de cellulose,Bois,"395"
+334,32,P.V.C dalle,Synthèse,"400"
+335,32,P.V.C souple,Synthèse,"400"
+338,32,Parquet flottant de synthèse,Synthèse,"400"
+342,32,Plastique,Synthèse,"400"
+345,32,Polystyrène expansé,Synthèse,"400"
+346,32,Polystyrène extrudé,Synthèse,"400"
+347,32,Polyuréthane,Synthèse,"400"
+300,32,Béton/métal,Mixte,"398"
+331,32,Métal/bois,Mixte,"398"
+332,32,Métal/brique,Mixte,"398"
+340,32,Pierre/bois,Mixte,"398"
+299,32,Aluminium,Métal,"399"
+330,32,Métal,Métal,"399"
+328,32,Matériaux de synthèse,Mixte,"398"
+337,32,Parquet à la francaise,Bois,"395"
+336,32,Paille,Végétal,"401"
+350,32,Roseaux,Végétal,"401"
+353,32,Seigle,Végétal,"401"
+395,33,Bois,type de materiaux pour la finition,
+396,33,Animal,type de materiaux pour la finition,
+397,33,Minéral,type de materiaux pour la finition,
+398,33,Mixte,type de materiaux pour la finition,
+399,33,Métal,type de materiaux pour la finition,
+400,33,Synthèse,type de materiaux pour la finition,
+401,33,Végétal,type de materiaux pour la finition,
+405,34,Décors,,
+406,34,Isolation,,
+407,34,Menuiserie,,
+408,34,Plafonds,,
+409,34,Remplissage de structure,,
+410,34,Revêtement de sol,,
+411,34,Revêtement de mur intérieur,,
+412,34,Revêtement de mur extérieur,,
+456,35,Corniche,"1","405"
+457,35,Fresque,"1","405"
+458,35,Peinture ,"1","405"
+459,35,Sculpture,"1","405"
+460,35,Stucs,"1","405"
+461,35,Laine minérale,"2","406"
+462,35,Matériaux de synthèse,"2","406"
+463,35,Matériaux naturels,"2","406"
+464,35,Cloison,"3","407"
+465,35,Escalier,"3","407"
+466,35,Fenêtre,"3","407"
+467,35,Lucarne,"3","407"
+468,35,Parquet,"3","407"
+469,35,Portail,"3","407"
+470,35,Porte,"3","407"
+471,35,Trappe,"3","407"
+472,35,Bois,"4","408"
+473,35,Platre,"4","408"
+474,35,Pierre,"5","409"
+475,35,Terre,"5","409"
+476,35,Carrelage,"7","410"
+477,35,Dallage,"7","410"
+478,35,Dalle ,"7","410"
+479,35,P.V.C,"7","410"
+480,35,Parquet flottant,"7","410"
+481,35,Bas-flanc,"3","407"
+482,35,Eléments de cuisine,"3","407"
+483,35,Terrasse,"3","407"
+484,35,Bardage métallique,"9","412"
+492,35,Peinture,"9","412"
+493,35,Enduit,"9","412"
+494,35,Crépis,"9","412"
+495,35,Bardage minéral,"9","412"
+496,35,Bardage bois,"9","412"
+485,35,Placo,"8","411"
+486,35,Tapisserie,"8","411"
+487,35,Peinture,"8","411"
+488,35,Enduit,"8","411"
+489,35,Crépis,"8","411"
+490,35,Bardage minéral,"8","411"
+491,35,Bardage bois,"8","411"
+497,35,OSB,"8","411"

@@ -19,4 +19,3 @@ coverage.xml
 /patbati/local_settings.py
 *.sh
 .env
-/csv/*.csv
