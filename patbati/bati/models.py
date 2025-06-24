@@ -202,7 +202,10 @@ class DemandeTravaux(models.Model):
     num_permis = models.CharField()
 
 class Travaux(models.Model):
-    date = models.DateField(null=False)
+    date = models.DateField(
+        null=False,
+        db_comment="Ce champs est non null depuis la v2, remplie avec 1800-01-01 quand l'info était absente"
+        )
     demande = models.ForeignKey(
         DemandeTravaux,
         null=False,

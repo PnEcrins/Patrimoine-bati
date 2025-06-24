@@ -99,7 +99,7 @@ class Command(BaseCommand):
                     bat_suppr=r.bat_suppr,
                     notepatri=get_nomenclature(r.valnotepatri, "NOTE_PAT"),
                     patrimonialite=r.patrimonialite,
-                    conservation=get_nomenclature(r.codeconservation, "CONSERVATION"),
+                    conservation=get_nomenclature(r.conservation, "CONSERVATION"),
                     ancien_index=r.indexbatiment,
                     commentaire_masque=r.info_masque,
                     remarque_risque=r.info_risquenat,
@@ -120,6 +120,19 @@ class Command(BaseCommand):
                 bati.risques_nat.set(
                     [get_nomenclature(risque.risque, 'RISQUE') for risque in risques]
                 )
+
+                # masques
+                masque_query = """
+                    SELECT * FROM patbati.rel_masque rel
+                    JOIN patbati.bib_masque bib USING(codemasque)
+                    WHERE indexbatiment = %s
+                """
+                cursor.execute(masque_query,  [r.indexbatiment])
+                masques = namedtuplefetchall(cursor)
+                for masque in masques:
+                    bati.masques.set(
+                        [get_nomenclature(masque.masque, 'MASQUE') for masque in masques]
+                    )
 
                 # Demande de travaux
                 dem_travaux_sql = (
@@ -143,7 +156,7 @@ class Command(BaseCommand):
                         """SELECT * FROM patbati.travaux
                             JOIN patbati.bib_nature nat USING (codenature)
                             JOIN patbati.bib_usage us using(codeusage)
-                             where indexdemande = %s
+                            WHERE indexdemande = %s
                         """
                     )
                     cursor.execute(travaux_sql, [dem.indexdemande])
@@ -266,7 +279,7 @@ class Command(BaseCommand):
 
 
 
-# TODO : rel_matfins_finition, rel_matge_meo, rel_protection, rel_recommande, rel_remplace, rel_so_mat_fins, rel_structures_matfin, rel_masque
+# TODO : rel_matfins_finition, rel_matge_meo, rel_protection, rel_recommande, rel_remplace, rel_so_mat_fins, rel_structures_matfin
 
  
 
