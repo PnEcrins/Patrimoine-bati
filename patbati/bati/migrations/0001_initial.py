@@ -99,15 +99,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Nomenclature",
             fields=[
-                (
-                    "id_nomenclature",
-                    models.AutoField(primary_key=True, serialize=False),
-                ),
-                ("label", models.CharField(max_length=255)),
-                (
-                    "description",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
+                ('id_nomenclature', models.AutoField(primary_key=True, serialize=False)),
+                ('label', models.CharField(max_length=255)),
+                ('description', models.CharField(blank=True, max_length=255, null=True)),
+                ('parentId', models.IntegerField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -233,94 +228,28 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name="Equipement",
+            name='Equipement',
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "commentaire",
-                    models.TextField(null=True, verbose_name="Commentaire"),
-                ),
-                (
-                    "est_remarquable",
-                    models.BooleanField(default=False, verbose_name="Remarquable"),
-                ),
-                (
-                    "bati",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="equipements",
-                        to="bati.bati",
-                    ),
-                ),
-                (
-                    "conservation",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "CONSERVATION"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="equipement_conservation",
-                        to="bati.nomenclature",
-                    ),
-                ),
-                (
-                    "type",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "TYPE_EQUIP"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="equipement_type",
-                        to="bati.nomenclature",
-                        verbose_name="Type d'équipement",
-                    ),
-                ),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('commentaire', models.TextField(null=True, verbose_name='Commentaire')),
+                ('est_remarquable', models.BooleanField(default=False, verbose_name='Remarquable')),
+                ('bati', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='equipements', to='bati.bati')),
+                ('conservation', models.ForeignKey(limit_choices_to={'id_type__code': 'CONSERVATION'}, on_delete=django.db.models.deletion.CASCADE, related_name='equipement_conservation', to='bati.nomenclature')),
+                ('type', models.ForeignKey(limit_choices_to={'id_type__code': 'TYPE_EQUIP'}, on_delete=django.db.models.deletion.CASCADE, related_name='equipement_type', to='bati.nomenclature', verbose_name="Type d'équipement")),
             ],
         ),
         migrations.CreateModel(
-            name="Enquetes",
+            name='Enquetes',
             fields=[
-                ("idenquete", models.AutoField(primary_key=True, serialize=False)),
-                (
-                    "date_enquete",
-                    models.DateTimeField(
-                        blank=True, default=django.utils.timezone.now, null=True
-                    ),
-                ),
-                (
-                    "date_redaction",
-                    models.DateTimeField(
-                        blank=True, default=django.utils.timezone.now, null=True
-                    ),
-                ),
-                (
-                    "bati",
-                    models.ForeignKey(
-                        db_column="id_bat",
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="enquetes",
-                        to="bati.bati",
-                    ),
-                ),
-                (
-                    "personne",
-                    models.ForeignKey(
-                        blank=True,
-                        limit_choices_to={"id_type__code": "PERSONNES"},
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="batiments_personnes_enquetes",
-                        to="bati.nomenclature",
-                    ),
-                ),
+                ('idenquete', models.AutoField(primary_key=True, serialize=False)),
+                ('date_enquete', models.DateTimeField(blank=True, default=django.utils.timezone.now, null=True)),
+                ('date_redaction', models.DateTimeField(blank=True, default=django.utils.timezone.now, null=True)),
+                ('bati', models.ForeignKey(db_column='bati', on_delete=django.db.models.deletion.CASCADE, related_name='enquetes', to='bati.bati')),
+                ('personne', models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'PERSONNES'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_personnes_enquetes', to='bati.nomenclature')),
             ],
         ),
         migrations.CreateModel(
-            name="ElementPaysager",
+            name='ElementPaysager',
             fields=[
                 (
                     "id",
@@ -368,100 +297,49 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
-            model_name="bati",
-            name="classe",
-            field=models.ForeignKey(
-                blank=True,
-                limit_choices_to={"id_type__code": "CL_ARCHI"},
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="batiments_classe",
-                to="bati.nomenclature",
-            ),
+            model_name='bati',
+            name='classe',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'CL_ARCHI'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_classe', to='bati.nomenclature'),
         ),
         migrations.AddField(
-            model_name="bati",
-            name="conservation",
-            field=models.ForeignKey(
-                blank=True,
-                limit_choices_to={"id_type__code": "CONSERVATION"},
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="batiments_conservation",
-                to="bati.nomenclature",
-            ),
+            model_name='bati',
+            name='conservation',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'CONSERVATION'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_conservation', to='bati.nomenclature'),
         ),
         migrations.AddField(
-            model_name="bati",
-            name="exposition",
-            field=models.ForeignKey(
-                blank=True,
-                limit_choices_to={"id_type__code": "EXPO"},
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="batiments_exposition",
-                to="bati.nomenclature",
-            ),
+            model_name='bati',
+            name='exposition',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'EXPO'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_exposition', to='bati.nomenclature'),
         ),
         migrations.AddField(
-            model_name="bati",
-            name="faitage",
-            field=models.ForeignKey(
-                blank=True,
-                limit_choices_to={"id_type__code": "FAITAGE"},
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="batiments_faitage",
-                to="bati.nomenclature",
-            ),
+            model_name='bati',
+            name='faitage',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'FAITAGE'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_faitage', to='bati.nomenclature'),
         ),
         migrations.AddField(
-            model_name="bati",
-            name="implantation",
-            field=models.ForeignKey(
-                blank=True,
-                limit_choices_to={"id_type__code": "IMPLA"},
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="batiments_codepem",
-                to="bati.nomenclature",
-            ),
+            model_name='bati',
+            name='implantation',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'IMPLA'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_implantation', to='bati.nomenclature'),
         ),
         migrations.AddField(
-            model_name="bati",
-            name="masques",
-            field=models.ForeignKey(
-                blank=True,
-                limit_choices_to={"id_type__code": "MASQUE"},
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="batiments_info_masque",
-                to="bati.nomenclature",
-            ),
+            model_name='bati',
+            name='masques',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'MASQUE'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_info_masque', to='bati.nomenclature'),
         ),
         migrations.AddField(
-            model_name="bati",
-            name="notepatri",
-            field=models.ForeignKey(
-                blank=True,
-                limit_choices_to={"id_type__code": "NOTE_PAT"},
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="batiments_notepatri",
-                to="bati.nomenclature",
-            ),
+            model_name='bati',
+            name='notepatri',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'NOTE_PAT'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_notepatri', to='bati.nomenclature'),
         ),
         migrations.AddField(
-            model_name="bati",
-            name="protection",
-            field=models.ForeignKey(
-                blank=True,
-                limit_choices_to={"id_type__code": "PROT"},
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="batiments_protection",
-                to="bati.nomenclature",
-            ),
+            model_name='bati',
+            name='perspective',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'PERSP'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_perspective', to='bati.nomenclature'),
+        ),
+        migrations.AddField(
+            model_name='bati',
+            name='protection',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'PROT'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_protection', to='bati.nomenclature'),
         ),
         migrations.AddField(
             model_name="bati",
@@ -473,16 +351,9 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="bati",
-            name="secteur",
-            field=models.ForeignKey(
-                blank=True,
-                limit_choices_to={"id_type__code": "SECTEUR"},
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="batiments_secteur",
-                to="bati.nomenclature",
-            ),
+            model_name='bati',
+            name='secteur',
+            field=models.ForeignKey(blank=True, limit_choices_to={'id_type__code': 'SECTEUR'}, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='batiments_secteur', to='bati.nomenclature'),
         ),
         migrations.AddField(
             model_name="nomenclature",
@@ -494,163 +365,39 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.CreateModel(
-            name="SecondOeuvre",
+            name='SecondOeuvre',
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "commentaire",
-                    models.TextField(null=True, verbose_name="Commentaire"),
-                ),
-                (
-                    "est_remarquable",
-                    models.BooleanField(default=False, verbose_name="Remarquable"),
-                ),
-                (
-                    "bati",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="second_oeuvre",
-                        to="bati.bati",
-                    ),
-                ),
-                (
-                    "conservation",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "CONSERVATION"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="second_oeuvre_conservation",
-                        to="bati.nomenclature",
-                    ),
-                ),
-                (
-                    "type",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "TYPE_SO"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="structure_second_oeuvre",
-                        to="bati.nomenclature",
-                        verbose_name="Type de second oeuvre",
-                    ),
-                ),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('commentaire', models.TextField(null=True, verbose_name='Commentaire')),
+                ('est_remarquable', models.BooleanField(default=False, verbose_name='Remarquable')),
+                ('bati', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='second_oeuvre', to='bati.bati')),
+                ('conservation', models.ForeignKey(limit_choices_to={'id_type__code': 'CONSERVATION'}, on_delete=django.db.models.deletion.CASCADE, related_name='second_oeuvre_conservation', to='bati.nomenclature')),
+                ('type', models.ForeignKey(limit_choices_to={'id_type__code': 'TYPE_SO'}, on_delete=django.db.models.deletion.CASCADE, related_name='structure_second_oeuvre', to='bati.nomenclature', verbose_name='Type de second oeuvre')),
             ],
         ),
         migrations.CreateModel(
-            name="Structure",
+            name='Structure',
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("info_structure", models.TextField(null=True)),
-                (
-                    "est_remarquable",
-                    models.BooleanField(
-                        default=False, verbose_name="Structure remarquable"
-                    ),
-                ),
-                (
-                    "bati",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="structure",
-                        to="bati.bati",
-                    ),
-                ),
-                (
-                    "conservation",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "CONSERVATION"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="structure_conservation",
-                        to="bati.nomenclature",
-                    ),
-                ),
-                (
-                    "materiaux_principal",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "MAT_GE"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="structure_mat_princip",
-                        to="bati.nomenclature",
-                        verbose_name="Materiau principal",
-                    ),
-                ),
-                (
-                    "mise_en_oeuvre",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "MEOEUVRE"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="structure_me",
-                        to="bati.nomenclature",
-                        verbose_name="Mise en oeuvre",
-                    ),
-                ),
-                (
-                    "type",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "STRUCT"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="structure_struct",
-                        to="bati.nomenclature",
-                        verbose_name="Type de structure",
-                    ),
-                ),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('info_structure', models.TextField(null=True)),
+                ('est_remarquable', models.BooleanField(default=False, verbose_name='Structure remarquable')),
+                ('bati', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='structure', to='bati.bati')),
+                ('conservation', models.ForeignKey(limit_choices_to={'id_type__code': 'CONSERVATION'}, on_delete=django.db.models.deletion.CASCADE, related_name='structure_conservation', to='bati.nomenclature')),
+                ('materiaux_principal', models.ForeignKey(limit_choices_to={'id_type__code': 'MAT_GE'}, on_delete=django.db.models.deletion.CASCADE, related_name='structure_mat_princip', to='bati.nomenclature', verbose_name='Materiau principal')),
+                ('mise_en_oeuvre', models.ForeignKey(limit_choices_to={'id_type__code': 'MEOEUVRE'}, on_delete=django.db.models.deletion.CASCADE, related_name='structure_me', to='bati.nomenclature', verbose_name='Mise en oeuvre')),
+                ('type', models.ForeignKey(limit_choices_to={'id_type__code': 'STRUCT'}, on_delete=django.db.models.deletion.CASCADE, related_name='structure_struct', to='bati.nomenclature', verbose_name='Type de structure')),
             ],
         ),
         migrations.CreateModel(
-            name="Travaux",
+            name='Travaux',
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("date", models.DateField()),
-                ("autorisation", models.BooleanField(null=True)),
-                ("subvention_pne", models.IntegerField(null=True)),
-                (
-                    "demande",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="travaux",
-                        to="bati.demandetravaux",
-                    ),
-                ),
-                (
-                    "nature",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "NATURE_TRAVAUX"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="nature_travaux",
-                        to="bati.nomenclature",
-                    ),
-                ),
-                (
-                    "usage",
-                    models.ForeignKey(
-                        limit_choices_to={"id_type__code": "USAGE_TRAVAUX"},
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="usage_travaux",
-                        to="bati.nomenclature",
-                    ),
-                ),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('date', models.DateField()),
+                ('autorisation', models.BooleanField(null=True)),
+                ('subvention_pne', models.IntegerField(null=True)),
+                ('demande', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='travaux', to='bati.demandetravaux')),
+                ('nature', models.ForeignKey(limit_choices_to={'id_type__code': 'NATURE_TRAVAUX'}, on_delete=django.db.models.deletion.CASCADE, related_name='nature_travaux', to='bati.nomenclature')),
+                ('usage', models.ForeignKey(limit_choices_to={'id_type__code': 'USAGE_TRAVAUX'}, on_delete=django.db.models.deletion.CASCADE, related_name='usage_travaux', to='bati.nomenclature')),
             ],
         ),
     ]

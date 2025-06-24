@@ -66,7 +66,7 @@ class EnquetesCreate(CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.instance.id_bat = self.bati
+        form.instance.bati = self.bati
         return super().form_valid(form)
 
     def get_success_url(self):

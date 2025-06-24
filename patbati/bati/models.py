@@ -27,7 +27,7 @@ class Nomenclature(models.Model):
 # Main Bati model
 class Bati(MapEntityMixin, models.Model):
     id = models.AutoField(primary_key=True) # indexBatiment
-    valide = models.BooleanField(default=False, null=True) # validé
+    valide = models.BooleanField(default=False, null=True, verbose_name="Validé") # validé
 
     # code_classe / classe archi
     classe = models.ForeignKey(
@@ -47,7 +47,7 @@ class Bati(MapEntityMixin, models.Model):
         blank=True,
         null=True,
         limit_choices_to={'id_type__code': 'IMPLA'},
-        related_name='batiments_codepem'
+        related_name='batiments_implantation',
     )
     
     # codefaitage
@@ -133,6 +133,16 @@ class Bati(MapEntityMixin, models.Model):
         related_name='batiments_conservation'
     ) 
 
+    # perspective
+    perspective = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__code': 'PERSP'},
+        related_name='batiments_perspective'
+    )
+
     # masques
     masques = models.ForeignKey(
         Nomenclature,
@@ -176,7 +186,7 @@ class Enquetes(models.Model):
     )
     bati = models.ForeignKey(
         Bati,
-        db_column='id_bat',
+        db_column='bati',
         on_delete=models.CASCADE,
         related_name='enquetes'
     )
@@ -189,7 +199,7 @@ class Enquetes(models.Model):
 
     def get_detail_url(self):
         # Return the detail page of the related Bati
-        return self.id_bat.get_detail_url()
+        return self.bati.get_detail_url()
 
 class DemandeTravaux(models.Model):
     bati = models.ForeignKey(

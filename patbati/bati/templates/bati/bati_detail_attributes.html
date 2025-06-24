@@ -28,7 +28,7 @@ mapentity_tags %} {% block attributes %}
     <td>{{ object.patrimonialite }}</td>
   </tr>
   <tr>
-    <th>Type architectural</th>
+    <th>Classe d'architecture</th>
     <td>{{ object.classe }}</td>
   </tr>
   <tr>
@@ -41,7 +41,7 @@ mapentity_tags %} {% block attributes %}
   </tr>
   <tr>
     <th>Règlementation</th>
-    <td>{{ object.protection.label }}</td>
+    <td>{{ object.protection }}</td>
   </tr>
   <tr>
     <th>Capacité</th>
@@ -60,8 +60,12 @@ mapentity_tags %} {% block attributes %}
     <td>{{ object.bat_suppr|yesno:"Oui,Non" }}</td>
   </tr>
   <tr>
-    <th>Conservation</th>
+    <th>Etat général</th>
     <td>{{ object.conservation }}</td>
+  </tr>
+  <tr>
+    <th>Perspectives</th>
+    <td>{{ object.perspective }}</td>
   </tr>
 </table>
 
@@ -76,7 +80,7 @@ mapentity_tags %} {% block attributes %}
   </thead>
   <tr>
     <th>Secteur</th>
-    <td>{{ object.secteur_label }}</td>
+    <td>{{ object.secteur }}</td>
   </tr>
   <tr>
     <th>Lieu-dit</th>
@@ -96,11 +100,11 @@ mapentity_tags %} {% block attributes %}
   </tr>
   <tr>
     <th>Altitude</th>
-    <td>{{ object.altitude }} m</td>
+    <td>{{ object.altitude|default:"-" }}</td>
   </tr>
   <tr>
     <th>Dénivelé</th>
-    <td>{{ object.denivelle }}</td>
+    <td>{{ object.denivelle|default:"-" }}</td>
   </tr>
 </table>
 <br />
@@ -114,11 +118,11 @@ mapentity_tags %} {% block attributes %}
   </thead>
   <tr>
     <th>Implantation</th>
-    <td>{{ object.implantation.label }}</td>
+    <td>{{ object.implantation }}</td>
   </tr>
   <tr>
     <th>Faitage</th>
-    <td>{{ object.faitage.label }}</td>
+    <td>{{ object.faitage }}</td>
   </tr>
   <tr>
     <th>Situation géographique</th>
@@ -126,7 +130,7 @@ mapentity_tags %} {% block attributes %}
   </tr>
   <tr>
     <th>Exposition</th>
-    <td>{{ object.exposition.label }}</td>
+    <td>{{ object.exposition }}</td>
   </tr>
   <tr>
     <th>Pente</th>
@@ -158,6 +162,10 @@ mapentity_tags %} {% block attributes %}
     <th>Commentaire Masque</th>
     <td>{{ object.commentaire_masque }}</td>
   </tr>
+  <tr>
+    <th>Remarque générale</th>
+    <td>{{ object.remarque_generale|default:"-" }}</td>
+  </tr>
 </table>
 
 <br />
@@ -174,7 +182,7 @@ mapentity_tags %} {% block attributes %}
     </tr>
   </thead>
   <tbody>
-    {% for enquete in object.batiments_id_bat.all %}
+    {% for enquete in object.enquetes.all %}
     <tr>
       <td>{{ enquete.personne }}</td>
       <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>

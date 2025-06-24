@@ -9,7 +9,7 @@ from .models import Enquetes, Bati, DemandeTravaux
 class EnquetesForm(forms.ModelForm):
     class Meta:
         model = Enquetes
-        exclude = ['id_bat']
+        exclude = ['bati']
 
 class DemandeTravauxForm(forms.ModelForm):
     class Meta:
