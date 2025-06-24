@@ -263,7 +263,7 @@ mapentity_tags %} {% block attributes %}
           <tbody>
             <tr>
               <th>Risque Naturel</th>
-              <td>{{ object.risquenat|default:"-" }}</td>
+              <td>{{ object.risques_nat|default:"-" }}</td>
             </tr>
             <tr>
               <th>Remarque risque naturel</th>
@@ -363,7 +363,7 @@ mapentity_tags %} {% block attributes %}
             </tr>
           </thead>
           <tbody>
-            {% for element in object.elements_paysager.all %}
+            {% for element in object.elements_paysagers.all %}
             <tr>
               <td>{{ element.type }}</td>
               <td>{{ element.conservation }}</td>
