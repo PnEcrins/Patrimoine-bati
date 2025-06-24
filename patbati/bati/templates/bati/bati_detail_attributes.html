@@ -88,6 +88,57 @@ mapentity_tags %} {% block attributes %}
   </div>
 </div>
 
+<!-- Table Enquêtes (expanded by default) -->
+<div class="content mb-3">
+  <div class="card">
+    <div class="card-header text-center" style="position: relative">
+      Liste des enquêtes
+      <button
+        class="btn btn-link p-0 float-end"
+        type="button"
+        data-toggle="collapse"
+        data-target="#collapseEnquetes"
+        aria-expanded="true"
+        aria-controls="collapseEnquetes"
+      >
+        <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
+      </button>
+    </div>
+    <div id="collapseEnquetes" class="collapse show">
+      <div class="card-body p-0">
+        <table class="table table-striped table-bordered mb-0">
+          <thead>
+            <tr>
+              <th>Personne</th>
+              <th>Date enquête</th>
+              <th>Date rédaction</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for enquete in object.enquetes.all %}
+            <tr>
+              <td>{{ enquete.personne }}</td>
+              <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
+              <td>{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3" class="text-center">Aucune enquête associée</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a
+          href="{% url 'bati:enquetes_add' bati_pk=object.pk %}"
+          class="btn btn-success mb-2"
+        >
+          Ajouter une enquête
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Table géographie (collapsed by default) -->
 <div class="content mb-3">
   <div class="card">
@@ -237,52 +288,97 @@ mapentity_tags %} {% block attributes %}
   </div>
 </div>
 
-<!-- Table Enquêtes (collapsed by default) -->
+<!-- Table Equipements (collapsed by default) -->
 <div class="content mb-3">
   <div class="card">
     <div class="card-header text-center" style="position: relative">
-      Liste des enquêtes
+      Equipements
       <button
-        class="btn btn-link p-0 float-end"
+        class="btn btn-link p-0 float-end collapsed"
         type="button"
         data-toggle="collapse"
-        data-target="#collapseEnquetes"
-        aria-expanded="true"
-        aria-controls="collapseEnquetes"
+        data-target="#collapseEquipements"
+        aria-expanded="false"
+        aria-controls="collapseEquipements"
       >
         <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
       </button>
     </div>
-    <div id="collapseEnquetes" class="collapse show">
+    <div id="collapseEquipements" class="collapse">
       <div class="card-body p-0">
         <table class="table table-striped table-bordered mb-0">
           <thead>
             <tr>
-              <th>Personne</th>
-              <th>Date enquête</th>
-              <th>Date rédaction</th>
+              <th>Type</th>
+              <th>Conservation</th>
+              <th>Commentaire</th>
+              <th>Est remarquable</th>
             </tr>
           </thead>
           <tbody>
-            {% for enquete in object.enquetes.all %}
+            {% for equipement in object.equipements.all %}
             <tr>
-              <td>{{ enquete.personne }}</td>
-              <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
-              <td>{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
+              <td>{{ equipement.type }}</td>
+              <td>{{ equipement.conservation }}</td>
+              <td>{{ equipement.commentaire }}</td>
+              <td>{{ equipement.est_remarquable|yesno:"Oui,Non" }}</td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="3" class="text-center">Aucune enquête associée</td>
+              <td colspan="4" class="text-center">Aucun équipement associé</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
-        <a
-          href="{% url 'bati:enquetes_add' bati_pk=object.pk %}"
-          class="btn btn-success mb-2"
-        >
-          Ajouter une enquête
-        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Table Elements Paysager (collapsed by default) -->
+<div class="content mb-3">
+  <div class="card">
+    <div class="card-header text-center" style="position: relative">
+      Elements Paysager
+      <button
+        class="btn btn-link p-0 float-end collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#collapseElementsPaysager"
+        aria-expanded="false"
+        aria-controls="collapseElementsPaysager"
+      >
+        <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
+      </button>
+    </div>
+    <div id="collapseElementsPaysager" class="collapse">
+      <div class="card-body p-0">
+        <table class="table table-striped table-bordered mb-0">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Conservation</th>
+              <th>Commentaire</th>
+              <th>Est remarquable</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for element in object.elements_paysager.all %}
+            <tr>
+              <td>{{ element.type }}</td>
+              <td>{{ element.conservation }}</td>
+              <td>{{ element.commentaire }}</td>
+              <td>{{ element.est_remarquable|yesno:"Oui,Non" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" class="text-center">
+                Aucun élément paysager associé
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
