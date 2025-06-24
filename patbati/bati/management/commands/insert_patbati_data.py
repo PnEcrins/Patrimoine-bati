@@ -12,7 +12,9 @@ from patbati.bati.models import (
     Equipement,
     ElementPaysager,
     Illustration,
-    AuteurPhoto
+    AuteurPhoto,
+    DocumentAttache,
+    Perspective
 )
 
 
@@ -205,7 +207,41 @@ class Command(BaseCommand):
                     )
                     illustration.save()
 
-        # TODO : Documents attachés ?
+                # Documents attachés 
+                documents_sql = (
+                    "SELECT * FROM patbati.documents where indexbatiment = %s"
+                )
+                cursor.execute(documents_sql, [r.indexbatiment])
+                documents = namedtuplefetchall(cursor)
+                for doc in documents:
+                    document = DocumentAttache(
+                        bati=bati,
+                        fichier_src=doc.fichier_source,
+                        date=doc.date_document
+                    )
+                    document.save()
+
+
+                # PERSPECTIVES
+                perspectives_sql = (
+                    "SELECT * FROM patbati.rel_ident_perspective where indexbatiment = %s"
+                )
+                cursor.execute(perspectives_sql, [r.indexbatiment])
+                perspectives = namedtuplefetchall(cursor)
+                for r in perspectives:
+                    persp = Perspective(
+                        bati=bati,
+                        perspective=get_nomenclature(r.codeperspective, "PERSPECTIVE")
+                    )
+                    persp.save()
+
+
+
+
+# TODO : rel_matfins_finition, rel_matge_meo, rel_protection, rel_recommande, rel_remplace, rel_so_mat_fins, rel_structures_matfin
+
+ 
+
 
 
 

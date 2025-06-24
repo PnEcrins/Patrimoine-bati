@@ -24,6 +24,7 @@ class Nomenclature(models.Model):
     def __str__(self):
         return self.label
 
+
 # Main Bati model
 class Bati(MapEntityMixin, models.Model):
     id = models.AutoField(primary_key=True) # indexBatiment
@@ -144,11 +145,8 @@ class Bati(MapEntityMixin, models.Model):
     )
 
     # masques
-    masques = models.ForeignKey(
+    masques = models.ManyToManyField(
         Nomenclature,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
         limit_choices_to={'id_type__code': 'MASQUE'},
         related_name='batiments_info_masque'
     )
@@ -166,6 +164,8 @@ class Bati(MapEntityMixin, models.Model):
     geom = gis_models.PointField(blank=True, null=True) # geom
 
     remarque_generale = models.TextField(null=True)
+
+    perspectives = models.ManyToManyField(Nomenclature, through="Perspective")
 
     def appelation_link(self):
         return f'<a data-pk="{self.pk}" href="{self.get_detail_url()}" title="{self.appelation}">{self.appelation}</a>'
@@ -411,3 +411,24 @@ class DocumentAttache(models.Model):
     )
     fichier_src = models.FileField(null=False, verbose_name="document")
     date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
+
+
+class Perspective(models.Model):
+    """_summary_
+
+    Perspectives associé à un batiment (rénovation, entretien)
+    Dans la v2 on ajoute une date à chaque "perspective"
+    """
+    perspective = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={'id_type__code': 'PERSPECTIVE'},
+        related_name='perspective_bati'
+    )
+    date = models.DateField(null=True)
+    bati = models.ForeignKey(
+        "Bati",
+        on_delete=models.CASCADE,
+    )
