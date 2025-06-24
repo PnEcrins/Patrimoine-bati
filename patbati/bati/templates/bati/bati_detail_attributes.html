@@ -1,205 +1,277 @@
 {% extends "mapentity/mapentity_detail_attributes.html" %} {% load i18n
 mapentity_tags %} {% block attributes %}
-<!-- Table renseignements -->
-<table class="table-striped table-bordered table">
-  <thead>
-    <tr>
-      <th colspan="2" class="text-center">Renseignements</th>
-    </tr>
-  </thead>
-  <tr>
-    <th>Nom</th>
-    <td>{{ object.appelation|default:object }}</td>
-  </tr>
-  <tr>
-    <th>Nouveau numéro</th>
-    <td>{{ object.id|default:"-" }}</td>
-  </tr>
-  <tr>
-    <th>Ancien numéro</th>
-    <td>{{ object.ancien_index }}</td>
-  </tr>
-  <tr>
-    <th>Valeur patrimoniale</th>
-    <td>{{ object.notepatri }}</td>
-  </tr>
-  <tr>
-    <th>Patrimonialité</th>
-    <td>{{ object.patrimonialite }}</td>
-  </tr>
-  <tr>
-    <th>Classe d'architecture</th>
-    <td>{{ object.classe }}</td>
-  </tr>
-  <tr>
-    <th>Propriétaire</th>
-    <td>{{ object.proprietaire }}</td>
-  </tr>
-  <tr>
-    <th>Bâtiment en indivision</th>
-    <td>{{ object.indivision|yesno:"Oui,Non" }}</td>
-  </tr>
-  <tr>
-    <th>Règlementation</th>
-    <td>{{ object.protection }}</td>
-  </tr>
-  <tr>
-    <th>Capacité</th>
-    <td>{{ object.capacite|default:"-" }}</td>
-  </tr>
-  <tr>
-    <th>Date d'insertion</th>
-    <td>{{ object.date_insert }}</td>
-  </tr>
-  <tr>
-    <th>Date de mise à jour</th>
-    <td>{{ object.date_update }}</td>
-  </tr>
-  <tr>
-    <th>Bâtiment supprimé</th>
-    <td>{{ object.bat_suppr|yesno:"Oui,Non" }}</td>
-  </tr>
-  <tr>
-    <th>Etat général</th>
-    <td>{{ object.conservation }}</td>
-  </tr>
-  <tr>
-    <th>Perspectives</th>
-    <td>{{ object.perspective }}</td>
-  </tr>
-</table>
+
+<!-- Table renseignements (expanded by default) -->
+<div class="content">
+  <table class="table-striped table-bordered table">
+    <thead>
+      <tr>
+        <th colspan="2" class="text-center" style="position: relative">
+          Renseignements
+          <button
+            type="button"
+            class="collapse-arrow"
+            onclick="toggleTableRows(this)"
+            aria-label="Afficher/Masquer"
+          >
+            <span class="arrow">−</span>
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Nom</th>
+        <td>{{ object.appelation|default:object }}</td>
+      </tr>
+      <tr>
+        <th>Nouveau numéro</th>
+        <td>{{ object.id|default:"-" }}</td>
+      </tr>
+      <tr>
+        <th>Ancien numéro</th>
+        <td>{{ object.ancien_index }}</td>
+      </tr>
+      <tr>
+        <th>Valeur patrimoniale</th>
+        <td>{{ object.notepatri }}</td>
+      </tr>
+      <tr>
+        <th>Patrimonialité</th>
+        <td>{{ object.patrimonialite }}</td>
+      </tr>
+      <tr>
+        <th>Classe d'architecture</th>
+        <td>{{ object.classe }}</td>
+      </tr>
+      <tr>
+        <th>Propriétaire</th>
+        <td>{{ object.proprietaire }}</td>
+      </tr>
+      <tr>
+        <th>Bâtiment en indivision</th>
+        <td>{{ object.indivision|yesno:"Oui,Non" }}</td>
+      </tr>
+      <tr>
+        <th>Règlementation</th>
+        <td>{{ object.protection }}</td>
+      </tr>
+      <tr>
+        <th>Capacité</th>
+        <td>{{ object.capacite|default:"-" }}</td>
+      </tr>
+      <tr>
+        <th>Date d'insertion</th>
+        <td>{{ object.date_insert }}</td>
+      </tr>
+      <tr>
+        <th>Date de mise à jour</th>
+        <td>{{ object.date_update }}</td>
+      </tr>
+      <tr>
+        <th>Bâtiment supprimé</th>
+        <td>{{ object.bat_suppr|yesno:"Oui,Non" }}</td>
+      </tr>
+      <tr>
+        <th>Etat général</th>
+        <td>{{ object.conservation }}</td>
+      </tr>
+      <tr>
+        <th>Perspectives</th>
+        <td>{{ object.perspective }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <br />
 
-<!-- Table géographie -->
-<table class="table-striped table-bordered table">
-  <thead>
-    <tr>
-      <th colspan="2" class="text-center">Géographie</th>
-    </tr>
-  </thead>
-  <tr>
-    <th>Secteur</th>
-    <td>{{ object.secteur }}</td>
-  </tr>
-  <tr>
-    <th>Lieu-dit</th>
-    <td>{{ object.lieu_dit }}</td>
-  </tr>
-  <tr>
-    <th>Cadastre</th>
-    <td>{{ object.cadastre }}</td>
-  </tr>
-  <tr>
-    <th>Coordonnée X</th>
-    <td>{{ object.x }}</td>
-  </tr>
-  <tr>
-    <th>Coordonnée Y</th>
-    <td>{{ object.y }}</td>
-  </tr>
-  <tr>
-    <th>Altitude</th>
-    <td>{{ object.altitude|default:"-" }}</td>
-  </tr>
-  <tr>
-    <th>Dénivelé</th>
-    <td>{{ object.denivelle|default:"-" }}</td>
-  </tr>
-</table>
-<br />
-
-<!-- Table Situation -->
-<table class="table-striped table-bordered table">
-  <thead>
-    <tr>
-      <th colspan="2" class="text-center">Situation</th>
-    </tr>
-  </thead>
-  <tr>
-    <th>Implantation</th>
-    <td>{{ object.implantation }}</td>
-  </tr>
-  <tr>
-    <th>Faitage</th>
-    <td>{{ object.faitage }}</td>
-  </tr>
-  <tr>
-    <th>Situation géographique</th>
-    <td>{{ object.situation_geo }}</td>
-  </tr>
-  <tr>
-    <th>Exposition</th>
-    <td>{{ object.exposition }}</td>
-  </tr>
-  <tr>
-    <th>Pente</th>
-    <td>{{ object.pente }}</td>
-  </tr>
-</table>
-<br />
-
-<!-- Table Contexte Naturel -->
-<table class="table-striped table-bordered table">
-  <thead>
-    <tr>
-      <th colspan="2" class="text-center">Contexte naturel</th>
-    </tr>
-  </thead>
-  <tr>
-    <th>Risque Naturel</th>
-    <td>{{ object.risquenat|default:"-" }}</td>
-  </tr>
-  <tr>
-    <th>Remarque risque naturel</th>
-    <td>{{ object.remarque_risque|default:"-" }}</td>
-  </tr>
-  <tr>
-    <th>Masques</th>
-    <td>{{ object.masques|default:"-" }}</td>
-  </tr>
-  <tr>
-    <th>Commentaire Masque</th>
-    <td>{{ object.commentaire_masque }}</td>
-  </tr>
-  <tr>
-    <th>Remarque générale</th>
-    <td>{{ object.remarque_generale|default:"-" }}</td>
-  </tr>
-</table>
+<!-- Table géographie (collapsed by default) -->
+<div class="content">
+  <table class="table-striped table-bordered table">
+    <thead>
+      <tr>
+        <th colspan="2" class="text-center" style="position: relative">
+          Géographie
+          <button
+            type="button"
+            class="collapse-arrow collapsed"
+            onclick="toggleTableRows(this)"
+            aria-label="Afficher/Masquer"
+          >
+            <span class="arrow">+</span>
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody style="display: none">
+      <tr>
+        <th>Secteur</th>
+        <td>{{ object.secteur }}</td>
+      </tr>
+      <tr>
+        <th>Lieu-dit</th>
+        <td>{{ object.lieu_dit }}</td>
+      </tr>
+      <tr>
+        <th>Cadastre</th>
+        <td>{{ object.cadastre }}</td>
+      </tr>
+      <tr>
+        <th>Coordonnée X</th>
+        <td>{{ object.x }}</td>
+      </tr>
+      <tr>
+        <th>Coordonnée Y</th>
+        <td>{{ object.y }}</td>
+      </tr>
+      <tr>
+        <th>Altitude</th>
+        <td>{{ object.altitude|default:"-" }}</td>
+      </tr>
+      <tr>
+        <th>Dénivelé</th>
+        <td>{{ object.denivelle|default:"-" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <br />
 
-<table class="table-striped table-bordered table">
-  <thead>
-    <tr>
-      <th colspan="3" class="text-center">Liste des enquêtes</th>
-    </tr>
-    <tr>
-      <th>Personne</th>
-      <th>Date enquête</th>
-      <th>Date rédaction</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for enquete in object.enquetes.all %}
-    <tr>
-      <td>{{ enquete.personne }}</td>
-      <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
-      <td>{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="3" class="text-center">Aucune enquête associée</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<!-- Table Situation (collapsed by default) -->
+<div class="content">
+  <table class="table-striped table-bordered table">
+    <thead>
+      <tr>
+        <th colspan="2" class="text-center" style="position: relative">
+          Situation
+          <button
+            type="button"
+            class="collapse-arrow collapsed"
+            onclick="toggleTableRows(this)"
+            aria-label="Afficher/Masquer"
+          >
+            <span class="arrow">+</span>
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody style="display: none">
+      <tr>
+        <th>Implantation</th>
+        <td>{{ object.implantation }}</td>
+      </tr>
+      <tr>
+        <th>Faitage</th>
+        <td>{{ object.faitage }}</td>
+      </tr>
+      <tr>
+        <th>Situation géographique</th>
+        <td>{{ object.situation_geo }}</td>
+      </tr>
+      <tr>
+        <th>Exposition</th>
+        <td>{{ object.exposition }}</td>
+      </tr>
+      <tr>
+        <th>Pente</th>
+        <td>{{ object.pente }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-<a
-  href="{% url 'bati:enquetes_add' bati_pk=object.pk %}"
-  class="btn btn-success mb-2"
->
-  Ajouter une enquête
-</a>
+<br />
+
+<!-- Table Contexte Naturel (collapsed by default) -->
+<div class="content">
+  <table class="table-striped table-bordered table">
+    <thead>
+      <tr>
+        <th colspan="2" class="text-center" style="position: relative">
+          Contexte naturel
+          <button
+            type="button"
+            class="collapse-arrow collapsed"
+            onclick="toggleTableRows(this)"
+            aria-label="Afficher/Masquer"
+          >
+            <span class="arrow">+</span>
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody style="display: none">
+      <tr>
+        <th>Risque Naturel</th>
+        <td>{{ object.risquenat|default:"-" }}</td>
+      </tr>
+      <tr>
+        <th>Remarque risque naturel</th>
+        <td>{{ object.remarque_risque|default:"-" }}</td>
+      </tr>
+      <tr>
+        <th>Masques</th>
+        <td>{{ object.masques|default:"-" }}</td>
+      </tr>
+      <tr>
+        <th>Commentaire Masque</th>
+        <td>{{ object.commentaire_masque }}</td>
+      </tr>
+      <tr>
+        <th>Remarque générale</th>
+        <td>{{ object.remarque_generale|default:"-" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<br />
+
+<!-- Table Enquêtes (collapsed by default) -->
+<div class="content">
+  <table class="table-striped table-bordered table">
+    <thead>
+      <tr>
+        <th colspan="3" class="text-center" style="position: relative">
+          Liste des enquêtes
+          <button
+            type="button"
+            class="collapse-arrow collapsed"
+            onclick="toggleTableRows(this)"
+            aria-label="Afficher/Masquer"
+          >
+            <span class="arrow">+</span>
+          </button>
+        </th>
+      </tr>
+      <tr>
+        <th>Personne</th>
+        <th>Date enquête</th>
+        <th>Date rédaction</th>
+      </tr>
+    </thead>
+    <tbody style="display: none">
+      {% for enquete in object.enquetes.all %}
+      <tr>
+        <td>{{ enquete.personne }}</td>
+        <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
+        <td>{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" class="text-center">Aucune enquête associée</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a
+    href="{% url 'bati:enquetes_add' bati_pk=object.pk %}"
+    class="btn btn-success mb-2"
+  >
+    Ajouter une enquête
+  </a>
+</div>
+
 {{ block.super }} {% endblock attributes %}

@@ -16,7 +16,7 @@ class NomenclatureType(models.Model):
 
 class Nomenclature(models.Model):
     id_nomenclature = models.AutoField(primary_key=True)
-    type = models.ForeignKey(NomenclatureType, db_column='id_type', on_delete=models.CASCADE)
+    id_type = models.ForeignKey(NomenclatureType, db_column='id_type', on_delete=models.CASCADE)
     label = models.CharField(max_length=255)
     description = models.CharField(max_length=255, blank=True, null=True)
     parentId = models.IntegerField(blank=True, null=True)
@@ -157,13 +157,14 @@ class Bati(MapEntityMixin, models.Model):
     risques_nat = models.ManyToManyField(
         Nomenclature,
         limit_choices_to={'id_type__code': 'RISQUE'},
+        blank=True,
         related_name='batiments_risquenat'
     )
 
     remarque_risque = models.CharField(max_length=500, blank=True, null=True) # remarque
     geom = gis_models.PointField(blank=True, null=True) # geom
 
-    remarque_generale = models.TextField(null=True)
+    remarque_generale = models.TextField(null=True, blank=True)
 
     perspectives = models.ManyToManyField(Nomenclature, through="Perspective")
 
