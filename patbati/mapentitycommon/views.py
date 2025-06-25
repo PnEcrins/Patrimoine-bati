@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-class ChildFormViewViewMixin:
+class ChildFormViewMixin:
     """
     Mixin for separate child form
     Manage :
@@ -12,6 +12,10 @@ class ChildFormViewViewMixin:
     view_name = "add"
     # model of the parent of form
     parent_model = None
+    # label use to the title of form "New" <model> for <oject>
+    add_label = "Nouveau"
+    template_name = "child_form.html"
+
 
     def get_parent_model(self):
         return self.parent_model
@@ -24,16 +28,14 @@ class ChildFormViewViewMixin:
         context = super().get_context_data(**kwargs)
         context['viewname'] = self.view_name
         context['title'] = self.parent_object
-
+        context["add_label"] = self.add_label
         parent_model = self.get_parent_model()
 
-        if parent_model:
+        if parent_model and self.model:
             context['model'] = parent_model
             context['appname'] = parent_model._meta.app_label.lower()
             context['app_verbose_name'] = parent_model._meta.app_config.verbose_name
-            context['modelname'] = parent_model._meta.object_name.lower()
-            context['objectname'] = parent_model._meta.verbose_name
-            context['objectsname'] = parent_model._meta.verbose_name_plural
+            context['modelname'] = self.model._meta.object_name.lower()
         return context
     
     def form_valid(self, form):

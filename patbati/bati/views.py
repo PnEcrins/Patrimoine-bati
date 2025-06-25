@@ -11,7 +11,7 @@ from patbati.bati.forms import EnquetesForm, DemandeTravauxFormSet, BatiForm, Pe
 from .models import Bati, Enquetes, Perspective
 from .serializers import BatiSerializer, BatiGeojsonSerializer
 from patbati.mapentitycommon.forms import FormsetMixin
-from patbati.mapentitycommon.views import ChildFormViewViewMixin
+from patbati.mapentitycommon.views import ChildFormViewMixin
 # Create your views here.
 
 
@@ -59,19 +59,20 @@ class BatiViewSet(MapEntityViewSet):
 
     queryset = Bati.objects.all()
 
-class EnquetesCreate(ChildFormViewViewMixin, CreateView):
+class EnquetesCreate(ChildFormViewMixin, CreateView):
     model = Enquetes
     parent_model = Bati
     parent_related_name = "bati"
     form_class = EnquetesForm
-    template_name = "bati/enquetes_form.html"
+    add_label = "Nouvelle"
 
-class PerspectiveCreate(ChildFormViewViewMixin, CreateView):
+class PerspectiveCreate(ChildFormViewMixin, CreateView):
     model = Perspective
     parent_model = Bati
     form_class = PerspectiveForm
     parent_related_name = "bati"
-    template_name = "bati/perspectives_form.html"
+    add_label = "Nouvel"
+
 
 
 
