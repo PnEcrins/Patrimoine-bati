@@ -143,6 +143,8 @@ DATABASES = {
         "PASSWORD": os.getenv("DB_PASSWORD"),
         "HOST": os.getenv("DB_HOST", "localhost"),
         "PORT": os.getenv("DB_PORT", "5432"),
+        "OPTIONS": {
+            "options": "-c search_path=public,ref_nomenclatures",}
     }
 }
 
@@ -167,8 +169,25 @@ MAPENTITY_CONFIG = {}
 
 LEAFLET_CONFIG = {
     'SRID': 3857,
-    'TILES': [
-        ('OSM', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', '(c) OpenStreetMap Contributors'),
+    "TILES": [
+        (
+            "OpenTopoMap",
+            "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+            {
+                "attribution": 'map data: © <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | map style: © <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+                "maxNativeZoom": 17,
+                "maxZoom": 22,
+            },
+        ),
+        (
+            "OpenStreetMap",
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                "attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">Contributeurs d\'OpenStreetMap</a>',
+                "maxNativeZoom": 19,
+                "maxZoom": 22,
+            },
+        ),
         ('OSM N&B', 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', '(c) OpenStreetMap Contributors'),
     ],
     # 'SPATIAL_EXTENT': (1.3, 43.7, 1.5, 43.5),
