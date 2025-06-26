@@ -34,6 +34,11 @@ class BatiList(MapEntityList):
 class BatiDetail(MapEntityDetail):
     model = Bati
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["mapwidth"] = "90%"
+        return context
+
 
 # class BatiCreate(FormsetMixin, MapEntityCreate):
 #     model = Bati
@@ -58,6 +63,7 @@ class BatiViewSet(MapEntityViewSet):
     geojson_serializer_class = BatiGeojsonSerializer
 
     queryset = Bati.objects.all()
+
 
 class EnquetesCreate(ChildFormViewMixin, CreateView):
     model = Enquetes

@@ -1,0 +1,47 @@
+{% extends "mapentity/mapentity_detail.html" %}
+
+
+{% block before_attachments_extra_tab_nav %}
+<li class="nav-item">
+    <a id="tab-structure" class="nav-link" href="#structure" 
+    data-toggle="tab"> 
+        <i class="bi bi-file-earmark"></i>
+    <span class="d-none d-sm-inline">Structure du bati</span></a>
+</li>
+<li class="nav-item">
+    <a id="tab-structure" class="nav-link" href="#travaux" 
+    data-toggle="tab"> 
+        <i class="bi bi-file-earmark"></i>
+    <span class="d-none d-sm-inline">Travaux</span></a>
+</li>
+
+{% endblock %}
+
+{% block before_attachments_extra_tab_content %}
+<div id="structure" class="tab-pane">
+    Structure HERE
+</div>
+<div id="travaux" class="tab-pane">
+    Travaux HERE
+</div>
+{% endblock %}
+
+
+{% block extrabody %}
+    {{ block.super }}
+
+
+<style>
+    /* These style make tue grag width buggy ... */
+    .map-panel {
+        max-width: 70%;
+        min-width: 30%;
+        width: 30%!important;
+    }
+    .details-panel {
+        max-width: 70%;
+        min-width: 30%;
+        width: 70%!important;
+    }
+</style>
+{% endblock extrabody %}
