@@ -24,11 +24,14 @@ def import_nomenclatures_from_csv(apps, schema_editor):
     with open(csv_path, newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+            label = row["label"]
+            if label and type(label) is str:
+                label = label.strip()
             Nomenclature.objects.update_or_create(
                 id_nomenclature=int(row['id_nomenclature']),
                 defaults={
                     'id_type_id': int(row['id_type']),
-                    'label': row['label'],
+                    'label': label,
                     'description': row.get('description', '') or None,
                     'parentId': int(row['parentid']) if row.get('parentid') else None,
                 }
