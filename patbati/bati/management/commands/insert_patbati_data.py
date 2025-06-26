@@ -15,7 +15,11 @@ from patbati.bati.models import (
     Illustration,
     AuteurPhoto,
     DocumentAttache,
-    Perspective
+    Perspective,
+    Structure,
+    MateriauxFinFinitionStructure,
+    SecondOeuvre,
+    MateriauxFinFinitionSecondOeuvre
 )
 
 
@@ -62,9 +66,6 @@ class Command(BaseCommand):
                     descriptif=pers.descriptif,
                 )
                 user.save()
-
-
-
             # BATI
             sqlquery = """
                 SELECT * 
@@ -288,14 +289,99 @@ class Command(BaseCommand):
                     )
                     persp.save()
 
+                # STRUCTURES
+                structure_sql = """
+                    SELECT * 
+                    FROM patbati.structures 
+                    JOIN patbati.bib_conservation USING(codeconservation)
+                    JOIN patbati.bib_materiaux_ge USING(codematge)
+                    JOIN patbati.bib_meoeuvre USING(codemeo)
+                    JOIN patbati.bib_structure USING(codestructure)
+                        where indexbatiment = %s
+                    """
+                cursor.execute(structure_sql, [r.indexbatiment])
+                structures = namedtuplefetchall(cursor)
+                for struct in structures:
+                    structure = Structure(
+                        bati=bati,
+                        conservation=get_nomenclature(struct.conservation, "CONSERVATION"),
+                        materiaux_principal=get_nomenclature(struct.matge, "MAT_GE"),
+                        type=get_nomenclature(struct.structure, "STRUCT"),
+                        mise_en_oeuvre=get_nomenclature(struct.meoeuvre, "MEOEUVRE"),
+                        info_structure=struct.info_structure,
+                        est_remarquable=struct.structure_rem
+                    )
+                    structure.save()
+
+                    mat_fin_finition_sql = """
+                    SELECT *
+                    FROM patbati.rel_structures_matfins
+                    JOIN patbati.bib_finition USING(codefinition)
+                    JOIN patbati.bib_materiaux_fins USING(codematfins)
+                    WHERE indexstructure = %s
+                    """
+
+                    cursor.execute(mat_fin_finition_sql, [struct.indexstructure])
+                    mat_fins = namedtuplefetchall(cursor)
+                    for mat in mat_fins:
+                        mat_object = MateriauxFinFinitionStructure(
+                            structure=structure,
+                            materiaux_fin=get_nomenclature(mat.matfins, "MAT_FIN"),
+                            finition=get_nomenclature(mat.finition, "FIN")
+
+                        )
+                        mat_object.save()
+
+                # SECOND OEUVRE
+                sql_second_oeuvre = """
+                SELECT * 
+                FROM patbati.second_oeuvre
+                JOIN patbati.bib_conservation USING(codeconservation)
+                JOIN patbati.bib_so USING(codeso)
+                WHERE indexbatiment = %s
+                """
+                cursor.execute(sql_second_oeuvre, [r.indexbatiment])
+                seconds_oeuvre = namedtuplefetchall(cursor)
+                for sec in seconds_oeuvre:
+                    second_oeuvre = SecondOeuvre(
+                        bati=bati,
+                        type=get_nomenclature(sec.second_oeuvre, "SO"),
+                        conservation=get_nomenclature(sec.conservation, "CONSERVATION"),
+                        commentaire=sec.info_so,
+                        est_remarquable=sec.so_rem or False
+                    )
+                    second_oeuvre.save()
+
+                    mat_fin_finition_sec_sql = """
+                    SELECT *
+                    FROM patbati.rel_so_matfins
+                    JOIN patbati.bib_finition USING(codefinition)
+                    JOIN patbati.bib_materiaux_fins USING(codematfins)
+                    WHERE indexso = %s
+                    """
+
+                    cursor.execute(mat_fin_finition_sec_sql, [sec.indexso])
+                    mat_fins = namedtuplefetchall(cursor)
+                    for mat in mat_fins:
+                        mat_sec_object = MateriauxFinFinitionSecondOeuvre(
+                            second_oeuvre=second_oeuvre,
+                            materiaux_fin=get_nomenclature(mat.matfins, "MAT_FIN"),
+                            finition=get_nomenclature(mat.finition, "FIN")
+                        )
+                        mat_sec_object.save()
 
 
 
-# TODO : rel_matfins_finition, rel_matge_meo, rel_recommande, rel_remplace, rel_so_mat_fins, rel_structures_matfin
-# DONE : rel_protection
 
- 
+                
 
 
 
+
+# TODO :
+# rel_protection = ref_geo
+# rel_matfins_finition = relation entre nomenclature
+# rel_matge_meo = relation entre nomenclature
+# rel_recommande = relation entre nomenclature
+# rel_remplace = vide
 

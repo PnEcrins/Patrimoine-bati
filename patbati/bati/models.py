@@ -278,7 +278,37 @@ class Structure(models.Model):
     info_structure = models.TextField(null=True)
     est_remarquable = models.BooleanField(null=False, default=False, verbose_name="Structure remarquable")
 
-    
+    materiaux_fin = models.ManyToManyField(
+        Nomenclature, 
+        through="MateriauxFinFinitionStructure",
+        through_fields=["structure", "materiaux_fin"]
+    )
+
+class MateriauxFinFinitionStructure(models.Model):
+    structure = models.ForeignKey(
+        "Structure",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="finitions",
+    )
+    materiaux_fin = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'MAT_FIN'},
+        related_name="materiaux_fin_rel",
+        verbose_name="Materiaux fin"
+    )
+    finition = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'FIN'},
+        related_name="finition_mat_fin_rel",
+        verbose_name="Finition"
+    )
 
 class SecondOeuvre(models.Model):
     bati = models.ForeignKey(
@@ -292,7 +322,7 @@ class SecondOeuvre(models.Model):
         on_delete=models.CASCADE,
         blank=False,
         null=False,
-        limit_choices_to={'id_type__code': 'TYPE_SO'},
+        limit_choices_to={'id_type__code': 'SO'},
         related_name="structure_second_oeuvre",
         verbose_name="Type de second oeuvre"
     )
@@ -306,7 +336,37 @@ class SecondOeuvre(models.Model):
     )
     commentaire = models.TextField(null=True, verbose_name="Commentaire")
     est_remarquable = models.BooleanField(null=False, default=False, verbose_name="Remarquable")
+    materiaux_fin = models.ManyToManyField(
+        Nomenclature, 
+        through="MateriauxFinFinitionSecondOeuvre",
+        through_fields=["second_oeuvre", "materiaux_fin"]
+    )
 
+class MateriauxFinFinitionSecondOeuvre(models.Model):
+    second_oeuvre = models.ForeignKey(
+        "SecondOeuvre",
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="second_oeuvre",
+    )
+    materiaux_fin = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'MAT_FIN'},
+        related_name="materiaux_fin_rel_sec",
+        verbose_name="Materiaux fins"
+    )
+    finition = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'FIN'},
+        related_name="finition_mat_fin_rel_soc",
+        verbose_name="Finition"
+    )
 
 class Equipement(models.Model):
     bati = models.ForeignKey(
