@@ -68,11 +68,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "patbati.urls"
-
+print(BASE_DIR)
+from pathlib import Path
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [Path(BASE_DIR)/ "mapentitycommon/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

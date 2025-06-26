@@ -1,7 +1,7 @@
 import django
 from django.db import models
 from django.contrib.gis.db import models as gis_models
-from mapentity.models import MapEntityMixin
+from mapentity.models import MapEntityMixin, BaseMapEntityMixin
 from django.contrib.auth.models import User
 
 # Nomenclature models for ref_nomenclatures schema

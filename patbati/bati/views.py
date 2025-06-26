@@ -6,10 +6,12 @@ from mapentity.views.generic import (
     MapEntityDelete
 )
 from mapentity.views.api import MapEntityViewSet
-from patbati.bati.forms import EnquetesForm, DemandeTravauxFormSet, BatiForm
-from .models import Bati, Enquetes
+from mapentity.views.mixins import ModelViewMixin
+from patbati.bati.forms import EnquetesForm, DemandeTravauxFormSet, BatiForm, PerspectiveForm
+from .models import Bati, Enquetes, Perspective
 from .serializers import BatiSerializer, BatiGeojsonSerializer
 from patbati.mapentitycommon.forms import FormsetMixin
+from patbati.mapentitycommon.views import ChildFormViewMixin
 # Create your views here.
 
 
@@ -40,6 +42,7 @@ class BatiDetail(MapEntityDetail):
 #     formset_class = DemandeTravauxFormSet
 
 
+
 class BatiCreate(MapEntityCreate):
     model = Bati
     form_class = BatiForm
@@ -56,18 +59,23 @@ class BatiViewSet(MapEntityViewSet):
 
     queryset = Bati.objects.all()
 
-class EnquetesCreate(CreateView):
+class EnquetesCreate(ChildFormViewMixin, CreateView):
     model = Enquetes
+    parent_model = Bati
+    parent_related_name = "bati"
     form_class = EnquetesForm
-    template_name = "bati/enquetes_form.html"
+    add_label = "Nouvelle"
 
-    def dispatch(self, request, *args, **kwargs):
-        self.bati = Bati.objects.get(pk=kwargs['bati_pk'])
-        return super().dispatch(request, *args, **kwargs)
+class PerspectiveCreate(ChildFormViewMixin, CreateView):
+    model = Perspective
+    parent_model = Bati
+    form_class = PerspectiveForm
+    parent_related_name = "bati"
+    add_label = "Nouvel"
 
-    def form_valid(self, form):
-        form.instance.bati = self.bati
-        return super().form_valid(form)
 
-    def get_success_url(self):
-        return self.bati.get_detail_url()
+
+
+
+    
+    

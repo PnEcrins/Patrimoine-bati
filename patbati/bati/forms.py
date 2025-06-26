@@ -1,15 +1,32 @@
+import datetime
+
 from django import forms
 from django.forms.models import inlineformset_factory
 
+from mapentity.forms import MapEntityForm
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout
+from crispy_forms.layout import Submit
 
-from .models import Enquetes, Bati, DemandeTravaux
+from patbati.mapentitycommon.forms import ChildFormHelper
+from .models import Enquetes, Bati, DemandeTravaux, Perspective
 
-class EnquetesForm(forms.ModelForm):
+
+class EnquetesForm(ChildFormHelper):
+
     class Meta:
         model = Enquetes
         exclude = ['bati']
+
+class PerspectiveForm(ChildFormHelper):
+    class Meta:
+        model = Perspective
+        exclude = ['bati']
+
+    date = forms.DateField(
+        initial=datetime.date.today,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+
 
 class DemandeTravauxForm(forms.ModelForm):
     class Meta:
@@ -24,9 +41,6 @@ class DemandeTravauxForm(forms.ModelForm):
 
 DemandeTravauxFormSet = inlineformset_factory(Bati, DemandeTravaux, form=DemandeTravauxForm, extra=1)
 
-from mapentity.forms import MapEntityForm
-from django.forms import FloatField, ModelChoiceField
-from crispy_forms.layout import Div, Fieldset, Layout
 
 class BatiForm(MapEntityForm):
     class Meta():

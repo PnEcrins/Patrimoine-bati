@@ -86,7 +86,8 @@ mapentity_tags %} {% block attributes %}
 
    <div class="d-flex mb-2">
     <h4>Perspectives </h4>
-    <button class="btn btn-success ml-2" >+</button>
+    <a href="{% url 'bati:perspectives_add' pk=object.pk %}" class="btn btn-success ml-2" >+</a>
+          
 
    </div> 
     <table class="table table-striped">
@@ -146,7 +147,7 @@ mapentity_tags %} {% block attributes %}
           </tbody>
         </table>
         <a
-          href="{% url 'bati:enquetes_add' bati_pk=object.pk %}"
+          href="{% url 'bati:enquetes_add' pk=object.pk %}"
           class="btn btn-success mb-2"
         >
           Ajouter une enquête
