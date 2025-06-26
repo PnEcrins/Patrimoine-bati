@@ -31,7 +31,7 @@ mapentity_tags %} {% block attributes %}
             </tr>
             <tr>
               <th>Ancien numéro</th>
-              <td>{{ object.ancien_index }}</td>
+              <td>{{ object.ancien_index|default:"-" }}</td>
             </tr>
             <tr>
               <th>Valeur patrimoniale</th>
@@ -39,15 +39,15 @@ mapentity_tags %} {% block attributes %}
             </tr>
             <tr>
               <th>Patrimonialité</th>
-              <td>{{ object.patrimonialite }}</td>
+              <td>{{ object.patrimonialite|default:"-" }}</td>
             </tr>
             <tr>
               <th>Classe d'architecture</th>
-              <td>{{ object.classe }}</td>
+              <td>{{ object.classe|default:"-" }}</td>
             </tr>
             <tr>
               <th>Propriétaire</th>
-              <td>{{ object.proprietaire }}</td>
+              <td>{{ object.proprietaire|default:"-" }}</td>
             </tr>
             <tr>
               <th>Bâtiment en indivision</th>
@@ -55,7 +55,13 @@ mapentity_tags %} {% block attributes %}
             </tr>
             <tr>
               <th>Règlementation</th>
-              <td>{{ object.protection|default:"-" }}</td>
+              <td>
+                {% for reg in object.protection.all %}
+                {{ reg.label }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                Aucun règlement associé
+                {% endfor %}
+              </td>
             </tr>
             <tr>
               <th>Capacité</th>
@@ -185,23 +191,23 @@ mapentity_tags %} {% block attributes %}
           <tbody>
             <tr>
               <th>Secteur</th>
-              <td>{{ object.secteur }}</td>
+              <td>{{ object.secteur|default:"-" }}</td>
             </tr>
             <tr>
               <th>Lieu-dit</th>
-              <td>{{ object.lieu_dit }}</td>
+              <td>{{ object.lieu_dit|default:"-" }}</td>
             </tr>
             <tr>
               <th>Cadastre</th>
-              <td>{{ object.cadastre }}</td>
+              <td>{{ object.cadastre|default:"-" }}</td>
             </tr>
             <tr>
               <th>Coordonnée X</th>
-              <td>{{ object.x }}</td>
+              <td>{{ object.x|default:"-" }}</td>
             </tr>
             <tr>
               <th>Coordonnée Y</th>
-              <td>{{ object.y }}</td>
+              <td>{{ object.y|default:"-" }}</td>
             </tr>
             <tr>
               <th>Altitude</th>
@@ -240,23 +246,23 @@ mapentity_tags %} {% block attributes %}
           <tbody>
             <tr>
               <th>Implantation</th>
-              <td>{{ object.implantation }}</td>
+              <td>{{ object.implantation|default:"-" }}</td>
             </tr>
             <tr>
               <th>Faitage</th>
-              <td>{{ object.faitage }}</td>
+              <td>{{ object.faitage|default:"-" }}</td>
             </tr>
             <tr>
               <th>Situation géographique</th>
-              <td>{{ object.situation_geo }}</td>
+              <td>{{ object.situation_geo|default:"-" }}</td>
             </tr>
             <tr>
               <th>Exposition</th>
-              <td>{{ object.exposition }}</td>
+              <td>{{ object.exposition|default:"-" }}</td>
             </tr>
             <tr>
               <th>Pente</th>
-              <td>{{ object.pente }}</td>
+              <td>{{ object.pente|default:"-" }}</td>
             </tr>
           </tbody>
         </table>
@@ -312,7 +318,7 @@ mapentity_tags %} {% block attributes %}
             </tr>
             <tr>
               <th>Commentaire Masque</th>
-              <td>{{ object.commentaire_masque }}</td>
+              <td>{{ object.commentaire_masque|default:"-" }}</td>
             </tr>
             <tr>
               <th>Remarque générale</th>
@@ -355,9 +361,9 @@ mapentity_tags %} {% block attributes %}
           <tbody>
             {% for equipement in object.equipements.all %}
             <tr>
-              <td>{{ equipement.type }}</td>
-              <td>{{ equipement.conservation }}</td>
-              <td>{{ equipement.commentaire }}</td>
+              <td>{{ equipement.type|default:"-" }}</td>
+              <td>{{ equipement.conservation|default:"-" }}</td>
+              <td>{{ equipement.commentaire|default:"-" }}</td>
               <td>{{ equipement.est_remarquable|yesno:"Oui,Non" }}</td>
             </tr>
             {% empty %}
@@ -402,9 +408,9 @@ mapentity_tags %} {% block attributes %}
           <tbody>
             {% for element in object.elements_paysagers.all %}
             <tr>
-              <td>{{ element.type }}</td>
-              <td>{{ element.conservation }}</td>
-              <td>{{ element.commentaire }}</td>
+              <td>{{ element.type|default:"-" }}</td>
+              <td>{{ element.conservation|default:"-" }}</td>
+              <td>{{ element.commentaire|default:"-" }}</td>
               <td>{{ element.est_remarquable|yesno:"Oui,Non" }}</td>
             </tr>
             {% empty %}

@@ -121,6 +121,18 @@ class Command(BaseCommand):
                     [get_nomenclature(risque.risque, 'RISQUE') for risque in risques]
                 )
 
+                # get protection
+                protection_query = """
+                    SELECT * FROM patbati.rel_protection rel
+                    JOIN patbati.bib_protection bib USING(codeprotection)
+                    WHERE indexbatiment = %s
+                """
+                cursor.execute(protection_query,  [r.indexbatiment])
+                protections = namedtuplefetchall(cursor)
+                bati.protection.set(
+                    [get_nomenclature(protection.protection, 'PROT') for protection in protections]
+                )
+
                 # masques
                 masque_query = """
                     SELECT * FROM patbati.rel_masque rel
@@ -279,7 +291,8 @@ class Command(BaseCommand):
 
 
 
-# TODO : rel_matfins_finition, rel_matge_meo, rel_protection, rel_recommande, rel_remplace, rel_so_mat_fins, rel_structures_matfin
+# TODO : rel_matfins_finition, rel_matge_meo, rel_recommande, rel_remplace, rel_so_mat_fins, rel_structures_matfin
+# DONE : rel_protection
 
  
 
