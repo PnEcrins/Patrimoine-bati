@@ -1,0 +1,93 @@
+{% load static %}
+
+<div class="mb-3">
+  <h5>Demande de permis (ou absence de demande)</h5>
+  <div class="accordion" id="demandesAccordion">
+    <div class="table">
+      <table class="table table-bordered mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Demande de permis de construire</th>
+            <th>Date de la demande</th>
+            <th>Autorisation de permis de construire</th>
+            <th>Date du permis</th>
+            <th>N° du permis</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for demande in object.demandes_travaux.all %}
+          <tr data-toggle="collapse"
+              data-target="#collapse{{ forloop.counter }}"
+              aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-controls="collapse{{ forloop.counter }}"
+              class="accordion-toggle"
+              style="cursor:pointer;">
+            <td>
+              {% if demande.demande_dep %}
+                <span style="color:green;">&#10003;</span>
+              {% else %}
+                <span style="color:red;">&#10007;</span>
+              {% endif %}
+            </td>
+            <td>{{ demande.date_demande_permis|default:"" }}</td>
+            <td>
+              {% if demande.autorisation_p %}
+                <span style="color:green;">&#10003;</span>
+              {% else %}
+                <span style="color:red;">&#10007;</span>
+              {% endif %}
+            </td>
+            <td>{{ demande.date_permis|default:"" }}</td>
+            <td>{{ demande.num_permis|default:"" }}</td>
+          </tr>
+          <tr>
+            <td colspan="5" class="p-0 border-0">
+              <div id="collapse{{ forloop.counter }}"
+                   class="collapse {% if forloop.first %}show{% endif %}"
+                   data-parent="#demandesAccordion">
+                <div class="card card-body border-0">
+                  {% comment %} <h6>Travaux associés</h6> {% endcomment %}
+                  {% if demande.travaux.all %}
+                  <table class="table table-sm table-bordered mb-0">
+                    <thead>
+                      <tr>
+                        <th>Date des travaux</th>
+                        <th>Autorisation du parc</th>
+                        <th>Subvention accordée par le parc</th>
+                        <th>Nature des Travaux</th>
+                        <th>Nouvel usage</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for travaux in demande.travaux.all %}
+                      <tr>
+                        <td>{{ travaux.date }}</td>
+                        <td>{{ travaux.autorisation|yesno:"✔,✘" }}</td>
+                        <td>{{ travaux.subvention_pne|default:"-" }}</td>
+                        <td>{{ travaux.nature.label }}</td>
+                        <td>{{ travaux.usage.label }}</td>
+                      </tr>
+                      {% empty %}
+                      <tr>
+                        <td colspan="5" class="text-center">Aucun travaux pour cette demande</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  {% else %}
+                  <p class="text-muted mb-0">Aucun travaux pour cette demande.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center">Aucune demande</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
