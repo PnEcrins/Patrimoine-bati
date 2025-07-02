@@ -85,11 +85,8 @@ class Bati(MapEntityMixin, models.Model):
 
     # protection = zone coeur 
     # TODO a connecter au ref_geo
-    protection = models.ForeignKey(
+    protection = models.ManyToManyField(
         Nomenclature,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
         limit_choices_to={'id_type__code': 'PROT'},
         related_name='batiments_protection'
     )
