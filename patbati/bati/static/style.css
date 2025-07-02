@@ -1,0 +1,8 @@
+.chevron-icon {
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.collapsed .chevron-icon {
+    transform: rotate(-90deg);
+}

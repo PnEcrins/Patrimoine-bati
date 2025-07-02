@@ -1,0 +1,340 @@
+{% extends "mapentity/mapentity_detail.html" %}
+
+
+{% block before_attachments_extra_tab_nav %}
+<li class="nav-item">
+    <a id="tab-structure" class="nav-link" href="#travaux" 
+    data-toggle="tab"> 
+        <i class="bi bi-cone-striped"></i>
+    <span class="d-none d-sm-inline">Travaux</span></a>
+</li>
+<li class="nav-item">
+    <a id="tab-structure" class="nav-link" href="#structure" 
+    data-toggle="tab"> 
+        <i class="bi bi-door-open"></i>
+    <span class="d-none d-sm-inline">Gros et Second Oeuvre</span></a>
+</li>
+
+{% endblock %}
+
+{% block before_attachments_extra_tab_content %}
+<div id="travaux" class="tab-pane">
+    <div class="mb-3">
+    <h5>Demande de permis (ou absence de demande)</h5>
+        <div class="accordion" id="demandesAccordion">
+            <div>
+            <table class="table table-bordered table-hover table-striped mb-0">
+                <thead class="table-primary">
+                <tr>
+                    <th style="width: 20%;">Demande de permis de construire</th>
+                    <th style="width: 20%;">Date de la demande</th>
+                    <th style="width: 20%;">Autorisation de permis de construire</th>
+                    <th style="width: 20%;">Date du permis</th>
+                    <th style="width: 20%;">N° du permis</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for demande in object.demandes_travaux.all %}
+                <tr data-toggle="collapse"
+                    data-target="#collapse{{ forloop.counter }}"
+                    aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                    aria-controls="collapse{{ forloop.counter }}"
+                    class="accordion-toggle"
+                    style="">
+                    <td>
+                    {% if demande.demande_dep %}
+                        <span style="color:green;">&#10003;</span>
+                    {% else %}
+                        <span style="color:red;">&#10007;</span>
+                    {% endif %}
+                    </td>
+                    <td>{{ demande.date_demande_permis|default:"-" }}</td>
+                    <td>
+                    {% if demande.autorisation_p %}
+                        <span style="color:green;">&#10003;</span>
+                    {% else %}
+                        <span style="color:red;">&#10007;</span>
+                    {% endif %} 
+                    </td>
+                    <td>{{ demande.date_permis|default:"-" }}</td>
+                    <td>{{ demande.num_permis|default:"-    " }}</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="p-0 border-0">
+                    <div id="collapse{{ forloop.counter }}"
+                        class="collapse {% if forloop.first %}show{% endif %}"
+                        data-parent="#demandesAccordion">
+                        <div class="card card-body border-0">
+                        <h6>Travaux</h6>
+                        {% if demande.travaux.all %}
+                        <table class="table table-sm table-bordered mb-0">
+                            <thead class="table-info">
+                            <tr>
+                                <th style="width: 20%;">Date des travaux</th>
+                                <th style="width: 20%;">Autorisation du parc</th>
+                                <th style="width: 20%;">Subvention accordée par le parc</th>
+                                <th style="width: 20%;">Nature des Travaux</th>
+                                <th style="width: 20%;">Nouvel usage</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for travaux in demande.travaux.all %}
+                                <tr class="travaux-row" style="cursor:pointer;">
+                                    <td>{{ travaux.date }}</td>
+                                    <td>
+                                    {% if travaux.autorisation %}
+                                        <span style="color:green;">&#10003;</span>
+                                    {% else %}
+                                        <span style="color:red;">&#10007;</span>
+                                    {% endif %}
+                                    </td>
+                                    <td>{{ travaux.subvention_pne|default:"-" }}</td>
+                                    <td>{{ travaux.nature.label }}</td>
+                                    <td>{{ travaux.usage.label }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucun travaux pour cette demande</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p class="text-muted mb-0">Aucun travaux pour cette demande.</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucune demande</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="structure" class="tab-pane">
+    <div class="mb-3">
+        <h5>Liste des structures</h5>
+        <div class="accordion" id="structuresAccordion">
+            <table class="table table-bordered table-hover table-striped mb-0">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Structure</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for struct in object.structure.all %}
+                    <tr data-toggle="collapse"
+                        data-target="#collapseStruct{{ forloop.counter }}"
+                        aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                        aria-controls="collapseStruct{{ forloop.counter }}"
+                        class="accordion-toggle"
+                        style="cursor:pointer;">
+                        <td>
+                            {{ struct.type.label }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-0 border-0">
+                            <div id="collapseStruct{{ forloop.counter }}"
+                                 class="collapse {% if forloop.first %}show{% endif %}"
+                                 data-parent="#structuresAccordion">
+                                <div class="card card-body border-0">
+                                    <!-- Description Table -->
+                                    <table class="table table-sm table-bordered mb-2">
+                                        <thead class="table-info">
+                                            <tr>
+                                                <th colspan="2">Description de la structure</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>Structure</th>
+                                                <td>{{ struct.type.label }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Structure remarquable</th>
+                                                <td>
+                                                    {% if struct.est_remarquable %}
+                                                        <span style="color:green;">&#10003;</span>
+                                                    {% else %}
+                                                        <span style="color:red;">&#10007;</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Conservation</th>
+                                                <td>{{ struct.conservation.label }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Matériau principal</th>
+                                                <td>{{ struct.materiaux_principal.label }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Mise en oeuvre</th>
+                                                <td>{{ struct.mise_en_oeuvre.label }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Commentaire</th>
+                                                <td>{{ struct.info_structure|default:"-" }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- Matériaux Fins / Finitions Table -->
+                                    <table class="table table-sm table-bordered mb-0">
+                                        <thead class="table-info">
+                                            <tr>
+                                                <th>Matériau fin</th>
+                                                <th>Finition</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for mf in struct.finitions.all %}
+                                            <tr>
+                                                <td>{{ mf.materiaux_fin.label }}</td>
+                                                <td>{{ mf.finition.label }}</td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="2" class="text-center">Aucun matériau fin pour cette structure</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td class="text-center">Aucune structure</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mb-3">
+        <h5>Liste des éléments de second oeuvre</h5>
+        <div class="accordion" id="secondOeuvreAccordion">
+            <table class="table table-bordered table-hover table-striped mb-0">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Élément</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for so in object.second_oeuvre.all %}
+                    <tr data-toggle="collapse"
+                        data-target="#collapseSO{{ forloop.counter }}"
+                        aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                        aria-controls="collapseSO{{ forloop.counter }}"
+                        class="accordion-toggle"
+                        style="cursor:pointer;">
+                        <td>
+                            {{ so.type.label }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-0 border-0">
+                            <div id="collapseSO{{ forloop.counter }}"
+                                class="collapse {% if forloop.first %}show{% endif %}"
+                                data-parent="#secondOeuvreAccordion">
+                                <div class="card card-body border-0">
+                                    <!-- Description Table -->
+                                    <table class="table table-sm table-bordered mb-2">
+                                        <thead class="table-info">
+                                            <tr>
+                                                <th colspan="2">Description de l'élément</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>Catégorie</th>
+                                                <td>{{ so.type.label }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Élément</th>
+                                                <td>{{ so.type.label }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Remarquable</th>
+                                                <td>
+                                                    {% if so.est_remarquable %}
+                                                        <span style="color:green;">&#10003;</span>
+                                                    {% else %}
+                                                        <span style="color:red;">&#10007;</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Conservation</th>
+                                                <td>{{ so.conservation.label }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Commentaire</th>
+                                                <td>{{ so.commentaire|default:"-" }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- Matériaux Fins / Finitions Table -->
+                                    <table class="table table-sm table-bordered mb-0">
+                                        <thead class="table-info">
+                                            <tr>
+                                                <th>Matériau fin</th>
+                                                <th>Finition</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for mf in so.second_oeuvre.all %}
+                                            <tr>
+                                                <td>{{ mf.materiaux_fin.label }}</td>
+                                                <td>{{ mf.finition.label }}</td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="2" class="text-center">Aucun matériau fin pour cet élément</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td class="text-center">Aucun élément de second oeuvre</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extrabody %}
+    {{ block.super }}
+
+
+<style>
+    /* These style make tue grag width buggy ... */
+    .map-panel {
+        max-width: 70%;
+        min-width: 30%;
+        width: 30%!important;
+    }
+    .details-panel {
+        max-width: 70%;
+        min-width: 30%;
+        width: 70%!important;
+    }
+</style>
+{% endblock extrabody %}

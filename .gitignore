@@ -1,5 +1,5 @@
 settings_local.py
-
+venv/*
 *.pyc
 __pycache__
 /database.db
@@ -16,3 +16,6 @@ __pycache__
 /.coverage
 *.mo
 coverage.xml
+/patbati/local_settings.py
+*.sh
+.env

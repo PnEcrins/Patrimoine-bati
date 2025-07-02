@@ -12,15 +12,19 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+# load .env file for DB config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-l*!ia^zpm6go(*qjylfe&4@bt6#f*-cwm7-pw8+ir3@oh(9e8r"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -48,6 +52,7 @@ INSTALLED_APPS = [
     'leaflet',
     'patbati.mapentitycommon',
     'patbati.bati',
+    'authent',
 ]
 
 MIDDLEWARE = [
@@ -63,11 +68,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "patbati.urls"
-
+print(BASE_DIR)
+from pathlib import Path
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [Path(BASE_DIR)/ "mapentitycommon/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -133,12 +139,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': "patbati",
-        'USER':"geonatadmin",
-        'PASSWORD': "monpassachanger",
-        'HOST': "localhost",
-        'PORT': 5432,
-
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "5432"),
+        "OPTIONS": {
+            "options": "-c search_path=public,ref_nomenclatures",}
     }
 }
 
@@ -163,12 +170,42 @@ MAPENTITY_CONFIG = {}
 
 LEAFLET_CONFIG = {
     'SRID': 3857,
-    'TILES': [
-        ('OSM', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', '(c) OpenStreetMap Contributors'),
+    "TILES": [
+        (
+            "OpenTopoMap",
+            "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+            {
+                "attribution": 'map data: © <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | map style: © <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+                "maxNativeZoom": 17,
+                "maxZoom": 22,
+            },
+        ),
+        (
+            "OpenStreetMap",
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                "attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">Contributeurs d\'OpenStreetMap</a>',
+                "maxNativeZoom": 19,
+                "maxZoom": 22,
+            },
+        ),
         ('OSM N&B', 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', '(c) OpenStreetMap Contributors'),
     ],
     # 'SPATIAL_EXTENT': (1.3, 43.7, 1.5, 43.5),
 }
 
-from patbati import settings_local
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.BCryptPasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
+
+# ENV = os.getenv('ENV', 'prod')
+# # Load custom settings file
+# if ENV != "tests":
+#     with open("./patbati/local_settings.py") as f:
+#         exec(f.read())
