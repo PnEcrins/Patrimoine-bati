@@ -1,7 +1,5 @@
 {% extends "mapentity/mapentity_detail_attributes.html" %} 
 {% load i18n mapentity_tags %}
-{% extends "mapentity/mapentity_detail_attributes.html" %} 
-{% load i18n mapentity_tags %}
 {% block attributes %}
 
 <!-- Table renseignements (expanded by default) -->
@@ -12,78 +10,34 @@
          aria-expanded="true" aria-controls="collapseRenseignements" style="cursor:pointer; position: relative;">
       <span>Renseignements</span>
       <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
-    <div class="card-header text-center d-flex justify-content-between align-items-center" 
-         data-toggle="collapse" data-target="#collapseRenseignements"
-         aria-expanded="true" aria-controls="collapseRenseignements" style="cursor:pointer; position: relative;">
-      <span>Renseignements</span>
-      <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
     </div>
     <div id="collapseRenseignements" class="collapse show">
       <div class="card-body p-0">
         <table class="table table-striped table-bordered mb-0">
           <tbody>
-            <tr>
-              <th>Nom</th>
-              <td>{{ object.appelation|default:object }}</td>
-            </tr>
-            <tr>
-              <th>Nouveau numéro</th>
-              <td>{{ object.id|default:"-" }}</td>
-            </tr>
-            <tr>
-              <th>Ancien numéro</th>
-              <td>{{ object.ancien_index|default:"-" }}</td>
-            </tr>
-            <tr>
-              <th>Valeur patrimoniale</th>
-              <td>{{ object.notepatri }}</td>
-            </tr>
-            <tr>
-              <th>Patrimonialité</th>
-              <td>{{ object.patrimonialite|default:"-" }}</td>
-            </tr>
-            <tr>
-              <th>Classe d'architecture</th>
-              <td>{{ object.classe|default:"-" }}</td>
-            </tr>
-            <tr>
-              <th>Propriétaire</th>
-              <td>{{ object.proprietaire|default:"-" }}</td>
-            </tr>
-            <tr>
-              <th>Bâtiment en indivision</th>
-              <td>{{ object.indivision|yesno:"Oui,Non" }}</td>
-            </tr>
+            <tr><th>Nom</th><td>{{ object.appelation|default:object }}</td></tr>
+            <tr><th>Nouveau numéro</th><td>{{ object.id|default:"-" }}</td></tr>
+            <tr><th>Ancien numéro</th><td>{{ object.ancien_index|default:"-" }}</td></tr>
+            <tr><th>Valeur patrimoniale</th><td>{{ object.notepatri }}</td></tr>
+            <tr><th>Patrimonialité</th><td>{{ object.patrimonialite|default:"-" }}</td></tr>
+            <tr><th>Classe d'architecture</th><td>{{ object.classe|default:"-" }}</td></tr>
+            <tr><th>Propriétaire</th><td>{{ object.proprietaire|default:"-" }}</td></tr>
+            <tr><th>Bâtiment en indivision</th><td>{{ object.indivision|yesno:"Oui,Non" }}</td></tr>
             <tr>
               <th>Règlementation</th>
               <td>
                 {% for reg in object.protection.all %}
-                {{ reg.label }}{% if not forloop.last %}, {% endif %}
+                  {{ reg.label }}{% if not forloop.last %}, {% endif %}
                 {% empty %}
-                Aucun règlement associé
+                  Aucun règlement associé
                 {% endfor %}
               </td>
             </tr>
-            <tr>
-              <th>Capacité</th>
-              <td>{{ object.capacite|default:"-" }}</td>
-            </tr>
-            <tr>
-              <th>Date d'insertion</th>
-              <td>{{ object.date_insert }}</td>
-            </tr>
-            <tr>
-              <th>Date de mise à jour</th>
-              <td>{{ object.date_update }}</td>
-            </tr>
-            <tr>
-              <th>Bâtiment supprimé</th>
-              <td>{{ object.bat_suppr|yesno:"Oui,Non" }}</td>
-            </tr>
-            <tr>
-              <th>Etat général</th>
-              <td>{{ object.conservation }}</td>
-            </tr>
+            <tr><th>Capacité</th><td>{{ object.capacite|default:"-" }}</td></tr>
+            <tr><th>Date d'insertion</th><td>{{ object.date_insert }}</td></tr>
+            <tr><th>Date de mise à jour</th><td>{{ object.date_update }}</td></tr>
+            <tr><th>Bâtiment supprimé</th><td>{{ object.bat_suppr|yesno:"Oui,Non" }}</td></tr>
+            <tr><th>Etat général</th><td>{{ object.conservation }}</td></tr>
           </tbody>
         </table>
       </div>
@@ -91,37 +45,7 @@
   </div>
 </div>
 
-<!-- Perspective -->
-<div class="d-flex mb-2 align-items-center">
-  <h4 class="mb-0">Perspectives</h4>
-  <a href="{% url 'bati:perspectives_add' pk=object.pk %}" class="btn btn-success ml-2">+</a>
-</div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th style="width:40%;">Date</th>
-      <th style="width:40%;">Perspective</th>
-      <th style="width:20%;">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for pers in object.perspective_set.all %}
-    <tr>
-      <td>{{ pers.date }}</td>
-      <td>{{ pers.perspective.label }}</td>
-      <td>
-        <a href="{% url 'bati:perspectives_update' object.pk pers.pk %}" class="btn btn-primary">
-            <i class="bi bi-pencil-square"></i>
-        </a>
-        <a href="{% url 'bati:perspectives_delete' object.pk pers.pk %}" class="btn btn-danger">
-            <i class="bi bi-trash"></i>
-        </a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<!-- Perspective -->
+<!-- Perspectives -->
 <div class="d-flex mb-2 align-items-center">
   <h4 class="mb-0">Perspectives</h4>
   <a href="{% url 'bati:perspectives_add' pk=object.pk %}" class="btn btn-success ml-2">+</a>
@@ -173,43 +97,7 @@
       <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
       <td>{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
       <td>
-        <a href="{% url 'bati:enquetes_update' object.pk enquete.pk%}" class="btn btn-primary">
-          <i class="bi bi-pencil-square"></i>
-        </a>
-        <a href="{% url 'bati:enquetes_delete' object.pk enquete.pk %}" class="btn btn-danger">
-          <i class="bi bi-trash"></i>
-        </a>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="4" class="text-center">Aucune enquête associée</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<!-- Enquêtes -->
-<div class="d-flex mb-2 align-items-center">
-  <h4 class="mb-0">Enquêtes</h4>
-  <a href="{% url 'bati:enquetes_add' pk=object.pk %}" class="btn btn-success ml-2">+</a>
-</div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th style="width:26.6%;">Personne</th>
-      <th style="width:26.6%;">Date enquête</th>
-      <th style="width:26.6%;">Date rédaction</th>
-      <th style="width:20%;">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for enquete in object.enquetes.all %}
-    <tr>
-      <td>{{ enquete.personne }}</td>
-      <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
-      <td>{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
-      <td>
-        <a href="{% url 'bati:enquetes_update' object.pk enquete.pk%}" class="btn btn-primary">
+        <a href="{% url 'bati:enquetes_update' object.pk enquete.pk %}" class="btn btn-primary">
           <i class="bi bi-pencil-square"></i>
         </a>
         <a href="{% url 'bati:enquetes_delete' object.pk enquete.pk %}" class="btn btn-danger">
@@ -225,19 +113,14 @@
   </tbody>
 </table>
 
-<!-- Collapsible card for Géographie -->
 <!-- Collapsible card for Géographie -->
 <div class="content mb-3">
   <div class="card">
-    <div class="card-header text-center d-flex justify-content-between align-items-center"
     <div class="card-header text-center d-flex justify-content-between align-items-center"
         data-toggle="collapse"
         data-target="#collapseGeo"
         aria-expanded="false"
         aria-controls="collapseGeo"
-        style="cursor:pointer; position: relative;">
-      <span>Géographie</span>
-      <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
         style="cursor:pointer; position: relative;">
       <span>Géographie</span>
       <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
@@ -253,13 +136,6 @@
             <tr><th>Coordonnée Y</th><td>{{ object.y }}</td></tr>
             <tr><th>Altitude</th><td>{{ object.altitude|default:"-" }}</td></tr>
             <tr><th>Dénivelé</th><td>{{ object.denivelle|default:"-" }}</td></tr>
-            <tr><th>Secteur</th><td>{{ object.secteur }}</td></tr>
-            <tr><th>Lieu-dit</th><td>{{ object.lieu_dit }}</td></tr>
-            <tr><th>Cadastre</th><td>{{ object.cadastre }}</td></tr>
-            <tr><th>Coordonnée X</th><td>{{ object.x }}</td></tr>
-            <tr><th>Coordonnée Y</th><td>{{ object.y }}</td></tr>
-            <tr><th>Altitude</th><td>{{ object.altitude|default:"-" }}</td></tr>
-            <tr><th>Dénivelé</th><td>{{ object.denivelle|default:"-" }}</td></tr>
           </tbody>
         </table>
       </div>
@@ -268,18 +144,13 @@
 </div>
 
 <!-- Collapsible card for Situation -->
-<!-- Collapsible card for Situation -->
 <div class="content mb-3">
   <div class="card">
-    <div class="card-header text-center d-flex justify-content-between align-items-center"
     <div class="card-header text-center d-flex justify-content-between align-items-center"
         data-toggle="collapse"
         data-target="#collapseSituation"
         aria-expanded="false"
         aria-controls="collapseSituation"
-        style="cursor:pointer; position: relative;">
-      <span>Situation</span>
-      <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
         style="cursor:pointer; position: relative;">
       <span>Situation</span>
       <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
@@ -293,11 +164,6 @@
             <tr><th>Situation géographique</th><td>{{ object.situation_geo }}</td></tr>
             <tr><th>Exposition</th><td>{{ object.exposition }}</td></tr>
             <tr><th>Pente</th><td>{{ object.pente }}</td></tr>
-            <tr><th>Implantation</th><td>{{ object.implantation }}</td></tr>
-            <tr><th>Faitage</th><td>{{ object.faitage }}</td></tr>
-            <tr><th>Situation géographique</th><td>{{ object.situation_geo }}</td></tr>
-            <tr><th>Exposition</th><td>{{ object.exposition }}</td></tr>
-            <tr><th>Pente</th><td>{{ object.pente }}</td></tr>
           </tbody>
         </table>
       </div>
@@ -306,18 +172,13 @@
 </div>
 
 <!-- Collapsible card for Contexte naturel -->
-<!-- Collapsible card for Contexte naturel -->
 <div class="content mb-3">
   <div class="card">
-    <div class="card-header text-center d-flex justify-content-between align-items-center"
     <div class="card-header text-center d-flex justify-content-between align-items-center"
         data-toggle="collapse"
         data-target="#collapseNaturel"
         aria-expanded="false"
         aria-controls="collapseNaturel"
-        style="cursor:pointer; position: relative;">
-      <span>Contexte naturel</span>
-      <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
         style="cursor:pointer; position: relative;">
       <span>Contexte naturel</span>
       <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
@@ -334,7 +195,6 @@
                   {% empty %}
                   Aucun risque naturel
                   {% endfor %}
-                </ul>
               </td>
             </tr>
             <tr>
@@ -367,18 +227,13 @@
 </div>
 
 <!-- Collapsible card for Equipements -->
-<!-- Collapsible card for Equipements -->
 <div class="content mb-3">
   <div class="card">
-    <div class="card-header text-center d-flex justify-content-between align-items-center"
     <div class="card-header text-center d-flex justify-content-between align-items-center"
         data-toggle="collapse"
         data-target="#collapseEquipements"
         aria-expanded="false"
         aria-controls="collapseEquipements"
-        style="cursor:pointer; position: relative;">
-      <span>Equipements</span>
-      <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
         style="cursor:pointer; position: relative;">
       <span>Equipements</span>
       <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
@@ -415,18 +270,13 @@
 </div>
 
 <!-- Collapsible card for Elements Paysager -->
-<!-- Collapsible card for Elements Paysager -->
 <div class="content mb-3">
   <div class="card">
-    <div class="card-header text-center d-flex justify-content-between align-items-center"
     <div class="card-header text-center d-flex justify-content-between align-items-center"
         data-toggle="collapse"
         data-target="#collapseElementsPaysager"
         aria-expanded="false"
         aria-controls="collapseElementsPaysager"
-        style="cursor:pointer; position: relative;">
-      <span>Elements Paysager</span>
-      <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
         style="cursor:pointer; position: relative;">
       <span>Elements Paysager</span>
       <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
@@ -453,7 +303,6 @@
             {% empty %}
             <tr>
               <td colspan="4" class="text-center">Aucun élément paysager associé</td>
-              <td colspan="4" class="text-center">Aucun élément paysager associé</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -465,20 +314,7 @@
 
 {{ block.super }} 
 {% endblock attributes %}
-{{ block.super }} 
-{% endblock attributes %}
 
-{% block extrabody %}
-{{ block.super }}
-<style>
-  .card-header[data-toggle="collapse"] { cursor: pointer; }
-  .chevron-icon { transition: transform 0.2s; }
-  .collapse.show ~ .card-header .chevron-icon,
-  .card-header[aria-expanded="true"] .chevron-icon {
-    transform: rotate(180deg);
-  }
-</style>
-{% endblock extrabody %}
 {% block extrabody %}
 {{ block.super }}
 <style>
