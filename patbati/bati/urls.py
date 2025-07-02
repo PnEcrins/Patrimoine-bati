@@ -1,7 +1,7 @@
 from patbati.bati import models
 from mapentity.registry import registry
 from django.urls import path
-from patbati.bati.views import DemandeTravauxCreate, DemandeTravauxDelete, DemandeTravauxUpdate, EnquetesCreate, EnquetesUpdate, EnquetesDelete, PerspectiveCreate, PerspectiveDelete, PerspectiveUpdate, TravauxCreate, TravauxDelete, TravauxUpdate
+from patbati.bati.views import DemandeTravauxCreate, DemandeTravauxDelete, DemandeTravauxUpdate, EnquetesCreate, EnquetesUpdate, EnquetesDelete, PerspectiveCreate, PerspectiveDelete, PerspectiveUpdate, SecondOeuvreCreate, SecondOeuvreDelete, SecondOeuvreUpdate, StructureCreate, StructureDelete, StructureUpdate, TravauxCreate, TravauxDelete, TravauxUpdate
 
 app_name = "bati"
 
@@ -19,7 +19,16 @@ urlpatterns += [
     path('bati/<int:pk>/demande_travaux/<int:demande_pk>/update/', DemandeTravauxUpdate.as_view(), name='demande_travaux_update'),
     path('bati/<int:pk>/demande_travaux/<int:demande_pk>/delete/', DemandeTravauxDelete.as_view(), name='demande_travaux_delete'),
     
-    path('bati/<int:pk>/travaux/add/', TravauxCreate.as_view(), name='travaux_add'),
+    path('bati/<int:pk>/demande_travaux/<int:demande_pk>/travaux/add/', TravauxCreate.as_view(), name='travaux_add'),
     path('bati/<int:pk>/travaux/<int:travaux_pk>/update/', TravauxUpdate.as_view(), name='travaux_update'),
     path('bati/<int:pk>/travaux/<int:travaux_pk>/delete/', TravauxDelete.as_view(), name='travaux_delete'),
+
+    path('bati/<int:pk>/structure/add/', StructureCreate.as_view(), name='structure_add'),
+    path('bati/<int:pk>/structure/<int:structure_pk>/update/', StructureUpdate.as_view(), name='structure_update'),
+    path('bati/<int:pk>/structure/<int:structure_pk>/delete/', StructureDelete.as_view(), name='structure_delete'),
+
+    path('bati/<int:pk>/second/add/', SecondOeuvreCreate.as_view(), name='second_add'),
+    path('bati/<int:pk>/second/<int:second_pk>/update/', SecondOeuvreUpdate.as_view(), name='second_update'),
+    path('bati/<int:pk>/second/<int:second_pk>/delete/', SecondOeuvreDelete.as_view(), name='second_delete'),
+
 ]

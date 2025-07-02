@@ -8,7 +8,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 from patbati.mapentitycommon.forms import ChildFormHelper
-from .models import Enquetes, Bati, DemandeTravaux, Perspective, Travaux
+from .models import Enquetes, Bati, DemandeTravaux, MateriauxFinFinitionSecondOeuvre, MateriauxFinFinitionStructure, Perspective, SecondOeuvre, Structure, Travaux
 
 
 class EnquetesForm(ChildFormHelper):
@@ -81,3 +81,25 @@ class BatiForm(MapEntityForm):
     #         Fieldset("DemandeTravaux")
     #     )
     # ]
+
+class StructureForm(forms.ModelForm):
+    class Meta:
+        model = Structure
+        fields = ['type', 'est_remarquable', 'conservation', 'materiaux_principal', 'mise_en_oeuvre', 'info_structure']
+
+StructureFinitionFormSet = inlineformset_factory(
+    Structure, MateriauxFinFinitionStructure,
+    fields=['materiaux_fin', 'finition'],
+    extra=1, can_delete=True
+)
+
+class SecondOeuvreForm(forms.ModelForm):
+    class Meta:
+        model = SecondOeuvre
+        fields = ['type', 'est_remarquable', 'conservation', 'commentaire']
+
+SecondOeuvreFinitionFormSet = inlineformset_factory(
+    SecondOeuvre, MateriauxFinFinitionSecondOeuvre,
+    fields=['materiaux_fin', 'finition'],
+    extra=1, can_delete=True
+)

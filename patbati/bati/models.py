@@ -158,6 +158,10 @@ class Bati(MapEntityMixin, models.Model):
     def secteur_label(self):
         return self.secteur.label if self.secteur else "" 
 
+    def get_detail_url(self):
+        from django.urls import reverse
+        return reverse('bati:bati_detail', kwargs={'pk': self.pk})
+
     def __str__(self):
         return self.appelation if self.appelation else f"Bâtiment {self.id}"
 
@@ -188,6 +192,9 @@ class Enquetes(models.Model):
         # Return the detail page of the related Bati
         return self.bati.get_detail_url()
 
+    def __str__(self):
+        return f"Enquête {self.idenquete} pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
+
 class DemandeTravaux(models.Model):
     bati = models.ForeignKey(
         "Bati",
@@ -200,6 +207,9 @@ class DemandeTravaux(models.Model):
     date_permis = models.DateField(null=True)
     date_demande_permis = models.DateField(null=True)
     num_permis = models.CharField()
+
+    def __str__(self):
+        return f"Demande de travaux pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
 
 class Travaux(models.Model):
     date = models.DateField(
@@ -231,6 +241,9 @@ class Travaux(models.Model):
     )
     autorisation = models.BooleanField(null=True)
     subvention_pne = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Travaux du {self.date} pour {self.demande.bati.appelation if self.demande.bati else 'Bâtiment inconnu'}"
 
 class Structure(models.Model):
     bati = models.ForeignKey(
@@ -283,6 +296,9 @@ class Structure(models.Model):
         through="MateriauxFinFinitionStructure",
         through_fields=["structure", "materiaux_fin"]
     )
+
+    def __str__(self):
+        return f"Structure de {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
 
 class MateriauxFinFinitionStructure(models.Model):
     structure = models.ForeignKey(
