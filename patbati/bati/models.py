@@ -363,11 +363,10 @@ class SecondOeuvre(models.Model):
         through_fields=["second_oeuvre", "materiaux_fin"]
     )
 
-    def get_detail_url(self):
-        return self.bati.get_detail_url()
 
     def __str__(self):
         return f"Structure de {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
+
 
 class MateriauxFinFinitionSecondOeuvre(models.Model):
     second_oeuvre = models.ForeignKey(

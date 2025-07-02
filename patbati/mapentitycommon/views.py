@@ -21,7 +21,7 @@ class ChildFormViewMixin:
         return self.parent_model
     
     def dispatch(self, request, *args, **kwargs):
-        self.parent_object = self.parent_model.objects.get(pk=kwargs['pk'])
+        self.parent_object = self.parent_model.objects.get(pk=kwargs['parent_pk'])
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -41,6 +41,20 @@ class ChildFormViewMixin:
     def form_valid(self, form):
         setattr(form.instance, self.parent_related_name, self.parent_object)
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.parent_object.get_detail_url()
+    
+class ChildDeleteViewMixin:
+    parent_model = None
+
+
+    def get_template_names(self):
+        return super().get_template_names() + ['mapentity/mapentity_confirm_delete.html']
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.parent_object = self.parent_model.objects.get(pk=kwargs['parent_pk'])
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return self.parent_object.get_detail_url()
