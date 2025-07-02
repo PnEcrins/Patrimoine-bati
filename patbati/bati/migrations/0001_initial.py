@@ -269,6 +269,7 @@ class Migration(migrations.Migration):
                 ('date', models.DateField(db_comment="Ce champs est non null depuis la v2, remplie avec 1800-01-01 quand l'info était absente")),
                 ('autorisation', models.BooleanField(null=True)),
                 ('subvention_pne', models.IntegerField(blank=True, null=True)),
+                ('subvention_pne', models.IntegerField(blank=True, null=True)),
                 ('demande', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='travaux', to='bati.demandetravaux')),
                 ('nature', models.ForeignKey(limit_choices_to={'id_type__code': 'NATURE_TRAVAUX'}, on_delete=django.db.models.deletion.CASCADE, related_name='nature_travaux', to='bati.nomenclature')),
                 ('usage', models.ForeignKey(limit_choices_to={'id_type__code': 'USAGE_TRAVAUX'}, on_delete=django.db.models.deletion.CASCADE, related_name='usage_travaux', to='bati.nomenclature')),
