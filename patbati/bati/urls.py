@@ -1,7 +1,7 @@
 from patbati.bati import models
 from mapentity.registry import registry
 from django.urls import path
-from patbati.bati.views import DemandeTravauxCreate, DemandeTravauxDelete, DemandeTravauxUpdate, EnquetesCreate, EnquetesUpdate, EnquetesDelete, PerspectiveCreate, PerspectiveDelete, PerspectiveUpdate, SecondOeuvreCreate, SecondOeuvreDelete, SecondOeuvreUpdate, StructureCreate, StructureDelete, StructureUpdate, TravauxCreate, TravauxDelete, TravauxUpdate
+from patbati.bati.views import DemandeTravauxCreate, DemandeTravauxDelete, DemandeTravauxUpdate, EnquetesCreate, EnquetesUpdate, EnquetesDelete, PerspectiveCreate, PerspectiveDelete, PerspectiveUpdate, SecondOeuvreCreate, SecondOeuvreDelete, SecondOeuvreFinitionCreate, SecondOeuvreFinitionDelete, SecondOeuvreFinitionUpdate, SecondOeuvreUpdate, StructureCreate, StructureDelete, StructureFinitionCreate, StructureFinitionDelete, StructureFinitionUpdate, StructureUpdate, TravauxCreate, TravauxDelete, TravauxUpdate
 
 app_name = "bati"
 
@@ -31,4 +31,11 @@ urlpatterns += [
     path('bati/<int:pk>/second/<int:second_pk>/update/', SecondOeuvreUpdate.as_view(), name='second_update'),
     path('bati/<int:pk>/second/<int:second_pk>/delete/', SecondOeuvreDelete.as_view(), name='second_delete'),
 
+    path('bati/<int:pk>/structure/<int:structure_pk>/finition/add/', StructureFinitionCreate.as_view(), name='structure_finition_add'),
+    path('bati/<int:pk>/structure/<int:structure_pk>/finition/<int:struct_finition_pk>/update/', StructureFinitionUpdate.as_view(), name='structure_finition_update'),
+    path('bati/<int:pk>/structure/<int:structure_pk>/finition/<int:struct_finition_pk>/delete/', StructureFinitionDelete.as_view(), name='structure_finition_delete'),
+
+    path('bati/<int:pk>/second_oeuvre/<int:second_pk>/finition/add/', SecondOeuvreFinitionCreate.as_view(), name='second_finition_add'),
+    path('bati/<int:pk>/second_oeuvre/<int:second_pk>/finition/<int:so_finition_pk>/update/', SecondOeuvreFinitionUpdate.as_view(), name='second_finition_update'),
+    path('bati/<int:pk>/second_oeuvre/<int:second_pk>/finition/<int:so_finition_pk>/delete/', SecondOeuvreFinitionDelete.as_view(), name='second_finition_delete'),
 ]

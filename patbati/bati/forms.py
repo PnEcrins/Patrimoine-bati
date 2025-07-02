@@ -82,24 +82,22 @@ class BatiForm(MapEntityForm):
     #     )
     # ]
 
-class StructureForm(forms.ModelForm):
+class StructureForm(ChildFormHelper):
     class Meta:
         model = Structure
         fields = ['type', 'est_remarquable', 'conservation', 'materiaux_principal', 'mise_en_oeuvre', 'info_structure']
 
-StructureFinitionFormSet = inlineformset_factory(
-    Structure, MateriauxFinFinitionStructure,
-    fields=['materiaux_fin', 'finition'],
-    extra=1, can_delete=True
-)
-
-class SecondOeuvreForm(forms.ModelForm):
+class SecondOeuvreForm(ChildFormHelper):
     class Meta:
         model = SecondOeuvre
         fields = ['type', 'est_remarquable', 'conservation', 'commentaire']
 
-SecondOeuvreFinitionFormSet = inlineformset_factory(
-    SecondOeuvre, MateriauxFinFinitionSecondOeuvre,
-    fields=['materiaux_fin', 'finition'],
-    extra=1, can_delete=True
-)
+class MateriauFinFinitionStructureForm(ChildFormHelper):
+    class Meta:
+        model = MateriauxFinFinitionStructure
+        fields = ['materiaux_fin', 'finition']
+
+class MateriauFinFinitionSecondOeuvreForm(ChildFormHelper):
+    class Meta:
+        model = MateriauxFinFinitionSecondOeuvre
+        fields = ['materiaux_fin', 'finition']

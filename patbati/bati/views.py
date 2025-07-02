@@ -9,8 +9,8 @@ from mapentity.views.generic import (
 )
 from mapentity.views.api import MapEntityViewSet
 from mapentity.views.mixins import ModelViewMixin
-from patbati.bati.forms import DemandeTravauxForm, EnquetesForm, BatiForm, PerspectiveForm, SecondOeuvreFinitionFormSet, SecondOeuvreForm, StructureFinitionFormSet, StructureForm, TravauxForm
-from .models import Bati, DemandeTravaux, Enquetes, Perspective, SecondOeuvre, Structure, Travaux
+from patbati.bati.forms import DemandeTravauxForm, EnquetesForm, BatiForm, MateriauFinFinitionSecondOeuvreForm, PerspectiveForm, SecondOeuvreForm, MateriauFinFinitionStructureForm, StructureForm, TravauxForm
+from .models import Bati, DemandeTravaux, Enquetes, MateriauxFinFinitionSecondOeuvre, MateriauxFinFinitionStructure, Perspective, SecondOeuvre, Structure, Travaux
 from .serializers import BatiSerializer, BatiGeojsonSerializer
 from patbati.mapentitycommon.forms import FormsetMixin
 from patbati.mapentitycommon.views import ChildFormViewMixin
@@ -187,31 +187,6 @@ class StructureCreate(ChildFormViewMixin, CreateView):
     add_label = "Nouvelle structure"
     form_class = StructureForm
 
-    def dispatch(self, request, *args, **kwargs):
-        self.bati = get_object_or_404(Bati, pk=kwargs['pk'])
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.POST:
-            context['finitions_formset'] = StructureFinitionFormSet(self.request.POST, instance=self.object)
-        else:
-            context['finitions_formset'] = StructureFinitionFormSet(instance=self.object)
-        context['bati'] = self.bati
-        return context
-
-    def form_valid(self, form):
-        form.instance.bati = self.bati
-        context = self.get_context_data()
-        formset = context['finitions_formset']
-        if formset.is_valid():
-            self.object = form.save()
-            formset.instance = self.object
-            formset.save()
-            return redirect(self.bati.get_detail_url())
-        else:
-            return self.render_to_response(self.get_context_data(form=form))
-
 class StructureUpdate(ChildFormViewMixin, UpdateView):
     model = Structure
     parent_model = Bati
@@ -219,30 +194,6 @@ class StructureUpdate(ChildFormViewMixin, UpdateView):
     add_label = "Modifier la structure"
     form_class = StructureForm
     pk_url_kwarg = 'structure_pk'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.bati = get_object_or_404(Bati, pk=kwargs['pk'])
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.POST:
-            context['finitions_formset'] = StructureFinitionFormSet(self.request.POST, instance=self.object)
-        else:
-            context['finitions_formset'] = StructureFinitionFormSet(instance=self.object)
-        context['bati'] = self.bati
-        return context
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['finitions_formset']
-        if formset.is_valid():
-            self.object = form.save()
-            formset.instance = self.object
-            formset.save()
-            return redirect(self.bati.get_detail_url())
-        else:
-            return self.render_to_response(self.get_context_data(form=form))
 
 class StructureDelete(ChildFormViewMixin, DeleteView):
     model = Structure
@@ -262,31 +213,6 @@ class SecondOeuvreCreate(ChildFormViewMixin, CreateView):
     add_label = "Nouvelle second oeuvre"
     form_class = SecondOeuvreForm
 
-    def dispatch(self, request, *args, **kwargs):
-        self.bati = get_object_or_404(Bati, pk=kwargs['pk'])
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.POST:
-            context['finitions_formset'] = SecondOeuvreFinitionFormSet(self.request.POST, instance=self.object)
-        else:
-            context['finitions_formset'] = SecondOeuvreFinitionFormSet(instance=self.object)
-        context['bati'] = self.bati
-        return context
-
-    def form_valid(self, form):
-        form.instance.bati = self.bati
-        context = self.get_context_data()
-        formset = context['finitions_formset']
-        if formset.is_valid():
-            self.object = form.save()
-            formset.instance = self.object
-            formset.save()
-            return redirect(self.bati.get_detail_url())
-        else:
-            return self.render_to_response(self.get_context_data(form=form))
-
 class SecondOeuvreUpdate(ChildFormViewMixin, UpdateView):
     model = SecondOeuvre
     parent_model = Bati
@@ -294,30 +220,6 @@ class SecondOeuvreUpdate(ChildFormViewMixin, UpdateView):
     add_label = "Modifier la second oeuvre"
     form_class = SecondOeuvreForm
     pk_url_kwarg = 'second_pk'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.bati = get_object_or_404(Bati, pk=kwargs['pk'])
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.POST:
-            context['finitions_formset'] = SecondOeuvreFinitionFormSet(self.request.POST, instance=self.object)
-        else:
-            context['finitions_formset'] = SecondOeuvreFinitionFormSet(instance=self.object)
-        context['bati'] = self.bati
-        return context
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['finitions_formset']
-        if formset.is_valid():
-            self.object = form.save()
-            formset.instance = self.object
-            formset.save()
-            return redirect(self.bati.get_detail_url())
-        else:
-            return self.render_to_response(self.get_context_data(form=form))
 
 class SecondOeuvreDelete(ChildFormViewMixin, DeleteView):
     model = SecondOeuvre
@@ -330,4 +232,114 @@ class SecondOeuvreDelete(ChildFormViewMixin, DeleteView):
     def get_success_url(self):
         return self.object.bati.get_detail_url()
 
+class StructureFinitionCreate(ChildFormViewMixin, CreateView):
+    model = MateriauxFinFinitionStructure
+    parent_model = Structure
+    parent_related_name = "structure"
+    add_label = "Nouvelle finition de structure"
+    form_class = MateriauFinFinitionStructureForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.structure = Structure.objects.get(pk=kwargs['structure_pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.structure = self.structure
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.structure.get_detail_url()
+
+class StructureFinitionUpdate(ChildFormViewMixin, UpdateView):
+    model = MateriauxFinFinitionStructure
+    parent_model = Structure
+    parent_related_name = "structure"
+    add_label = "Modifier la finition de structure"
+    form_class = MateriauFinFinitionStructureForm
+    pk_url_kwarg = 'struct_finition_pk'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.structure = Structure.objects.get(pk=kwargs['structure_pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.structure.get_detail_url()
     
+    def form_valid(self, form):
+        form.instance.structure = self.structure  
+        return super().form_valid(form)
+
+class StructureFinitionDelete(DeleteView):
+    model = MateriauxFinFinitionStructure
+    parent_model = Structure
+    parent_related_name = "structure"
+    add_label = "Supprimer la finition de structure"
+    template_name = "bati/structure_finition_confirm_delete.html"
+    pk_url_kwarg = 'struct_finition_pk'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.structure = Structure.objects.get(pk=kwargs['structure_pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.structure.get_detail_url()
+
+    def form_valid(self, form):
+        form.instance.structure = self.structure  
+        return super().form_valid(form)
+
+class SecondOeuvreFinitionCreate(ChildFormViewMixin, CreateView):
+    model = MateriauxFinFinitionSecondOeuvre
+    parent_model = SecondOeuvre
+    parent_related_name = "second_oeuvre"
+    add_label = "Nouvelle finition de second oeuvre"
+    form_class = MateriauFinFinitionSecondOeuvreForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.second_oeuvre = SecondOeuvre.objects.get(pk=kwargs['second_pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.second_oeuvre = self.second_oeuvre
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.second_oeuvre.get_detail_url()
+
+class SecondOeuvreFinitionUpdate(ChildFormViewMixin, UpdateView):
+    model = MateriauxFinFinitionSecondOeuvre
+    parent_model = SecondOeuvre
+    parent_related_name = "second_oeuvre"
+    add_label = "Modifier la finition de second oeuvre"
+    form_class = MateriauFinFinitionSecondOeuvreForm
+    pk_url_kwarg = 'so_finition_pk'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.second_oeuvre = SecondOeuvre.objects.get(pk=kwargs['second_pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.second_oeuvre.get_detail_url()
+    
+    def form_valid(self, form):
+        form.instance.second_oeuvre = self.second_oeuvre  
+        return super().form_valid(form)
+
+class SecondOeuvreFinitionDelete(DeleteView):
+    model = MateriauxFinFinitionSecondOeuvre
+    parent_model = SecondOeuvre
+    parent_related_name = "second_oeuvre"
+    add_label = "Supprimer la finition de second oeuvre"
+    template_name = "bati/second_finition_confirm_delete.html"
+    pk_url_kwarg = 'so_finition_pk'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.second_oeuvre = SecondOeuvre.objects.get(pk=kwargs['second_pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.second_oeuvre.get_detail_url()
+
+    def form_valid(self, form):
+        form.instance.second_oeuvre = self.second_oeuvre  
+        return super().form_valid(form)

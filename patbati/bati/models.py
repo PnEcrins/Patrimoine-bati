@@ -189,7 +189,6 @@ class Enquetes(models.Model):
         return reverse('bati:bati_list')
 
     def get_detail_url(self):
-        # Return the detail page of the related Bati
         return self.bati.get_detail_url()
 
     def __str__(self):
@@ -297,6 +296,9 @@ class Structure(models.Model):
         through_fields=["structure", "materiaux_fin"]
     )
 
+    def get_detail_url(self):
+        return self.bati.get_detail_url()
+
     def __str__(self):
         return f"Structure de {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
 
@@ -325,6 +327,9 @@ class MateriauxFinFinitionStructure(models.Model):
         related_name="finition_mat_fin_rel",
         verbose_name="Finition"
     )
+
+    def get_detail_url(self):
+        return self.structure.get_detail_url()
 
 class SecondOeuvre(models.Model):
     bati = models.ForeignKey(
@@ -358,6 +363,12 @@ class SecondOeuvre(models.Model):
         through_fields=["second_oeuvre", "materiaux_fin"]
     )
 
+    def get_detail_url(self):
+        return self.bati.get_detail_url()
+
+    def __str__(self):
+        return f"Structure de {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
+
 class MateriauxFinFinitionSecondOeuvre(models.Model):
     second_oeuvre = models.ForeignKey(
         "SecondOeuvre",
@@ -383,6 +394,9 @@ class MateriauxFinFinitionSecondOeuvre(models.Model):
         related_name="finition_mat_fin_rel_soc",
         verbose_name="Finition"
     )
+    
+    def get_detail_url(self):
+        return self.second_oeuvre.get_detail_url()
 
 class Equipement(models.Model):
     bati = models.ForeignKey(
@@ -497,4 +511,48 @@ class Perspective(models.Model):
     bati = models.ForeignKey(
         "Bati",
         on_delete=models.CASCADE,
+    )
+
+class MateriauxFinFinition(models.Model):
+    """_summary_
+
+    rel_matfins_finition
+    """
+    materiaux_fin = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'MAT_FIN'},
+        related_name="materiaux_fin_finition"
+    )
+    finition = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'FIN'},
+        related_name="finition_materiaux_fin"
+    )
+
+class MateriauGeMiseEnOeuvre(models.Model):
+    """_summary_
+
+    rel_matge_meo
+    """
+    materiaux_ge = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'MAT_GE'},
+        related_name="materiaux_ge_mise_en_oeuvre"
+    )
+    mise_en_oeuvre = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        limit_choices_to={'id_type__code': 'MEOEUVRE'},
+        related_name="mise_en_oeuvre_materiaux_ge"
     )

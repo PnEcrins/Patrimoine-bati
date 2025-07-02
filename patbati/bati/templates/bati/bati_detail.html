@@ -3,6 +3,12 @@
 
 {% block before_attachments_extra_tab_nav %}
 <li class="nav-item">
+    <a id="tab-enq-pers" class="nav-link" href="#enq-pers" 
+    data-toggle="tab"> 
+        <i class="bi bi-search"></i>
+    <span class="d-none d-sm-inline">Perspectives et Enquetes</span></a>
+</li>
+<li class="nav-item">
     <a id="tab-travaux" class="nav-link" href="#travaux" 
     data-toggle="tab"> 
         <i class="bi bi-cone-striped"></i>
@@ -18,6 +24,77 @@
 {% endblock %}
 
 {% block before_attachments_extra_tab_content %}
+<div id="enq-pers" class="tab-pane">
+    <div class="mb-3">
+        <!-- Perspectives -->
+    <div class="d-flex mb-2 align-items-center">
+        <h4 class="mb-0">Perspectives</h4>
+        <a href="{% url 'bati:perspectives_add' pk=object.pk %}" class="btn btn-success ml-2">+</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th style="width:40%;">Date</th>
+            <th style="width:40%;">Perspective</th>
+            <th style="width:20%;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pers in object.perspective_set.all %}
+            <tr>
+            <td>{{ pers.date }}</td>
+            <td>{{ pers.perspective.label }}</td>
+            <td>
+                <a href="{% url 'bati:perspectives_update' object.pk pers.pk %}" class="btn btn-primary">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+                <a href="{% url 'bati:perspectives_delete' object.pk pers.pk %}" class="btn btn-danger">
+                    <i class="bi bi-trash"></i>
+                </a>
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Enquêtes -->
+    <div class="d-flex mb-2 align-items-center">
+        <h4 class="mb-0">Enquêtes</h4>
+        <a href="{% url 'bati:enquetes_add' pk=object.pk %}" class="btn btn-success ml-2">+</a>
+    </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                <th style="width:26.6%;">Personne</th>
+                <th style="width:26.6%;">Date enquête</th>
+                <th style="width:26.6%;">Date rédaction</th>
+                <th style="width:20%;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enquete in object.enquetes.all %}
+                <tr>
+                <td>{{ enquete.personne }}</td>
+                <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
+                <td>{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'bati:enquetes_update' object.pk enquete.pk %}" class="btn btn-primary">
+                    <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <a href="{% url 'bati:enquetes_delete' object.pk enquete.pk %}" class="btn btn-danger">
+                    <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+                </tr>
+                {% empty %}
+                <tr>
+                <td colspan="4" class="text-center">Aucune enquête associée</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 <div id="travaux" class="tab-pane">
     <div class="mb-3">
         <h5>Demande de permis (ou absence de demande)</h5>
@@ -132,6 +209,7 @@
 </div>
 <!-- Structures Section -->
 <div id="structure" class="tab-pane">
+    <!-- Structures Section -->
     <div class="mb-3">
         <h5>
             Liste des structures
@@ -211,6 +289,7 @@
                                 <tr>
                                     <th>Matériau fin</th>
                                     <th>Finition</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -218,12 +297,27 @@
                                 <tr>
                                     <td>{{ mf.materiaux_fin.label }}</td>
                                     <td>{{ mf.finition.label }}</td>
+                                    <td>
+                                        <a href="{% url 'bati:structure_finition_update' struct.pk bati.pk mf.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'bati:structure_finition_delete' struct.pk bati.pk mf.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="2" class="text-center">Aucun matériau fin pour cette structure</td>
+                                    <td colspan="3" class="text-center">Aucun matériau fin pour cette structure</td>
                                 </tr>
                                 {% endfor %}
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        <a href="{% url 'bati:structure_finition_add' struct.pk bati.pk  %}" class="btn btn-sm btn-success">
+                                            <i class="bi bi-plus"></i> Ajouter un matériau fin
+                                        </a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -307,19 +401,35 @@
                                 <tr>
                                     <th>Matériau fin</th>
                                     <th>Finition</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for mf in so.finitions.all %}
+                                {% for mf in so.second_oeuvre.all %}
                                 <tr>
                                     <td>{{ mf.materiaux_fin.label }}</td>
                                     <td>{{ mf.finition.label }}</td>
+                                    <td>
+                                        <a href="{% url 'bati:second_finition_update' so.pk so.bati.pk mf.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'bati:second_finition_delete' so.pk so.bati.pk mf.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="2" class="text-center">Aucun matériau fin pour cet élément</td>
+                                    <td colspan="3" class="text-center">Aucun matériau fin pour cet élément</td>
                                 </tr>
                                 {% endfor %}
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        <a href="{% url 'bati:second_finition_add' so.pk so.bati.pk %}" class="btn btn-sm btn-success">
+                                            <i class="bi bi-plus"></i> Ajouter un matériau fin
+                                        </a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
