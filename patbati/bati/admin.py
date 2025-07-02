@@ -1,5 +1,5 @@
 from django.contrib import admin
-from patbati.bati.models import Bati, Nomenclature, NomenclatureType
+from patbati.bati.models import Nomenclature, NomenclatureType
 from leaflet.admin import LeafletGeoAdmin
 
 @admin.register(Nomenclature)

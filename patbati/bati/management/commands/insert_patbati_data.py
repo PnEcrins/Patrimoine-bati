@@ -44,9 +44,11 @@ def namedtuplefetchall(cursor):
 
 def get_nomenclature(label, code_id_type):
     try:
+        if label and type(label) is str:
+            label = label.strip()
         return Nomenclature.objects.get(label=label, id_type__code=code_id_type)
     except Nomenclature.DoesNotExist as e:
-        print(f"Not found for {label}- type {code_id_type} ")
+        print(f"Not found for {label} - type {code_id_type} ")
 
 
 class Command(BaseCommand):
@@ -342,11 +344,12 @@ class Command(BaseCommand):
                 """
                 cursor.execute(sql_second_oeuvre, [r.indexbatiment])
                 seconds_oeuvre = namedtuplefetchall(cursor)
-                for sec in seconds_oeuvre:
+
+                for sec in seconds_oeuvre: 
                     second_oeuvre = SecondOeuvre(
                         bati=bati,
-                        type=get_nomenclature(sec.second_oeuvre, "SO"),
                         conservation=get_nomenclature(sec.conservation, "CONSERVATION"),
+                        type=get_nomenclature(sec.second_oeuvre, "SO"),
                         commentaire=sec.info_so,
                         est_remarquable=sec.so_rem or False
                     )
