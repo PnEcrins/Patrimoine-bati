@@ -98,7 +98,7 @@
 <div id="travaux" class="tab-pane">
     <div class="mb-3">
         <h5>Demande de permis (ou absence de demande)</h5>
-        <a href="{% url 'bati:demande_travaux_add' pk=object.pk %}" class="btn btn-success mb-3">
+        <a href="{% url 'bati:demande_travaux_add' parent_pk=object.pk %}" class="btn btn-success mb-3">
             Ajouter une Demande de permis
         </a>
         <!-- Header row for demandes -->
@@ -151,7 +151,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="collapse{{ forloop.counter }}" class="collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-parent="#demandesAccordion">
+                <div id="collapse{{ forloop.counter }}" class="ml-3 mb-2 mr-2 collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-parent="#demandesAccordion">
                     <div class="card-body p-0">
                         {% if demande.travaux.all %}
                         <table class="table table-sm table-bordered mb-0 text-center">
