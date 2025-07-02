@@ -230,7 +230,7 @@ class Travaux(models.Model):
 
     )
     autorisation = models.BooleanField(null=True)
-    subvention_pne = models.IntegerField(null=True)
+    subvention_pne = models.IntegerField(null=True, blank=True)
 
 class Structure(models.Model):
     bati = models.ForeignKey(
