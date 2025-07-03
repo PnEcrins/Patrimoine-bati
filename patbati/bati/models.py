@@ -192,7 +192,12 @@ class Enquetes(models.Model):
         return self.bati.get_detail_url()
 
     def __str__(self):
-        return f"Enquête {self.idenquete} pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
+        return (
+            f"Enquête {self.idenquete} de "
+            f"{self.personne.label if self.personne else 'Inconnu'} "
+            f"du {self.date_enquete.strftime('%Y-%m-%d') if self.date_enquete else 'Date inconnue'} "
+            f"pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
+        )
 
 class DemandeTravaux(models.Model):
     bati = models.ForeignKey(
@@ -208,7 +213,7 @@ class DemandeTravaux(models.Model):
     num_permis = models.CharField()
 
     def __str__(self):
-        return f"Demande de travaux pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
+        return f"Demande de travaux du {self.date_demande_permis} pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
 
 class Travaux(models.Model):
     date = models.DateField(
@@ -432,6 +437,9 @@ class Equipement(models.Model):
     commentaire = models.TextField(null=True, verbose_name="Commentaire")
     est_remarquable = models.BooleanField(null=False, default=False, verbose_name="Remarquable")
 
+    def __str__(self):
+        return f"Equipement de {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
+
 class ElementPaysager(models.Model):
     bati = models.ForeignKey(
         "Bati",
@@ -457,6 +465,9 @@ class ElementPaysager(models.Model):
     )
     commentaire = models.TextField(null=True, verbose_name="Commentaire")
     est_remarquable = models.BooleanField(null=False, default=False, verbose_name="Remarquable")
+
+    def __str__(self):
+        return f"Élément paysager de {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
 
 class AuteurPhoto(models.Model):
     nom = models.CharField(100)
@@ -489,6 +500,9 @@ class Illustration(models.Model):
     date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
     indexajaris = models.IntegerField(null=True, verbose_name="index photothèque")
 
+    def __str__(self):
+        return f"Illustration {self.id} pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
+
 class DocumentAttache(models.Model):
     bati = models.ForeignKey(
         "Bati",
@@ -499,6 +513,8 @@ class DocumentAttache(models.Model):
     fichier_src = models.FileField(null=False, verbose_name="document")
     date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
 
+    def __str__(self):
+        return f"Document attaché {self.id} pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
 
 class Perspective(models.Model):
     """_summary_

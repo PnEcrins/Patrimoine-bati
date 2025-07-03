@@ -10,20 +10,25 @@ from django.db.models.functions import Coalesce
 from django.db.models import Value, DateField
 from mapentity.views.api import MapEntityViewSet
 from mapentity.views.mixins import ModelViewMixin
+from patbati.bati.filters import BatiFilterSet
 from patbati.bati.forms import DemandeTravauxForm, EnquetesForm, BatiForm, MateriauFinFinitionSecondOeuvreForm, PerspectiveForm, SecondOeuvreForm, MateriauFinFinitionStructureForm, StructureForm, TravauxForm
 from .models import Bati, DemandeTravaux, Enquetes, MateriauxFinFinitionSecondOeuvre, MateriauxFinFinitionStructure, Perspective, SecondOeuvre, Structure, Travaux
 from .serializers import BatiSerializer, BatiGeojsonSerializer
 from patbati.mapentitycommon.forms import FormsetMixin
 from patbati.mapentitycommon.views import ChildFormViewMixin, ChildDeleteViewMixin
+from mapentity.views import MapEntityFilter
 # Create your views here.
 
 
 def home(request):
     return HttpResponse("YEP")
 
+class BatiFilter(MapEntityFilter):
+    model = Bati
+    filterset_class = BatiFilterSet
 
 class BatiList(MapEntityList):
-    model = Bati
+    queryset = Bati.objects.all()
     columns = [
         "id",
         "valide",
@@ -33,6 +38,14 @@ class BatiList(MapEntityList):
         "conservation",
         "date_update"
     ]
+    searchable_columns = [
+        "appelation",
+        "secteur__label",
+        "notepatri__label",
+        "conservation__label"
+    ]
+
+    filterform = BatiFilter
 
 class BatiDetail(MapEntityDetail):
     model = Bati
@@ -81,7 +94,9 @@ class BatiCreate(MapEntityCreate):
 
 
 class BatiFormat(MapEntityFormat, BatiList):
-    pass
+    filterset_class = BatiFilterSet
+    mandatory_columns = ["id", "appelation", "secteur", "notepatri", "conservation", "date_update"]
+    
 
 class BatiViewSet(MapEntityViewSet):
     model = Bati

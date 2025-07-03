@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'patbati.mapentitycommon',
     'patbati.bati',
     'authent',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
