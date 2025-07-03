@@ -328,6 +328,9 @@ class MateriauxFinFinitionStructure(models.Model):
         verbose_name="Finition"
     )
 
+    def __str__(self):
+        return f"Finition de structure pour {self.structure.bati.appelation if self.structure.bati else 'Bâtiment inconnu'}"
+
     def get_detail_url(self):
         return self.structure.get_detail_url()
 
@@ -363,6 +366,8 @@ class SecondOeuvre(models.Model):
         through_fields=["second_oeuvre", "materiaux_fin"]
     )
 
+    def get_detail_url(self):
+        return self.bati.get_detail_url()
 
     def __str__(self):
         return f"Structure de {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
@@ -396,6 +401,9 @@ class MateriauxFinFinitionSecondOeuvre(models.Model):
     
     def get_detail_url(self):
         return self.second_oeuvre.get_detail_url()
+
+    def __str__(self):
+        return f"Finition de second oeuvre pour {self.second_oeuvre.bati.appelation if self.second_oeuvre.bati else 'Bâtiment inconnu'}"
 
 class Equipement(models.Model):
     bati = models.ForeignKey(
@@ -511,6 +519,9 @@ class Perspective(models.Model):
         "Bati",
         on_delete=models.CASCADE,
     )
+
+    def __str__(self):
+        return f"Perspective {self.perspective.label if self.perspective else 'Inconnue'} pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
 
 class MateriauxFinFinition(models.Model):
     """_summary_

@@ -80,7 +80,6 @@ class EnquetesUpdate(ChildFormViewMixin, UpdateView):
     parent_related_name = "bati"
     form_class = EnquetesForm
     add_label = "Modifier l'enquête"
-    pk_url_kwarg = 'enquete_pk'
 
 class EnquetesDelete(ChildDeleteViewMixin, DeleteView):
     model = Enquetes
@@ -99,7 +98,6 @@ class PerspectiveUpdate(ChildFormViewMixin, UpdateView):
     form_class = PerspectiveForm
     parent_related_name = "bati"
     add_label = "Modifier la perspective"
-    pk_url_kwarg = 'perspective_pk'
 
 class PerspectiveDelete(ChildDeleteViewMixin, DeleteView):
     model = Perspective
@@ -118,7 +116,6 @@ class DemandeTravauxUpdate(ChildFormViewMixin, UpdateView):
     form_class = DemandeTravauxForm
     parent_related_name = "bati"
     add_label = "Modifier la demande de travaux"
-    pk_url_kwarg = 'demande_pk'
 
 class DemandeTravauxDelete(ChildDeleteViewMixin, DeleteView):
     model = DemandeTravaux
@@ -133,7 +130,7 @@ class TravauxCreate(ChildFormViewMixin, CreateView):
     add_label = "Nouveau travaux"
 
     def dispatch(self, request, *args, **kwargs):
-        self.demande = get_object_or_404(DemandeTravaux, pk=kwargs['demande_pk'])
+        self.demande = get_object_or_404(DemandeTravaux, pk=kwargs['pk'])
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -154,7 +151,6 @@ class TravauxUpdate(ChildFormViewMixin, UpdateView):
     form_class = TravauxForm
     parent_related_name = "bati"
     add_label = "Modifier les travaux: "
-    pk_url_kwarg = 'travaux_pk'
 
 class TravauxDelete(ChildDeleteViewMixin, DeleteView):
     model = Travaux
@@ -173,7 +169,6 @@ class StructureUpdate(ChildFormViewMixin, UpdateView):
     parent_related_name = "bati"
     add_label = "Modifier la structure"
     form_class = StructureForm
-    pk_url_kwarg = 'structure_pk'
 
 
 class StructureDelete(ChildDeleteViewMixin, DeleteView):
@@ -193,7 +188,6 @@ class SecondOeuvreUpdate(ChildFormViewMixin, UpdateView):
     parent_related_name = "bati"
     add_label = "Modifier la second oeuvre"
     form_class = SecondOeuvreForm
-    pk_url_kwarg = 'second_pk'
 
 class SecondOeuvreDelete(ChildDeleteViewMixin, DeleteView):
     model = SecondOeuvre
@@ -223,7 +217,6 @@ class StructureFinitionUpdate(ChildFormViewMixin, UpdateView):
     parent_related_name = "structure"
     add_label = "Modifier la finition de structure"
     form_class = MateriauFinFinitionStructureForm
-    pk_url_kwarg = 'struct_finition_pk'
 
     def dispatch(self, request, *args, **kwargs):
         self.structure = Structure.objects.get(pk=kwargs['structure_pk'])
@@ -264,7 +257,6 @@ class SecondOeuvreFinitionUpdate(ChildFormViewMixin, UpdateView):
     parent_related_name = "second_oeuvre"
     add_label = "Modifier la finition de second oeuvre"
     form_class = MateriauFinFinitionSecondOeuvreForm
-    pk_url_kwarg = 'so_finition_pk'
 
     def dispatch(self, request, *args, **kwargs):
         self.second_oeuvre = SecondOeuvre.objects.get(pk=kwargs['second_pk'])

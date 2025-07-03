@@ -24,18 +24,18 @@ urlpatterns += [
     path('bati/<int:parent_pk>/travaux/<int:pk>/delete/', TravauxDelete.as_view(), name='travaux_delete'),
 
     path('bati/<int:parent_pk>/structure/add/', StructureCreate.as_view(), name='structure_add'),
-    path('bati/<int:parent_pk>/structure/<int:k>/update/', StructureUpdate.as_view(), name='structure_update'),
+    path('bati/<int:parent_pk>/structure/<int:pk>/update/', StructureUpdate.as_view(), name='structure_update'),
     path('bati/<int:parent_pk>/structure/<int:pk>/delete/', StructureDelete.as_view(), name='structure_delete'),
 
     path('bati/<int:parent_pk>/second/add/', SecondOeuvreCreate.as_view(), name='second_add'),
     path('bati/<int:parent_pk>/second/<int:pk>/update/', SecondOeuvreUpdate.as_view(), name='second_update'),
     path('bati/<int:parent_pk>/second/<int:pk>/delete/', SecondOeuvreDelete.as_view(), name='second_delete'),
 
-    path('bati/<int:pk>/structure/<int:structure_pk>/finition/add/', StructureFinitionCreate.as_view(), name='structure_finition_add'),
-    path('bati/<int:pk>/structure/<int:structure_pk>/finition/<int:struct_finition_pk>/update/', StructureFinitionUpdate.as_view(), name='structure_finition_update'),
-    path('bati/<int:pk>/structure/<int:structure_pk>/finition/<int:struct_finition_pk>/delete/', StructureFinitionDelete.as_view(), name='structure_finition_delete'),
+    path('bati/<int:parent_pk>/structure/<int:structure_pk>/finition/add/', StructureFinitionCreate.as_view(), name='structure_finition_add'),
+    path('bati/<int:parent_pk>/structure/<int:structure_pk>/finition/<int:pk>/update/', StructureFinitionUpdate.as_view(), name='structure_finition_update'),
+    path('bati/<int:parent_pk>/structure/<int:structure_pk>/finition/<int:pk>/delete/', StructureFinitionDelete.as_view(), name='structure_finition_delete'),
 
-    path('bati/<int:pk>/second_oeuvre/<int:second_pk>/finition/add/', SecondOeuvreFinitionCreate.as_view(), name='second_finition_add'),
-    path('bati/<int:pk>/second_oeuvre/<int:second_pk>/finition/<int:so_finition_pk>/update/', SecondOeuvreFinitionUpdate.as_view(), name='second_finition_update'),
-    path('bati/<int:pk>/second_oeuvre/<int:second_pk>/finition/<int:so_finition_pk>/delete/', SecondOeuvreFinitionDelete.as_view(), name='second_finition_delete'),
+    path('bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/add/', SecondOeuvreFinitionCreate.as_view(), name='second_finition_add'),
+    path('bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/<int:pk>/update/', SecondOeuvreFinitionUpdate.as_view(), name='second_finition_update'),
+    path('bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/<int:pk>/delete/', SecondOeuvreFinitionDelete.as_view(), name='second_finition_delete'),
 ]
