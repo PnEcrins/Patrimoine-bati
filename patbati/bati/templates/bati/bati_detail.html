@@ -29,7 +29,7 @@
         <!-- Perspectives -->
     <div class="d-flex mb-2 align-items-center">
         <h4 class="mb-0">Perspectives</h4>
-        <a href="{% url 'bati:perspectives_add' pk=object.pk %}" class="btn btn-success ml-2">+</a>
+        <a href="{% url 'bati:perspectives_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
     </div>
     <table class="table table-striped">
         <thead>
@@ -60,7 +60,7 @@
     <!-- Enquêtes -->
     <div class="d-flex mb-2 align-items-center">
         <h4 class="mb-0">Enquêtes</h4>
-        <a href="{% url 'bati:enquetes_add' pk=object.pk %}" class="btn btn-success ml-2">+</a>
+        <a href="{% url 'bati:enquetes_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
     </div>
         <table class="table table-striped">
             <thead>
