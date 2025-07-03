@@ -111,7 +111,7 @@
             <div class="col-3 text-right">Actions</div>
         </div>
         <div class="accordion" id="demandesAccordion">
-            {% for demande in object.demandes_travaux.all %}
+            {% for demande, travaux_list in demandes_travaux_sorted %}
             <div class="card mb-2 shadow-sm">
                 <div class="card-header p-2" id="heading{{ forloop.counter }}">
                     <div class="row align-items-center"
@@ -153,7 +153,7 @@
                 </div>
                 <div id="collapse{{ forloop.counter }}" class="ml-3 mb-2 mr-2 collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-parent="#demandesAccordion">
                     <div class="card-body p-0">
-                        {% if demande.travaux.all %}
+                        {% if travaux_list %}
                         <table class="table table-sm table-bordered mb-0 text-center">
                             <thead class="table-info">
                                 <tr>
@@ -166,7 +166,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for travaux in demande.travaux.all %}
+                                {% for travaux in travaux_list %}
                                 <tr>
                                     <td>{{ travaux.date }}</td>
                                     <td>

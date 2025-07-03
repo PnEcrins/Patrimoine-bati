@@ -1,4 +1,3 @@
-from ast import Delete
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -7,6 +6,8 @@ from mapentity.views.generic import (
     MapEntityFormat, MapEntityCreate, MapEntityUpdate, MapEntityDocument,
     MapEntityDelete
 )
+from django.db.models.functions import Coalesce
+from django.db.models import Value, DateField
 from mapentity.views.api import MapEntityViewSet
 from mapentity.views.mixins import ModelViewMixin
 from patbati.bati.forms import DemandeTravauxForm, EnquetesForm, BatiForm, MateriauFinFinitionSecondOeuvreForm, PerspectiveForm, SecondOeuvreForm, MateriauFinFinitionStructureForm, StructureForm, TravauxForm
@@ -39,6 +40,29 @@ class BatiDetail(MapEntityDetail):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["mapwidth"] = "90%"
+
+        # Sort demandes_travaux by date_demande_permis (nulls last)
+        demandes = (
+            self.object.demandes_travaux.all()
+            .annotate(
+                date_sort=Coalesce('date_demande_permis', Value('0001-01-01', output_field=DateField()))
+            )
+            .order_by('-date_sort')
+        )
+
+        # For each demande, sort travaux by date (nulls last)
+        demandes_travaux_sorted = []
+        for demande in demandes:
+            travaux_sorted = (
+                demande.travaux.all()
+                .annotate(
+                    date_sort=Coalesce('date', Value('0001-01-01', output_field=DateField()))
+                )
+                .order_by('-date_sort')
+            )
+            demandes_travaux_sorted.append((demande, travaux_sorted))
+
+        context['demandes_travaux_sorted'] = demandes_travaux_sorted
         return context
 
 
