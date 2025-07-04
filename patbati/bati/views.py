@@ -36,7 +36,7 @@ class BatiList(MapEntityList):
         "secteur",
         "notepatri",
         "conservation",
-        "date_update"
+        "date_update",
     ]
     searchable_columns = [
         "appelation",
@@ -94,15 +94,14 @@ class BatiCreate(MapEntityCreate):
 
 
 class BatiFormat(MapEntityFormat, BatiList):
-    filterset_class = BatiFilterSet
-    mandatory_columns = ["id", "appelation", "secteur", "notepatri", "conservation", "date_update"]
+    pass
     
 
 class BatiViewSet(MapEntityViewSet):
     model = Bati
     serializer_class = BatiSerializer
     geojson_serializer_class = BatiGeojsonSerializer
-
+    filterset_class = BatiFilterSet
     queryset = Bati.objects.all()
 
 
