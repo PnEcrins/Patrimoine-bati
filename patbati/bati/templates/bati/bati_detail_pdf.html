@@ -1,0 +1,154 @@
+
+{% block title %}
+  Fiche du bâtiment – {{ object.appelation }}
+{% endblock %}
+
+{% block content %}
+<style>
+  body { font-family: "DejaVu Sans", sans-serif; }
+  h1, h2 { color: #333; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 1.5em; }
+  th, td { border: 1px solid #ddd; padding: 0.5em; text-align: left; }
+  th { background: #f7f7f7; width:25%; }
+  .section { margin-top: 2em; }
+</style>
+
+<h1>{{ object.appelation }}</h1>
+
+<table>
+  <tr><th>Validé</th><td>{{ object.valide|yesno:"Oui,Non" }}</td></tr>
+  <tr><th>Classe architecturale</th><td>{{ object.classe }}</td></tr>
+  <tr><th>Implantation</th><td>{{ object.implantation }}</td></tr>
+  <tr><th>Faitage</th><td>{{ object.faitage }}</td></tr>
+  <tr><th>Secteur</th><td>{{ object.secteur }}</td></tr>
+  <tr><th>Exposition</th><td>{{ object.exposition }}</td></tr>
+  <tr><th>Altitude, X, Y</th><td>{{ object.altitude }} m, {{ object.x }}, {{ object.y }}</td></tr>
+  <tr><th>Dénivelé</th><td>{{ object.denivelle }}</td></tr>
+  <tr><th>Capacité</th><td>{{ object.capacite }}</td></tr>
+  <tr><th>Note patrimoniale</th><td>{{ object.notepatri }}</td></tr>
+  <tr><th>Patrimonialité</th><td>{{ object.patrimonialite }}</td></tr>
+  <tr><th>Conservation</th><td>{{ object.conservation }}</td></tr>
+  <tr><th>Masques</th><td>{{ object.masques.all|join:", " }}</td></tr>
+  <tr><th>Risques naturels</th><td>{{ object.risques_nat.all|join:", " }}</td></tr>
+  <tr><th>Commentaire masques</th><td>{{ object.commentaire_masque }}</td></tr>
+  <tr><th>Remarque générale</th><td>{{ object.remarque_generale }}</td></tr>
+  <tr><th>Date création / MAJ</th><td>{{ object.date_insert|date:"Y-m-d H:i" }} / {{ object.date_update|date:"Y-m-d H:i" }}</td></tr>
+</table>
+
+<div class="map-panel"></div>
+
+{% if object.enquetes.exists %}
+  <div class="section">
+    <h2>Enquêtes</h2>
+    <table>
+      <tr><th>Date enquête</th><th>Personne</th><th>Date rédaction</th></tr>
+      {% for eq in object.enquetes.all %}
+      <tr>
+        <td>{{ eq.date_enquete|date:"Y-m-d" }}</td>
+        <td>{{ eq.personne }}</td>
+        <td>{{ eq.date_redaction|date:"Y-m-d" }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endif %}
+
+<h2>Structure, Gros et Second work in progress</h2>
+{% comment %} {% if object.demandes_travaux.exists %}
+  <div class="section">
+    <h2>Demandes de travaux</h2>
+    <table>
+      <tr><th>Date demande</th><th>Autorisation</th><th>Permis</th></tr>
+      {% for dem in object.demandes_travaux.all %}
+      <tr>
+        <td>{{ dem.date_demande_permis|date:"Y-m-d" }}</td>
+        <td>{{ dem.autorisation_p|yesno:"Oui,Non" }}</td>
+        <td>{{ dem.num_permis }} ({{ dem.date_permis|date:"Y-m-d" }})</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endif %}
+
+{% if object.structure.exists %}
+  <div class="section">
+    <h2>Structure</h2>
+    {% for struct in object.structure.all %}
+    <table>
+      <tr><th>Type</th><td>{{ struct.type }}</td></tr>
+      <tr><th>Matériaux principal</th><td>{{ struct.materiaux_principal }}</td></tr>
+      <tr><th>Conservation</th><td>{{ struct.conservation }}</td></tr>
+      <tr><th>Mise en œuvre</th><td>{{ struct.mise_en_oeuvre }}</td></tr>
+      <tr><th>Remarquable</th><td>{{ struct.est_remarquable|yesno:"Oui,Non" }}</td></tr>
+      <tr><th>Info structure</th><td>{{ struct.info_structure }}</td></tr>
+      {% if struct.finitions.exists %}
+        <tr><th>Finitions</th><td>
+          <ul>
+            {% for fin in struct.finitions.all %}
+              <li>{{ fin.materiaux_fin }} – {{ fin.finition }}</li>
+            {% endfor %}
+          </ul>
+        </td></tr>
+      {% endif %}
+    </table>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if object.second_oeuvre.exists %}
+  <div class="section">
+    <h2>Second œuvre</h2>
+    {% for sec in object.second_oeuvre.all %}
+    <table>
+      <tr><th>Type</th><td>{{ sec.type }}</td></tr>
+      <tr><th>Conservation</th><td>{{ sec.conservation }}</td></tr>
+      <tr><th>Remarquable</th><td>{{ sec.est_remarquable|yesno:"Oui,Non" }}</td></tr>
+      <tr><th>Commentaire</th><td>{{ sec.commentaire }}</td></tr>
+      {% if sec.materiaux_fin.exists %}
+        <tr><th>Finitions</th><td>
+          <ul>
+            {% for fin in sec.materiaux_fin.all %}
+              <li>{{ fin }}</li>
+            {% endfor %}
+          </ul>
+        </td></tr>
+      {% endif %}
+    </table>
+    {% endfor %}
+  </div>
+{% endif %} {% endcomment %}
+
+{% if object.equipements.exists %}
+  <div class="section">
+    <h2>Équipements</h2>
+    <ul>
+      {% for eq in object.equipements.all %}
+        <li>{{ eq.type }} – {{ eq.conservation }}{% if eq.est_remarquable %} (Remarquable){% endif %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{% if object.elements_paysagers.exists %}
+  <div class="section">
+    <h2>Éléments paysagers</h2>
+    <ul>
+      {% for el in object.elements_paysagers.all %}
+        <li>{{ el.type }} – {{ el.conservation }}{% if el.est_remarquable %} (Remarquable){% endif %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{% if object.perspective_set.exists %}
+  <div class="section">
+    <h2>Perspectives</h2>
+    <ul>
+      {% for pers in object.perspective_set.all %}
+        <li>{{ pers.perspective }} – {{ pers.date|date:"Y-m-d" }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{% endblock %}
