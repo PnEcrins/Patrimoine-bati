@@ -30,6 +30,17 @@ class Bati(MapEntityMixin, models.Model):
     id = models.AutoField(primary_key=True) # indexBatiment
     valide = models.BooleanField(default=False, null=True, verbose_name="Validé") # validé
 
+    # type de batiment
+    type_bat = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={'id_type__code': 'TYPE_BAT'},
+        related_name='batiments_type'
+    )
+
+
     # code_classe / classe archi
     classe = models.ForeignKey(
         Nomenclature,
@@ -155,8 +166,8 @@ class Bati(MapEntityMixin, models.Model):
         return f'<a data-pk="{self.pk}" href="{self.get_detail_url()}" title="{self.appelation}">{self.appelation}</a>'
 
     @property
-    def secteur_label(self):
-        return self.secteur.label if self.secteur else "" 
+    def type_bat_label(self):
+        return self.type_bat.label if self.type_bat else "" 
 
     def get_detail_url(self):
         from django.urls import reverse

@@ -1,7 +1,6 @@
-from attr import field
 import django_filters
 from django import forms
-from .models import Bati, Nomenclature
+from .models import Bati, Nomenclature, NomenclatureType
 
 class BatiFilterSet(django_filters.FilterSet):
     appelation = django_filters.CharFilter(
@@ -20,6 +19,11 @@ class BatiFilterSet(django_filters.FilterSet):
     #     label="Secteur",
     #     empty_label="Secteur"
     # )
+    type_bat = django_filters.ModelChoiceFilter(
+        queryset=Nomenclature.objects.filter(id_type__code='TYPE_BAT'),
+        label="Type de batiment",
+        empty_label="Type de batiment"
+    )
     notepatri = django_filters.ModelChoiceFilter(
         queryset=Nomenclature.objects.filter(id_type__code='NOTE_PAT'),
         label="Note patrimoniale",
@@ -82,9 +86,7 @@ class BatiFilterSet(django_filters.FilterSet):
     class Meta:
         model = Bati
         fields = [
-            'appelation', 'classe',
-            # 'secteur',
-            'notepatri', 'conservation', 'exposition',
+            'appelation', 'classe', 'type_bat', 'notepatri', 'conservation', 'exposition',
             'faitage', 'implantation', 'proprietaire', 'valide', 'indivision', 'bat_suppr', 'protection', 'masques',
             'risques_nat', 'perspectives'
         ]

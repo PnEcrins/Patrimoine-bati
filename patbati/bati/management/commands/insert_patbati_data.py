@@ -109,6 +109,38 @@ class Command(BaseCommand):
                     geom=r.the_geom,
                     remarque_generale=r.remarques,
                 )
+
+                types = {
+                    "abri": 498,
+                    "hangar": 499,
+                    "cabane": 500,
+                    "bergerie": 501,
+                    "microcentrale": 502,
+                    "chalets": 503,
+                    "chapelle": 504,
+                    "ferme": 505,
+                    "gîte": 506,
+                    "grange": 507,
+                    "maison": 508,
+                    "oratoire": 509,
+                    "refuge": 510,
+                    "ruine": 511 
+                }
+
+                found = False
+                if r.appelation:
+                    app_name = r.appelation.lower()
+                    for key, nom_id in types.items():
+                        if key in app_name:
+                            try:
+                                bati.type_bat = Nomenclature.objects.get(id_nomenclature=nom_id)
+                                found = True
+                                break
+                            except Nomenclature.DoesNotExist:
+                                print(f"Nomenclature TYPE_BAT id={nom_id} introuvable")
+                if not found:
+                    print(f"Aucun type_bat trouvé pour appelation '{r.appelation}'")
+
                 bati.save()
 
                 # get risques
@@ -373,6 +405,41 @@ class Command(BaseCommand):
                         )
                         mat_sec_object.save()
 
+                # # inserer bon numero de type de batiment en fonction de appelation
+                # # # Type de batiment
+                # types = {
+                #     "abri": 498,
+                #     "hangar": 499,
+                #     "cabane": 500,
+                #     "bergerie": 501,
+                #     "microcentrale": 502,
+                #     "chalets": 503,
+                #     "chapelle": 504,
+                #     "ferme": 505,
+                #     "gite": 506,
+                #     "grange": 507,
+                #     "maison": 508,
+                #     "oratoire": 509,
+                #     "refuge": 510,
+                #     "ruine": 511 
+                # }
+                
+                # sql_type_batiment = """
+                # SELECT appelation
+                # FROM patbati.identification
+                # ORDER BY appelation
+                # """
+
+                # cursor.execute(sql_type_batiment)
+                # appelation = namedtuplefetchall(cursor)
+                # for app in appelation:
+                #     app_name = app.appelation.lower() if app.appelation else ""
+                #     for key in types:
+                #         if key in app_name:
+                #             print(f"'{key}' trouvé dans appelation '{app.appelation}', code = {types[key]}")
+                #             # ajoute numero de type dans la colone du batiment
+                #             bati.type_bat.set(get_nomenclature[key.type_bat])
+                #             break
 
 
 
@@ -383,6 +450,7 @@ class Command(BaseCommand):
 
 # TODO :
 # enquetes
+# type batiment
 # rel_protection = ref_geo
 # rel_matfins_finition = relation entre nomenclature
 # rel_matge_meo = relation entre nomenclature
