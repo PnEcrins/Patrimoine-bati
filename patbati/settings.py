@@ -152,8 +152,8 @@ DATABASES = {
 
 # config lié à l'install de mapentity et ses dépendances
 
-PAPERCLIP_ENABLE_VIDEO = True
-PAPERCLIP_ENABLE_LINK = True
+PAPERCLIP_ENABLE_VIDEO = False
+PAPERCLIP_ENABLE_LINK = False
 PAPERCLIP_FILETYPE_MODEL = 'mapentitycommon.FileType'
 PAPERCLIP_LICENSE_MODEL = 'mapentitycommon.License'
 PAPERCLIP_ATTACHMENT_MODEL = 'mapentitycommon.Attachment'
@@ -166,7 +166,9 @@ LANGUAGES = (
     ('fr', 'French'),
 )
 
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR + "/" + "media" 
+
 MAPENTITY_CONFIG = {}
 
 LEAFLET_CONFIG = {

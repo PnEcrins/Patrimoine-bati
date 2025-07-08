@@ -1,3 +1,5 @@
+from os import stat
+from patbati import settings
 from patbati.bati import models
 from mapentity.registry import registry
 from django.urls import path
