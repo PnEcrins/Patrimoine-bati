@@ -360,6 +360,7 @@ class SecondOeuvre(models.Model):
         on_delete=models.CASCADE,
         blank=False,
         null=False,
+        verbose_name="Etat de conservation",
         limit_choices_to={'id_type__code': 'CONSERVATION'},
         related_name="second_oeuvre_conservation"
     )
