@@ -8,7 +8,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 from patbati.mapentitycommon.forms import ChildFormHelper
-from .models import Enquetes, Bati, DemandeTravaux, MateriauxFinFinitionSecondOeuvre, MateriauxFinFinitionStructure, Perspective, SecondOeuvre, Structure, Travaux
+from .models import Enquetes, Bati, DemandeTravaux, Illustration, MateriauxFinFinitionSecondOeuvre, MateriauxFinFinitionStructure, Perspective, SecondOeuvre, Structure, Travaux
 
 
 class EnquetesForm(ChildFormHelper):
@@ -101,3 +101,8 @@ class MateriauFinFinitionSecondOeuvreForm(ChildFormHelper):
     class Meta:
         model = MateriauxFinFinitionSecondOeuvre
         fields = ['materiaux_fin', 'finition']
+
+class IllustrationForm(ChildFormHelper):
+    class Meta:
+        model = Illustration
+        fields = ['type', 'fichier_src', 'auteur', 'date']

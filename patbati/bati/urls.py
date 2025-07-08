@@ -3,7 +3,7 @@ from patbati import settings
 from patbati.bati import models
 from mapentity.registry import registry
 from django.urls import path
-from patbati.bati.views import DemandeTravauxCreate, DemandeTravauxDelete, DemandeTravauxUpdate, EnquetesCreate, EnquetesUpdate, EnquetesDelete, PerspectiveCreate, PerspectiveDelete, PerspectiveUpdate, SecondOeuvreCreate, SecondOeuvreDelete, SecondOeuvreFinitionCreate, SecondOeuvreFinitionDelete, SecondOeuvreFinitionUpdate, SecondOeuvreUpdate, StructureCreate, StructureDelete, StructureFinitionCreate, StructureFinitionDelete, StructureFinitionUpdate, StructureUpdate, TravauxCreate, TravauxDelete, TravauxUpdate
+from patbati.bati.views import DemandeTravauxCreate, DemandeTravauxDelete, DemandeTravauxUpdate, EnquetesCreate, EnquetesUpdate, EnquetesDelete, IllustrationCreateView, PerspectiveCreate, PerspectiveDelete, PerspectiveUpdate, SecondOeuvreCreate, SecondOeuvreDelete, SecondOeuvreFinitionCreate, SecondOeuvreFinitionDelete, SecondOeuvreFinitionUpdate, SecondOeuvreUpdate, StructureCreate, StructureDelete, StructureFinitionCreate, StructureFinitionDelete, StructureFinitionUpdate, StructureUpdate, TravauxCreate, TravauxDelete, TravauxUpdate
 
 app_name = "bati"
 
@@ -40,4 +40,5 @@ urlpatterns += [
     path('bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/add/', SecondOeuvreFinitionCreate.as_view(), name='second_finition_add'),
     path('bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/<int:pk>/update/', SecondOeuvreFinitionUpdate.as_view(), name='second_finition_update'),
     path('bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/<int:pk>/delete/', SecondOeuvreFinitionDelete.as_view(), name='second_finition_delete'),
+    path('<int:parent_pk>/illustration/add/', IllustrationCreateView.as_view(), name='illustration_add'),
 ]
