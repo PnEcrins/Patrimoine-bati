@@ -25,45 +25,6 @@
 {% endblock %}
 
 
-{% block attachmentspanel %}
-
-<div class="mt-3">
-    <h3>Illustrations</h3>
-    <div class="row">
-        {% for img in object.illustrations.all %}
-            {% if img.fichier_src %}
-            <div class="col-md-4 mb-3">
-                <div class="card shadow-sm">
-                    <img src="{{ img.fichier_src.url }}" class="card-img-top" alt="{{ img.type }}">
-                    <div class="card-body text-center">
-                        <p> Type d'illustration: {{ img.type }}</p>
-                        <small class="text-muted">{{ img.date }}</small><br>
-                        {% if img.auteur %}
-                            <small>Auteur : {{ img.auteur }} </small>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        {% empty %}
-        <div class="col-12 text-muted">
-            Aucune illustration pour ce bâtiment.
-        </div>
-        {% endfor %}
-    </div>
-</div>
-
-<div class="mt-4">
-    <h5>Ajouter une illustration</h5>
-    <form method="post" enctype="multipart/form-data" action="{% url 'bati:illustration_add' parent_pk=object.pk %}">
-        {% csrf_token %}
-        {% crispy form %}
-    </form>
-</div>
-
-{{ block.super }}
-{% endblock attachmentspanel %}
-
 {% block before_attachments_extra_tab_content %}
 <div id="enq-pers" class="tab-pane">
     <div class="mb-3">

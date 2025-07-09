@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from easy_thumbnails.conf import Settings as easy_thumbnails_defaults
 from dotenv import load_dotenv
 # load .env file for DB config
 
@@ -183,6 +184,17 @@ PAPERCLIP_ALLOWED_EXTENSIONS = [
     "xlsx",
     "odg",
 ]
+
+THUMBNAIL_ALIASES = {
+    "": {
+        "thumbnail": {"size": (150, 150)},
+    },
+}
+
+THUMBNAIL_PROCESSORS = (
+    *easy_thumbnails_defaults.THUMBNAIL_PROCESSORS,
+)
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
