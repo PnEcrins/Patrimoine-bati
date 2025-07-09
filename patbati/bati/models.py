@@ -496,7 +496,7 @@ class Illustration(models.Model):
         null=True,
         related_name="ilustration_auteur"
     ) 
-    fichier_src = models.ImageField(null=False, verbose_name="fichier source")
+    fichier_src = models.ImageField(null=False, verbose_name="fichier source", upload_to="post_images/")
     date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
     indexajaris = models.IntegerField(null=True, verbose_name="index photothèque")
 

@@ -158,6 +158,32 @@ PAPERCLIP_FILETYPE_MODEL = 'mapentitycommon.FileType'
 PAPERCLIP_LICENSE_MODEL = 'mapentitycommon.License'
 PAPERCLIP_ATTACHMENT_MODEL = 'mapentitycommon.Attachment'
 
+PAPERCLIP_ALLOWED_EXTENSIONS = [
+    "jpeg",
+    "jpg",
+    "mp3",
+    "mp4",
+    "odt",
+    "pdf",
+    "png",
+    "svg",
+    "txt",
+    "gif",
+    "tiff",
+    "tif",
+    "docx",
+    "webp",
+    "bmp",
+    "flac",
+    "mpeg",
+    "doc",
+    "ods",
+    "gpx",
+    "xls",
+    "xlsx",
+    "odg",
+]
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 

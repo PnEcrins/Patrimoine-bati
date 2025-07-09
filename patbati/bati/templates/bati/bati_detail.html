@@ -34,11 +34,11 @@
             {% if img.fichier_src %}
             <div class="col-md-4 mb-3">
                 <div class="card shadow-sm">
-                    <img src="{{ img.fichier_src.url }}" class="card-img-top" alt="Illustration {{ forloop.counter }}">
+                    <img src="{{ img.fichier_src }}" class="card-img-top" alt="Illustration {{ forloop.counter }}">
                     <div class="card-body text-center">
                         <small class="text-muted">{{ img.date }}</small><br>
                         {% if img.auteur %}
-                            <small>Auteur : {{ img.auteur.prenom }} {{ img.auteur.nom }}</small>
+                            <small>Auteur : {{ img.auteur }} </small>
                         {% endif %}
                     </div>
                 </div>
