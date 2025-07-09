@@ -111,20 +111,20 @@ class Command(BaseCommand):
                 )
 
                 types = {
-                    "abri": 498,
-                    "hangar": 499,
-                    "cabane": 500,
-                    "bergerie": 501,
-                    "microcentrale": 502,
-                    "chalets": 503,
-                    "chapelle": 504,
-                    "ferme": 505,
-                    "gîte": 506,
-                    "grange": 507,
-                    "maison": 508,
-                    "oratoire": 509,
-                    "refuge": 510,
-                    "ruine": 511 
+                    "abri": 598,
+                    "hangar": 599,
+                    "cabane": 600,
+                    "bergerie": 601,
+                    "microcentrale": 602,
+                    "chalets": 603,
+                    "chapelle": 604,
+                    "ferme": 606,
+                    "gîte": 606,
+                    "grange": 607,
+                    "maison": 608,
+                    "oratoire": 609,
+                    "refuge": 610,
+                    "ruine": 611 
                 }
 
                 found = False
