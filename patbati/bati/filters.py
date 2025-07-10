@@ -1,3 +1,4 @@
+import django_filters.fields
 from mapentity.filters import BaseMapEntityFilterSet
 
 from attr import field
@@ -14,7 +15,7 @@ class EmptyLabelChoiceFilterMixin:
         super().__init__(*args, **kwargs)
         for fieldname in self.base_filters.keys():
             field = self.form.fields[fieldname]
-            if isinstance(field, forms.ChoiceField):
+            if isinstance(field, django_filters.fields.ModelChoiceField):
                 field.empty_label = field.label
 
 
