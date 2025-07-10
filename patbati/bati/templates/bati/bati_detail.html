@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block download %}
-    {{ block.super }}
   </div>
 
   <div class="btn-group pull-right">
-    <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_export_public' object.pk  %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Print</a>
+    <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_detail' object.pk  %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Fiche</a>
+    <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_export_public' object.pk  %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Fiche resumé</a>
 {% endblock download %}
 
 {% block before_attachments_extra_tab_nav %}

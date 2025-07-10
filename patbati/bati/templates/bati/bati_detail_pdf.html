@@ -4,7 +4,12 @@
 
 {% block content %}
 
-<h2>{{ object.appelation }}</h2>
+<title>{{ object.appelation }}</title>
+
+<h2 class="title">{{ object.appelation }} Alt.: {{ object.altitude }} m</h2>
+<p class="subtitle">
+  <strong> Secteur : {{ object.secteur|default:"-" }}</strong> 
+</p>
 
 <h3>Renseignements</h3>
 <table>

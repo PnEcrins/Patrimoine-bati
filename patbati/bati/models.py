@@ -1,3 +1,4 @@
+from collections import defaultdict
 import django
 from django.db import models
 from django.contrib.gis.db import models as gis_models
@@ -178,6 +179,33 @@ class Bati(MapEntityMixin, models.Model):
     def secteur_label(self):
         return self.secteur.label if self.secteur else ""
 
+    @property
+    def dernier_travaux(self):
+        from patbati.bati.models import Travaux
+
+        return (
+            Travaux.objects.filter(demande__bati=self)
+            .order_by('-date')
+            .first()
+        )
+
+    @property
+    def get_structures_with_materials(self):
+        structures_with_materials = defaultdict(list)
+
+        for struct in self.structure.all():
+            structures_with_materials[struct.type.label].append(struct.materiaux_principal.label)
+
+            for mat_fin in struct.materiaux_fin.all():
+                structures_with_materials[struct.type.label].append(mat_fin.label)
+
+        structures_with_materials = {
+            struct_type: ', '.join(sorted(set(materials), key=materials.index))
+            for struct_type, materials in structures_with_materials.items()
+        }
+
+        return structures_with_materials
+
     def get_detail_url(self):
         from django.urls import reverse
 
@@ -351,7 +379,7 @@ class MateriauxFinFinitionStructure(models.Model):
         null=False,
         limit_choices_to={"id_type__code": "MAT_FIN"},
         related_name="materiaux_fin_rel",
-        verbose_name="Materiaux fin",
+        verbose_name="Materiaux fin",   
     )
     finition = models.ForeignKey(
         Nomenclature,

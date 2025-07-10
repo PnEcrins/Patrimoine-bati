@@ -366,10 +366,18 @@ class SecondOeuvreFinitionDelete(ChildDeleteViewMixin, DeleteView):
 from mapentity.views.generic import MapEntityDocumentWeasyprint
 
 
-class BatiDocumentPdf(MapEntityDocumentWeasyprint):
+class BatiDocumentPdfPublic(MapEntityDocumentWeasyprint):
+    model = Bati
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.template_name = "bati/bati_public_pdf.html"
+
+
+class BatiDocumentPdfDetail(MapEntityDocumentWeasyprint):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.template_name = "bati/bati_detail_pdf.html"
     
     model = Bati

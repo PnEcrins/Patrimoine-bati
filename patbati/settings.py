@@ -9,12 +9,11 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
 import os
 from pathlib import Path
 
+from easy_thumbnails.conf import Settings as easy_thumbnails_defaults
 from dotenv import load_dotenv
-
 # load .env file for DB config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,20 +41,20 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "paperclip",
-    "compressor",
-    "easy_thumbnails",
-    "crispy_forms",
-    "crispy_bootstrap4",
-    "rest_framework",
-    "embed_video",
-    "modeltranslation",
-    "mapentity",  # Make sure mapentity settings are loaded before leaflet ones
-    "leaflet",
-    "patbati.mapentitycommon",
-    "patbati.bati",
-    "authent",
-    "django_filters",
+    'paperclip',
+    'compressor',
+    'easy_thumbnails',
+    'crispy_forms',
+    'crispy_bootstrap4',
+    'rest_framework',
+    'embed_video',
+    'modeltranslation',
+    'mapentity',  # Make sure mapentity settings are loaded before leaflet ones
+    'leaflet',
+    'patbati.mapentitycommon',
+    'patbati.bati',
+    'authent',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -66,17 +65,17 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
+    'django.middleware.locale.LocaleMiddleware',
+
 ]
 
 ROOT_URLCONF = "patbati.urls"
 print(BASE_DIR)
 from pathlib import Path
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [Path(BASE_DIR) / "mapentitycommon/templates"],
+        "DIRS": [Path(BASE_DIR)/ "mapentitycommon/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -95,6 +94,7 @@ WSGI_APPLICATION = "patbati.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
 
 
 # Password validation
@@ -139,16 +139,15 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         "NAME": os.getenv("DB_NAME"),
         "USER": os.getenv("DB_USER"),
         "PASSWORD": os.getenv("DB_PASSWORD"),
         "HOST": os.getenv("DB_HOST", "localhost"),
         "PORT": os.getenv("DB_PORT", "5432"),
         "OPTIONS": {
-            "options": "-c search_path=public,ref_nomenclatures",
-        },
+            "options": "-c search_path=public,ref_nomenclatures",}
     }
 }
 
@@ -156,28 +155,64 @@ DATABASES = {
 
 PAPERCLIP_ENABLE_VIDEO = False
 PAPERCLIP_ENABLE_LINK = False
-PAPERCLIP_FILETYPE_MODEL = "mapentitycommon.FileType"
-PAPERCLIP_LICENSE_MODEL = "mapentitycommon.License"
-PAPERCLIP_ATTACHMENT_MODEL = "mapentitycommon.Attachment"
+PAPERCLIP_FILETYPE_MODEL = 'mapentitycommon.FileType'
+PAPERCLIP_LICENSE_MODEL = 'mapentitycommon.License'
+PAPERCLIP_ATTACHMENT_MODEL = 'mapentitycommon.Attachment'
+
+PAPERCLIP_ALLOWED_EXTENSIONS = [
+    "jpeg",
+    "jpg",
+    "mp3",
+    "mp4",
+    "odt",
+    "pdf",
+    "png",
+    "svg",
+    "txt",
+    "gif",
+    "tiff",
+    "tif",
+    "docx",
+    "webp",
+    "bmp",
+    "flac",
+    "mpeg",
+    "doc",
+    "ods",
+    "gpx",
+    "xls",
+    "xlsx",
+    "odg",
+]
+
+THUMBNAIL_ALIASES = {
+    "": {
+        "thumbnail": {"size": (150, 150)},
+    },
+}
+
+THUMBNAIL_PROCESSORS = (
+    *easy_thumbnails_defaults.THUMBNAIL_PROCESSORS,
+)
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LANGUAGES = (
-    ("en", "English"),
-    ("fr", "French"),
+    ('en', 'English'),
+    ('fr', 'French'),
 )
 
 MEDIA_URL = "/media/"
-
-MAPENTITY_SCREENSHOT_SERVER_URL = "http://screamshotter"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MAPENTITY_CONFIG = {
     "MAPENTITY_WEASYPRINT": True,
 }
 
 LEAFLET_CONFIG = {
-    "SRID": 3857,
+    'SRID': 3857,
     "TILES": [
         (
             "OpenTopoMap",
@@ -197,16 +232,12 @@ LEAFLET_CONFIG = {
                 "maxZoom": 22,
             },
         ),
-        (
-            "OSM N&B",
-            "http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png",
-            "(c) OpenStreetMap Contributors",
-        ),
+        ('OSM N&B', 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', '(c) OpenStreetMap Contributors'),
     ],
     # 'SPATIAL_EXTENT': (1.3, 43.7, 1.5, 43.5),
 }
 
-AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.BCryptPasswordHasher",

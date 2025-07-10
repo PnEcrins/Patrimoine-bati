@@ -2,6 +2,8 @@ from patbati.bati import models
 from mapentity.registry import registry
 from django.urls import path
 from patbati.bati.views import (
+    BatiDocumentPdfDetail,
+    BatiDocumentPdfPublic,
     DemandeTravauxCreate,
     DemandeTravauxDelete,
     DemandeTravauxUpdate,
@@ -26,7 +28,6 @@ from patbati.bati.views import (
     TravauxCreate,
     TravauxDelete,
     TravauxUpdate,
-    BatiDocumentPdf,
 )
 
 app_name = "bati"
@@ -155,7 +156,12 @@ urlpatterns += [
     ),
     path(
         "bati/<int:pk>/public_pdf/",
-        BatiDocumentPdf.as_view(),
+        BatiDocumentPdfPublic.as_view(),
         name="pdf_export_public",
+    ),
+    path(
+        "bati/<int:pk>/detail_pdf/",
+        BatiDocumentPdfDetail.as_view(),
+        name="pdf_detail",
     ),
 ]
