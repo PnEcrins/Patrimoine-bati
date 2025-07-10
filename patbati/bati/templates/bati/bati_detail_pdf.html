@@ -1,4 +1,4 @@
-{% load static %}
+{% load static attachments_tags %}
 
 <link rel="stylesheet" href="{% static 'bati_detail_pdf.css' %}">
 
@@ -173,5 +173,16 @@
 {% endif %}
 
 <div class="map-panel" style="margin-top: 2em;"></div>
+
+<h5> Fichiers attachés :</h5> 
+  {% get_attachments_for object as "my_attachments" %}
+  {% for att in my_attachments %}
+   {% if att.is_image %}
+      <img src="{% get_media_prefix %}{{att.attachment_file}}" alt="">
+    {% elif att.attachment_link %}
+        <img class="img-thumbnail" src="{{ att.attachment_link }}" alt="{{ att.title|default:att.filename }}" title="{{ att.title|default:att.filename }}">
+    {% endif %}
+  {% endfor %}
+
 
 {% endblock %}
