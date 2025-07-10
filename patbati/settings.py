@@ -207,7 +207,10 @@ LANGUAGES = (
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-MAPENTITY_CONFIG = {}
+
+MAPENTITY_CONFIG = {
+    "MAPENTITY_WEASYPRINT": True,
+}
 
 LEAFLET_CONFIG = {
     'SRID': 3857,

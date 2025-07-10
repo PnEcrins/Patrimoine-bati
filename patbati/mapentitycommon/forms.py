@@ -3,15 +3,17 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
+
 class ChildFormHelper(forms.ModelForm):
     """
-        Add a crispy form helper and submit button to form
+    Add a crispy form helper and submit button to form
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.user = kwargs.pop('user', None)
+        self.user = kwargs.pop("user", None)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('submit', 'Enregistrer', css_class='btn-success'))
+        self.helper.add_input(Submit("submit", "Enregistrer", css_class="btn-success"))
 
 
 class FormsetMixin:
@@ -35,11 +37,11 @@ class FormsetMixin:
         if self.request.POST:
             try:
                 context[self.context_name] = self.formset_class(
-                    self.request.POST, instance=self.object)
+                    self.request.POST, instance=self.object
+                )
             except ValidationError:
                 pass
         else:
-            context[self.context_name] = self.formset_class(
-                instance=self.object)
+            context[self.context_name] = self.formset_class(instance=self.object)
             print("context", context)
         return context

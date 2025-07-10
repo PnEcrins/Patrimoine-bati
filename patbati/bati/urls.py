@@ -3,43 +3,173 @@ from patbati import settings
 from patbati.bati import models
 from mapentity.registry import registry
 from django.urls import path
-from patbati.bati.views import DemandeTravauxCreate, DemandeTravauxDelete, DemandeTravauxUpdate, EnquetesCreate, EnquetesUpdate, EnquetesDelete, IllustrationCreateView, PerspectiveCreate, PerspectiveDelete, PerspectiveUpdate, SecondOeuvreCreate, SecondOeuvreDelete, SecondOeuvreFinitionCreate, SecondOeuvreFinitionDelete, SecondOeuvreFinitionUpdate, SecondOeuvreUpdate, StructureCreate, StructureDelete, StructureFinitionCreate, StructureFinitionDelete, StructureFinitionUpdate, StructureUpdate, TravauxCreate, TravauxDelete, TravauxUpdate
 from django.conf.urls.static import static
+from patbati.bati.views import (
+    BatiDocumentPdfDetail,
+    BatiDocumentPdfPublic,
+    DemandeTravauxCreate,
+    DemandeTravauxDelete,
+    DemandeTravauxUpdate,
+    EnquetesCreate,
+    EnquetesUpdate,
+    EnquetesDelete,
+    PerspectiveCreate,
+    PerspectiveDelete,
+    PerspectiveUpdate,
+    SecondOeuvreCreate,
+    SecondOeuvreDelete,
+    SecondOeuvreFinitionCreate,
+    SecondOeuvreFinitionDelete,
+    SecondOeuvreFinitionUpdate,
+    SecondOeuvreUpdate,
+    StructureCreate,
+    StructureDelete,
+    StructureFinitionCreate,
+    StructureFinitionDelete,
+    StructureFinitionUpdate,
+    StructureUpdate,
+    TravauxCreate,
+    TravauxDelete,
+    TravauxUpdate,
+)
 
 app_name = "bati"
 
 urlpatterns = registry.register(models.Bati)
 urlpatterns += [
-    path('bati/<int:parent_pk>/enquetes/add/', EnquetesCreate.as_view(), name='enquetes_add'),
-    path('bati/<int:parent_pk>/enquetes/<int:pk>/update/', EnquetesUpdate.as_view(), name='enquetes_update'),
-    path('bati/<int:parent_pk>/enquetes/<int:pk>/delete/', EnquetesDelete.as_view(), name='enquetes_delete'),
-    
-    path('bati/<int:parent_pk>/perspective/add/', PerspectiveCreate.as_view(), name='perspectives_add'),
-    path('bati/<int:parent_pk>/perspective/<int:pk>/update/', PerspectiveUpdate.as_view(), name='perspectives_update'),
-    path('bati/<int:parent_pk>/perspective/<int:pk>/delete/', PerspectiveDelete.as_view(), name='perspectives_delete'),
-    
-    path('bati/<int:parent_pk>/demande_travaux/add/', DemandeTravauxCreate.as_view(), name='demande_travaux_add'),
-    path('bati/<int:parent_pk>/demande_travaux/<int:pk>/update/', DemandeTravauxUpdate.as_view(), name='demande_travaux_update'),
-    path('bati/<int:parent_pk>/demande_travaux/<int:pk>/delete/', DemandeTravauxDelete.as_view(), name='demande_travaux_delete'),
-    
-    path('bati/<int:parent_pk>/demande_travaux/<int:pk>/travaux/add/', TravauxCreate.as_view(), name='travaux_add'),
-    path('bati/<int:parent_pk>/travaux/<int:pk>/update/', TravauxUpdate.as_view(), name='travaux_update'),
-    path('bati/<int:parent_pk>/travaux/<int:pk>/delete/', TravauxDelete.as_view(), name='travaux_delete'),
-
-    path('bati/<int:parent_pk>/structure/add/', StructureCreate.as_view(), name='structure_add'),
-    path('bati/<int:parent_pk>/structure/<int:pk>/update/', StructureUpdate.as_view(), name='structure_update'),
-    path('bati/<int:parent_pk>/structure/<int:pk>/delete/', StructureDelete.as_view(), name='structure_delete'),
-
-    path('bati/<int:parent_pk>/second/add/', SecondOeuvreCreate.as_view(), name='second_add'),
-    path('bati/<int:parent_pk>/second/<int:pk>/update/', SecondOeuvreUpdate.as_view(), name='second_update'),
-    path('bati/<int:parent_pk>/second/<int:pk>/delete/', SecondOeuvreDelete.as_view(), name='second_delete'),
-
-    path('bati/<int:parent_pk>/structure/<int:structure_pk>/finition/add/', StructureFinitionCreate.as_view(), name='structure_finition_add'),
-    path('bati/<int:parent_pk>/structure/<int:structure_pk>/finition/<int:pk>/update/', StructureFinitionUpdate.as_view(), name='structure_finition_update'),
-    path('bati/<int:parent_pk>/structure/<int:structure_pk>/finition/<int:pk>/delete/', StructureFinitionDelete.as_view(), name='structure_finition_delete'),
-
-    path('bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/add/', SecondOeuvreFinitionCreate.as_view(), name='second_finition_add'),
-    path('bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/<int:pk>/update/', SecondOeuvreFinitionUpdate.as_view(), name='second_finition_update'),
-    path('bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/<int:pk>/delete/', SecondOeuvreFinitionDelete.as_view(), name='second_finition_delete'),
-    path('<int:parent_pk>/illustration/add/', IllustrationCreateView.as_view(), name='illustration_add'),
+    path(
+        "bati/<int:parent_pk>/enquetes/add/",
+        EnquetesCreate.as_view(),
+        name="enquetes_add",
+    ),
+    path(
+        "bati/<int:parent_pk>/enquetes/<int:pk>/update/",
+        EnquetesUpdate.as_view(),
+        name="enquetes_update",
+    ),
+    path(
+        "bati/<int:parent_pk>/enquetes/<int:pk>/delete/",
+        EnquetesDelete.as_view(),
+        name="enquetes_delete",
+    ),
+    path(
+        "bati/<int:parent_pk>/perspective/add/",
+        PerspectiveCreate.as_view(),
+        name="perspectives_add",
+    ),
+    path(
+        "bati/<int:parent_pk>/perspective/<int:pk>/update/",
+        PerspectiveUpdate.as_view(),
+        name="perspectives_update",
+    ),
+    path(
+        "bati/<int:parent_pk>/perspective/<int:pk>/delete/",
+        PerspectiveDelete.as_view(),
+        name="perspectives_delete",
+    ),
+    path(
+        "bati/<int:parent_pk>/demande_travaux/add/",
+        DemandeTravauxCreate.as_view(),
+        name="demande_travaux_add",
+    ),
+    path(
+        "bati/<int:parent_pk>/demande_travaux/<int:pk>/update/",
+        DemandeTravauxUpdate.as_view(),
+        name="demande_travaux_update",
+    ),
+    path(
+        "bati/<int:parent_pk>/demande_travaux/<int:pk>/delete/",
+        DemandeTravauxDelete.as_view(),
+        name="demande_travaux_delete",
+    ),
+    path(
+        "bati/<int:parent_pk>/demande_travaux/<int:pk>/travaux/add/",
+        TravauxCreate.as_view(),
+        name="travaux_add",
+    ),
+    path(
+        "bati/<int:parent_pk>/travaux/<int:pk>/update/",
+        TravauxUpdate.as_view(),
+        name="travaux_update",
+    ),
+    path(
+        "bati/<int:parent_pk>/travaux/<int:pk>/delete/",
+        TravauxDelete.as_view(),
+        name="travaux_delete",
+    ),
+    path(
+        "bati/<int:parent_pk>/structure/add/",
+        StructureCreate.as_view(),
+        name="structure_add",
+    ),
+    path(
+        "bati/<int:parent_pk>/structure/<int:pk>/update/",
+        StructureUpdate.as_view(),
+        name="structure_update",
+    ),
+    path(
+        "bati/<int:parent_pk>/structure/<int:pk>/delete/",
+        StructureDelete.as_view(),
+        name="structure_delete",
+    ),
+    path(
+        "bati/<int:parent_pk>/second/add/",
+        SecondOeuvreCreate.as_view(),
+        name="second_add",
+    ),
+    path(
+        "bati/<int:parent_pk>/second/<int:pk>/update/",
+        SecondOeuvreUpdate.as_view(),
+        name="second_update",
+    ),
+    path(
+        "bati/<int:parent_pk>/second/<int:pk>/delete/",
+        SecondOeuvreDelete.as_view(),
+        name="second_delete",
+    ),
+    path(
+        "bati/<int:parent_pk>/structure/<int:structure_pk>/finition/add/",
+        StructureFinitionCreate.as_view(),
+        name="structure_finition_add",
+    ),
+    path(
+        "bati/<int:parent_pk>/structure/<int:structure_pk>/finition/<int:pk>/update/",
+        StructureFinitionUpdate.as_view(),
+        name="structure_finition_update",
+    ),
+    path(
+        "bati/<int:parent_pk>/structure/<int:structure_pk>/finition/<int:pk>/delete/",
+        StructureFinitionDelete.as_view(),
+        name="structure_finition_delete",
+    ),
+    path(
+        "bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/add/",
+        SecondOeuvreFinitionCreate.as_view(),
+        name="second_finition_add",
+    ),
+    path(
+        "bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/<int:pk>/update/",
+        SecondOeuvreFinitionUpdate.as_view(),
+        name="second_finition_update",
+    ),
+    path(
+        "bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/<int:pk>/delete/",
+        SecondOeuvreFinitionDelete.as_view(),
+        name="second_finition_delete",
+    ),
+    path(
+      '<int:parent_pk>/illustration/add/', 
+      IllustrationCreateView.as_view(), 
+      name='illustration_add'
+    ),
+    path(
+        "bati/<int:pk>/public_pdf/",
+        BatiDocumentPdfPublic.as_view(),
+        name="pdf_export_public",
+    ),
+    path(
+        "bati/<int:pk>/detail_pdf/",
+        BatiDocumentPdfDetail.as_view(),
+        name="pdf_detail",
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
