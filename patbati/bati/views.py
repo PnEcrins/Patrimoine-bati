@@ -21,6 +21,7 @@ from patbati.bati.forms import (
     DemandeTravauxForm,
     EnquetesForm,
     BatiForm,
+    IllustrationForm,
     MateriauFinFinitionSecondOeuvreForm,
     PerspectiveForm,
     SecondOeuvreForm,
@@ -32,6 +33,7 @@ from .models import (
     Bati,
     DemandeTravaux,
     Enquetes,
+    Illustration,
     MateriauxFinFinitionSecondOeuvre,
     MateriauxFinFinitionStructure,
     Perspective,
@@ -112,6 +114,7 @@ class BatiDetail(MapEntityDetail):
         context['demandes_travaux_sorted'] = demandes_travaux_sorted
         context['form'] = IllustrationForm()
 
+        return context
 
 
 # class BatiCreate(FormsetMixin, MapEntityCreate):
@@ -389,9 +392,8 @@ class BatiDocumentPdfPublic(MapEntityDocumentWeasyprint):
 
 
 class BatiDocumentPdfDetail(MapEntityDocumentWeasyprint):
+    model = Bati
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.template_name = "bati/bati_detail_pdf.html"
-    
-    model = Bati
+        self.template_name = 'bati/bati_detail_pdf.html'

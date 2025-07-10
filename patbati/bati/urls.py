@@ -1,4 +1,3 @@
-from os import stat
 from patbati import settings
 from patbati.bati import models
 from mapentity.registry import registry
@@ -13,6 +12,7 @@ from patbati.bati.views import (
     EnquetesCreate,
     EnquetesUpdate,
     EnquetesDelete,
+    IllustrationCreateView,
     PerspectiveCreate,
     PerspectiveDelete,
     PerspectiveUpdate,
@@ -160,7 +160,7 @@ urlpatterns += [
     path(
       '<int:parent_pk>/illustration/add/', 
       IllustrationCreateView.as_view(), 
-      name='illustration_add'
+      name="illustration_add",
     ),
     path(
         "bati/<int:pk>/public_pdf/",

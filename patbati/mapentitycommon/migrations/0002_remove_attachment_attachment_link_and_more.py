@@ -18,4 +18,5 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='attachment',
             name='attachment_video',
+        )
     ]
