@@ -18,27 +18,37 @@ class EmptyLabelChoiceFilterMixin:
             if isinstance(field, django_filters.fields.ModelChoiceField):
                 field.empty_label = field.label
 
-
 class BatiFilterSet(EmptyLabelChoiceFilterMixin, BaseMapEntityFilterSet):
     appelation = django_filters.CharFilter(
-        lookup_expr='icontains',
+        lookup_expr="icontains",
         label="Recherche par nom",
-        widget=forms.TextInput(attrs={'placeholder': 'Nom du bâtiment'})
+        widget=forms.TextInput(attrs={"placeholder": "Nom du bâtiment"}),
     )
 
-    # # @TODO: ref_geo --> zone geopgraphique sur carte
-    # # secteur = django_filters.ModelChoiceFilter(
-    # #     queryset=Nomenclature.objects.filter(id_type__code='SECTEUR'),
-    # #     label="Secteur",
-    # #     empty_label="Secteur"
-    # # )
+    # @TODO: ref_geo --> zone geopgraphique sur carte
+    # secteur = django_filters.ModelChoiceFilter(
+    #     queryset=Nomenclature.objects.filter(id_type__code='SECTEUR'),
+    #     label="Secteur",
+    #     empty_label="Secteur"
+    # )
 
     class Meta:
         model = Bati
         fields = [
-            'appelation', 'classe',
+            "appelation",
+            "classe",
             # 'secteur',
-            'notepatri', 'conservation', 'exposition',
-            'faitage', 'implantation', 'proprietaire', 'valide', 'indivision', 'bat_suppr', 'protection', 'masques',
-            'risques_nat', 'perspectives'
+            "notepatri",
+            "conservation",
+            "exposition",
+            "faitage",
+            "implantation",
+            "proprietaire",
+            "valide",
+            "indivision",
+            "bat_suppr",
+            "protection",
+            "masques",
+            "risques_nat",
+            "perspectives",
         ]
