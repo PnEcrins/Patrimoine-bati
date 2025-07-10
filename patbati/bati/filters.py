@@ -4,7 +4,7 @@ from mapentity.filters import BaseMapEntityFilterSet
 from attr import field
 import django_filters
 from django import forms
-from .models import Bati, Nomenclature
+from .models import Bati, Nomenclature, NomenclatureType
 
 class EmptyLabelChoiceFilterMixin:
     """
@@ -32,23 +32,12 @@ class BatiFilterSet(EmptyLabelChoiceFilterMixin, BaseMapEntityFilterSet):
     #     empty_label="Secteur"
     # )
 
+
     class Meta:
         model = Bati
         fields = [
-            "appelation",
-            "classe",
-            # 'secteur',
-            "notepatri",
-            "conservation",
-            "exposition",
-            "faitage",
-            "implantation",
-            "proprietaire",
-            "valide",
-            "indivision",
-            "bat_suppr",
-            "protection",
-            "masques",
-            "risques_nat",
-            "perspectives",
+            'appelation', 'classe', 'type_bat', 'notepatri', 'conservation', 'exposition',
+            'faitage', 'implantation', 'proprietaire', 'valide', 'indivision', 'bat_suppr', 'protection', 'masques',
+            'risques_nat', 'perspectives'
         ]
+

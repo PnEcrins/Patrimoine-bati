@@ -62,14 +62,14 @@ class BatiList(MapEntityList):
         "id",
         "valide",
         "appelation",
-        "secteur",
+        "type_bat",
         "notepatri",
         "conservation",
         "date_update",
     ]
     searchable_columns = [
         "appelation",
-        "secteur__label",
+        "type_bat__label",
         "notepatri__label",
         "conservation__label",
     ]
