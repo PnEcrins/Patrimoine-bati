@@ -1,5 +1,13 @@
 {% extends "mapentity/mapentity_detail.html" %}
+{% load static %}
 
+{% block download %}
+  </div>
+
+  <div class="btn-group pull-right">
+    <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_detail' object.pk  %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Fiche</a>
+    <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_export_public' object.pk  %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Fiche resumé</a>
+{% endblock download %}
 
 {% block before_attachments_extra_tab_nav %}
 <li class="nav-item">
@@ -22,6 +30,7 @@
 </li>
 
 {% endblock %}
+
 
 {% block before_attachments_extra_tab_content %}
 <div id="enq-pers" class="tab-pane">

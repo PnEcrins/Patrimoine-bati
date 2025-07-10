@@ -19,7 +19,7 @@ from patbati.bati.models import (
     Structure,
     MateriauxFinFinitionStructure,
     SecondOeuvre,
-    MateriauxFinFinitionSecondOeuvre
+    MateriauxFinFinitionSecondOeuvre,
 )
 
 
@@ -150,10 +150,10 @@ class Command(BaseCommand):
                     JOIN patbati.bib_risquenat bib USING(coderisque)
                     WHERE indexbatiment = %s
                 """
-                cursor.execute(risque_query,  [r.indexbatiment])
+                cursor.execute(risque_query, [r.indexbatiment])
                 risques = namedtuplefetchall(cursor)
                 bati.risques_nat.set(
-                    [get_nomenclature(risque.risque, 'RISQUE') for risque in risques]
+                    [get_nomenclature(risque.risque, "RISQUE") for risque in risques]
                 )
 
                 # get protection
@@ -162,10 +162,13 @@ class Command(BaseCommand):
                     JOIN patbati.bib_protection bib USING(codeprotection)
                     WHERE indexbatiment = %s
                 """
-                cursor.execute(protection_query,  [r.indexbatiment])
+                cursor.execute(protection_query, [r.indexbatiment])
                 protections = namedtuplefetchall(cursor)
                 bati.protection.set(
-                    [get_nomenclature(protection.protection, 'PROT') for protection in protections]
+                    [
+                        get_nomenclature(protection.protection, "PROT")
+                        for protection in protections
+                    ]
                 )
 
                 # masques
@@ -174,11 +177,14 @@ class Command(BaseCommand):
                     JOIN patbati.bib_masque bib USING(codemasque)
                     WHERE indexbatiment = %s
                 """
-                cursor.execute(masque_query,  [r.indexbatiment])
+                cursor.execute(masque_query, [r.indexbatiment])
                 masques = namedtuplefetchall(cursor)
                 for masque in masques:
                     bati.masques.set(
-                        [get_nomenclature(masque.masque, 'MASQUE') for masque in masques]
+                        [
+                            get_nomenclature(masque.masque, "MASQUE")
+                            for masque in masques
+                        ]
                     )
 
                 # Demande de travaux
@@ -199,19 +205,17 @@ class Command(BaseCommand):
                     demande.save()
 
                     # Travaux
-                    travaux_sql = (
-                        """SELECT * FROM patbati.travaux
+                    travaux_sql = """SELECT * FROM patbati.travaux
                             JOIN patbati.bib_nature nat USING (codenature)
                             JOIN patbati.bib_usage us using(codeusage)
                             WHERE indexdemande = %s
                         """
-                    )
                     cursor.execute(travaux_sql, [dem.indexdemande])
                     travaux = namedtuplefetchall(cursor)
                     for tr in travaux:
                         travaux = Travaux(
                             demande=demande,
-                            date=tr.date_travaux or datetime(1800,1,1),
+                            date=tr.date_travaux or datetime(1800, 1, 1),
                             usage=get_nomenclature(tr.usage, "USAGE_TRAVAUX"),
                             nature=get_nomenclature(tr.nature, "NATURE_TRAVAUX"),
                             autorisation=tr.autorisation,
@@ -220,59 +224,47 @@ class Command(BaseCommand):
                         travaux.save()
 
                 # EQUIPEMENTS
-                equipements_sql = (
-                    """SELECT * FROM patbati.equipements 
+                equipements_sql = """SELECT * FROM patbati.equipements 
                         JOIN patbati.bib_conservation USING(codeconservation)
                         JOIN patbati.bib_equipement USING(codeequipement)
                         WHERE indexbatiment = %s
                     """
-                )
                 cursor.execute(equipements_sql, [r.indexbatiment])
                 equipements = namedtuplefetchall(cursor)
                 for eq in equipements:
                     equipement = Equipement(
                         bati=bati,
                         type=get_nomenclature(eq.equipement, "EQUIP"),
-                        conservation=get_nomenclature(
-                            eq.conservation, "CONSERVATION"
-                        ),
+                        conservation=get_nomenclature(eq.conservation, "CONSERVATION"),
                         commentaire=eq.info_equip,
                         est_remarquable=eq.equipement_rem,
                     )
                     equipement.save()
 
                 # ELEMENTS PAYSAGERS
-                elmt_paysage_sql = (
-                    """SELECT * 
+                elmt_paysage_sql = """SELECT * 
                         FROM patbati.elements_paysagers 
                         JOIN patbati.bib_conservation USING(codeconservation)
                         JOIN patbati.bib_element_paysager USING(codeep)
                         WHERE indexbatiment = %s
 
                     """
-                )
                 cursor.execute(elmt_paysage_sql, [r.indexbatiment])
                 elements_paysagers = namedtuplefetchall(cursor)
                 for el in elements_paysagers:
                     element = ElementPaysager(
                         bati=bati,
-                        conservation=get_nomenclature(
-                            el.conservation, "CONSERVATION"
-                        ),
+                        conservation=get_nomenclature(el.conservation, "CONSERVATION"),
                         type=get_nomenclature(el.elements_paysagers, "ELEM_PAYS"),
                         commentaire=el.info_ep,
-                        est_remarquable=el.ep_rem
-
+                        est_remarquable=el.ep_rem,
                     )
                     element.save()
 
-                
-                illustrations_sql = (
-                    """SELECT * FROM patbati.illustration ill 
+                illustrations_sql = """SELECT * FROM patbati.illustration ill 
                     LEFT JOIN patbati.bib_personnes USING(codepersonne) 
                     where indexbatiment = %s
                     """
-                )
                 cursor.execute(illustrations_sql, [r.indexbatiment])
                 illustrations = namedtuplefetchall(cursor)
                 for ill in illustrations:
@@ -282,7 +274,7 @@ class Command(BaseCommand):
                         # TODO convertir les binaires en fichiers
                         fichier_src="test",
                         date=ill.date_illustration,
-                        indexajaris=ill.indexajaris
+                        indexajaris=ill.indexajaris,
                     )
                     if ill.personne:
                         try:
@@ -292,7 +284,7 @@ class Command(BaseCommand):
                             pass
                     illustration.save()
 
-                # Documents attachés 
+                # Documents attachés
                 documents_sql = (
                     "SELECT * FROM patbati.documents where indexbatiment = %s"
                 )
@@ -302,24 +294,20 @@ class Command(BaseCommand):
                     document = DocumentAttache(
                         bati=bati,
                         fichier_src=doc.fichier_source,
-                        date=doc.date_document
+                        date=doc.date_document,
                     )
                     document.save()
 
-
                 # PERSPECTIVES
-                perspectives_sql = (
-                    """SELECT * FROM patbati.rel_ident_perspective 
+                perspectives_sql = """SELECT * FROM patbati.rel_ident_perspective 
                         JOIN patbati.bib_perspective USING(codeperspective)
                         where indexbatiment = %s
                     """
-                )
                 cursor.execute(perspectives_sql, [r.indexbatiment])
                 perspectives = namedtuplefetchall(cursor)
                 for r in perspectives:
                     persp = Perspective(
-                        bati=bati,
-                        perspective=get_nomenclature(r.perspective, "PERSP")
+                        bati=bati, perspective=get_nomenclature(r.perspective, "PERSP")
                     )
                     persp.save()
 
@@ -338,12 +326,14 @@ class Command(BaseCommand):
                 for struct in structures:
                     structure = Structure(
                         bati=bati,
-                        conservation=get_nomenclature(struct.conservation, "CONSERVATION"),
+                        conservation=get_nomenclature(
+                            struct.conservation, "CONSERVATION"
+                        ),
                         materiaux_principal=get_nomenclature(struct.matge, "MAT_GE"),
                         type=get_nomenclature(struct.structure, "STRUCT"),
                         mise_en_oeuvre=get_nomenclature(struct.meoeuvre, "MEOEUVRE"),
                         info_structure=struct.info_structure,
-                        est_remarquable=struct.structure_rem
+                        est_remarquable=struct.structure_rem,
                     )
                     structure.save()
 
@@ -361,8 +351,7 @@ class Command(BaseCommand):
                         mat_object = MateriauxFinFinitionStructure(
                             structure=structure,
                             materiaux_fin=get_nomenclature(mat.matfins, "MAT_FIN"),
-                            finition=get_nomenclature(mat.finition, "FIN")
-
+                            finition=get_nomenclature(mat.finition, "FIN"),
                         )
                         mat_object.save()
 
@@ -377,13 +366,13 @@ class Command(BaseCommand):
                 cursor.execute(sql_second_oeuvre, [r.indexbatiment])
                 seconds_oeuvre = namedtuplefetchall(cursor)
 
-                for sec in seconds_oeuvre: 
+                for sec in seconds_oeuvre:
                     second_oeuvre = SecondOeuvre(
                         bati=bati,
                         conservation=get_nomenclature(sec.conservation, "CONSERVATION"),
                         type=get_nomenclature(sec.second_oeuvre, "SO"),
                         commentaire=sec.info_so,
-                        est_remarquable=sec.so_rem or False
+                        est_remarquable=sec.so_rem or False,
                     )
                     second_oeuvre.save()
 
@@ -401,7 +390,7 @@ class Command(BaseCommand):
                         mat_sec_object = MateriauxFinFinitionSecondOeuvre(
                             second_oeuvre=second_oeuvre,
                             materiaux_fin=get_nomenclature(mat.matfins, "MAT_FIN"),
-                            finition=get_nomenclature(mat.finition, "FIN")
+                            finition=get_nomenclature(mat.finition, "FIN"),
                         )
                         mat_sec_object.save()
 
@@ -441,13 +430,6 @@ class Command(BaseCommand):
                 #             bati.type_bat.set(get_nomenclature[key.type_bat])
                 #             break
 
-
-
-                
-
-
-
-
 # TODO :
 # enquetes
 # type batiment
@@ -456,4 +438,3 @@ class Command(BaseCommand):
 # rel_matge_meo = relation entre nomenclature
 # rel_recommande = relation entre nomenclature
 # rel_remplace = vide
-

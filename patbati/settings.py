@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from easy_thumbnails.conf import Settings as easy_thumbnails_defaults
 from dotenv import load_dotenv
 # load .env file for DB config
 
@@ -152,11 +153,48 @@ DATABASES = {
 
 # config lié à l'install de mapentity et ses dépendances
 
-PAPERCLIP_ENABLE_VIDEO = True
-PAPERCLIP_ENABLE_LINK = True
+PAPERCLIP_ENABLE_VIDEO = False
+PAPERCLIP_ENABLE_LINK = False
 PAPERCLIP_FILETYPE_MODEL = 'mapentitycommon.FileType'
 PAPERCLIP_LICENSE_MODEL = 'mapentitycommon.License'
 PAPERCLIP_ATTACHMENT_MODEL = 'mapentitycommon.Attachment'
+
+PAPERCLIP_ALLOWED_EXTENSIONS = [
+    "jpeg",
+    "jpg",
+    "mp3",
+    "mp4",
+    "odt",
+    "pdf",
+    "png",
+    "svg",
+    "txt",
+    "gif",
+    "tiff",
+    "tif",
+    "docx",
+    "webp",
+    "bmp",
+    "flac",
+    "mpeg",
+    "doc",
+    "ods",
+    "gpx",
+    "xls",
+    "xlsx",
+    "odg",
+]
+
+THUMBNAIL_ALIASES = {
+    "": {
+        "thumbnail": {"size": (150, 150)},
+    },
+}
+
+THUMBNAIL_PROCESSORS = (
+    *easy_thumbnails_defaults.THUMBNAIL_PROCESSORS,
+)
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -166,8 +204,13 @@ LANGUAGES = (
     ('fr', 'French'),
 )
 
-MEDIA_URL = '/media/'
-MAPENTITY_CONFIG = {}
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+MAPENTITY_CONFIG = {
+    "MAPENTITY_WEASYPRINT": True,
+}
 
 LEAFLET_CONFIG = {
     'SRID': 3857,

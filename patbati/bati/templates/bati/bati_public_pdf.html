@@ -1,0 +1,73 @@
+{% load static mapentity_tags %}
+<link rel="stylesheet" href="{% static 'bati_public_pdf.css' %}">
+
+{% block content %}
+<title>{{ object.appelation }}</title>
+
+<h1 class="title">{{ object.appelation }} Alt.: {{ object.altitude }} m</h1>
+<p class="subtitle">
+  <strong> Secteur : {{ object.secteur|default:"-" }}</strong> 
+</p>
+
+{% if object.illustrations.all %}
+<div class="image-row">
+  {% for img in object.illustrations.all|slice:":2" %}
+    {% if img.fichier_src %}
+    <img src="file://{{ img.fichier_src.path }}" alt="Illustration {{ forloop.counter }}">
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+<section>
+  <h2>Informations générales</h2>
+  <ul class="info-list">
+    <li><span class="label">Propriétaire :</span> {{ object.proprietaire|default:"-" }}</li>
+    <li><span class="label">Coordonnées (Lambert93) : </span> x: {{ object.x|default:"-" }} y: {{ object.y|default:"-" }}</li>
+    <br><br>
+    <li><span class="label">Typologie :</span>{{ object.classe|default:"-" }}</li>
+    <li><span class="label"></span>{{ object.classe.description }}</li>
+    <br><br>
+    <li><span class="label">État général :</span> {{ object.conservation }}</li>
+    <li><span class="label">Perspective :</span> 
+      {% for pers in object.perspective_set.all %} 
+      {{ pers.perspective.label }}
+      {% if not forloop.last %}, {% endif %}
+      {% empty %}
+      Aucune Perspective
+      {% endfor %}</li>
+    <li>
+      <span class="label">Date derniers travaux :</span>
+      {% if object.dernier_travaux %}
+        {{ object.dernier_travaux.date|date:"d/m/Y" }}
+      {% else %}
+        Aucun travaux
+      {% endif %}
+    </li>
+
+    <br><br>
+    <li><span class="label">Degré de patrimonialité :</span> {{ object.notepatri }}/6</li>
+    <li><span class="label">Patrimonialité :</span> {{ object.patrimonialite|default:"-" }}</li>
+  </ul>
+</section>
+
+<section>
+  <h2 class="section-title">STRUCTURES PORTEUSES</h2>
+  <ul class="info-list">
+    {% for struct_type, materials in object.get_structures_with_materials.items %}
+      <li>
+        <strong>{{ struct_type }}:</strong> {{ materials }}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section>
+  <h2>Équipements</h2>
+    {% for e in object.equipements.all %}
+    {{ e.type }}{% if not forloop.last %}, {% endif %}
+    {% empty %}
+    Aucun equipements
+    {% endfor %}</li>
+</section>
+{% endblock %}
