@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from mapentity.views.generic import (
     MapEntityList,
@@ -15,6 +16,7 @@ from django.db.models import Value, DateField
 from mapentity.views.api import MapEntityViewSet
 from mapentity.views.mixins import ModelViewMixin
 from patbati.bati.filters import BatiFilterSet
+
 from patbati.bati.forms import (
     DemandeTravauxForm,
     EnquetesForm,
@@ -107,8 +109,9 @@ class BatiDetail(MapEntityDetail):
             )
             demandes_travaux_sorted.append((demande, travaux_sorted))
 
-        context["demandes_travaux_sorted"] = demandes_travaux_sorted
-        return context
+        context['demandes_travaux_sorted'] = demandes_travaux_sorted
+        context['form'] = IllustrationForm()
+
 
 
 # class BatiCreate(FormsetMixin, MapEntityCreate):
@@ -362,9 +365,20 @@ class SecondOeuvreFinitionDelete(ChildDeleteViewMixin, DeleteView):
     model = MateriauxFinFinitionSecondOeuvre
     parent_model = SecondOeuvre
 
+class IllustrationCreateView(CreateView):
+    model = Illustration
+    form_class = IllustrationForm
 
+    def form_valid(self, form):
+        parent = Bati.objects.get(pk=self.kwargs['parent_pk'])
+        form.instance.bati = parent
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('bati:bati_detail', kwargs={'pk': self.object.bati.pk})
+
+      
 from mapentity.views.generic import MapEntityDocumentWeasyprint
-
 
 class BatiDocumentPdfPublic(MapEntityDocumentWeasyprint):
     model = Bati

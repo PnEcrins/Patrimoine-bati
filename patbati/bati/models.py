@@ -565,10 +565,13 @@ class Illustration(models.Model):
         limit_choices_to={"id_type__code": "TYPE_ILLUSTRATION"},
         related_name="illustration_type",
     )
-    auteur = models.ForeignKey(
-        User, on_delete=models.PROTECT, null=True, related_name="ilustration_auteur"
-    )
-    fichier_src = models.ImageField(null=False, verbose_name="fichier source")
+    auteur = models.ForeignKey (
+        User,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name="ilustration_auteur"
+    ) 
+    fichier_src = models.ImageField(null=False, verbose_name="fichier source", upload_to="post_images/")
     date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
     indexajaris = models.IntegerField(null=True, verbose_name="index photothèque")
 

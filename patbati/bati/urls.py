@@ -1,6 +1,9 @@
+from os import stat
+from patbati import settings
 from patbati.bati import models
 from mapentity.registry import registry
 from django.urls import path
+from django.conf.urls.static import static
 from patbati.bati.views import (
     BatiDocumentPdfDetail,
     BatiDocumentPdfPublic,
@@ -155,6 +158,11 @@ urlpatterns += [
         name="second_finition_delete",
     ),
     path(
+      '<int:parent_pk>/illustration/add/', 
+      IllustrationCreateView.as_view(), 
+      name='illustration_add'
+    ),
+    path(
         "bati/<int:pk>/public_pdf/",
         BatiDocumentPdfPublic.as_view(),
         name="pdf_export_public",
@@ -164,4 +172,4 @@ urlpatterns += [
         BatiDocumentPdfDetail.as_view(),
         name="pdf_detail",
     ),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
