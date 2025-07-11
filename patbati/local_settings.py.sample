@@ -16,3 +16,4 @@ DATABASES['authent'] = {
 }
 
 #AUTHENT_DEFAULT_USER_GROUP_NAME = "test"
+LOCAL_SRID = 2154

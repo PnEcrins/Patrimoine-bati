@@ -8,23 +8,35 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 from patbati.mapentitycommon.forms import ChildFormHelper
-from .models import Enquetes, Bati, DemandeTravaux, Illustration, MateriauxFinFinitionSecondOeuvre, MateriauxFinFinitionStructure, Perspective, SecondOeuvre, Structure, Travaux
+from .models import (
+    Enquetes,
+    Bati,
+    DemandeTravaux,
+    Illustration,
+    MateriauxFinFinitionSecondOeuvre,
+    MateriauxFinFinitionStructure,
+    Perspective,
+    SecondOeuvre,
+    Structure,
+    Travaux,
+)
 
 
 class EnquetesForm(ChildFormHelper):
 
     class Meta:
         model = Enquetes
-        exclude = ['bati']
+        exclude = ["bati"]
+
 
 class PerspectiveForm(ChildFormHelper):
     class Meta:
         model = Perspective
-        exclude = ['bati']
+        exclude = ["bati"]
 
     date = forms.DateField(
         initial=datetime.date.today,
-        widget=forms.DateInput(attrs={'type': 'date'}),
+        widget=forms.DateInput(attrs={"type": "date"}),
     )
 
 
@@ -41,39 +53,43 @@ class PerspectiveForm(ChildFormHelper):
 
 # DemandeTravauxFormSet = inlineformset_factory(Bati, DemandeTravaux, form=DemandeTravauxForm, extra=1)
 
+
 class DemandeTravauxForm(ChildFormHelper):
     class Meta:
         model = DemandeTravaux
-        exclude = ['bati']
+        exclude = ["bati"]
         widgets = {
-            'date_permis': forms.DateInput(
+            "date_permis": forms.DateInput(
                 attrs={
-                    'type': 'date',             
+                    "type": "date",
                 }
             ),
-            'date_demande_permis': forms.DateInput(
+            "date_demande_permis": forms.DateInput(
                 attrs={
-                    'type': 'date',
+                    "type": "date",
                 }
             ),
         }
 
+
 class TravauxForm(ChildFormHelper):
     class Meta:
         model = Travaux
-        exclude = ['demande']
+        exclude = ["demande"]
         widgets = {
-            'date': forms.DateInput(
+            "date": forms.DateInput(
                 attrs={
-                    'type': 'date',
+                    "type": "date",
                 }
             ),
         }
-    
+
+
 class BatiForm(MapEntityForm):
-    class Meta():
+    class Meta:
         model = Bati
         exclude = []
+
     # TODO : ajouter les champs un par un...
     # fieldslayout = [
     #     Div(
@@ -82,27 +98,39 @@ class BatiForm(MapEntityForm):
     #     )
     # ]
 
+
 class StructureForm(ChildFormHelper):
     class Meta:
         model = Structure
-        fields = ['type', 'est_remarquable', 'conservation', 'materiaux_principal', 'mise_en_oeuvre', 'info_structure']
+        fields = [
+            "type",
+            "est_remarquable",
+            "conservation",
+            "materiaux_principal",
+            "mise_en_oeuvre",
+            "info_structure",
+        ]
+
 
 class SecondOeuvreForm(ChildFormHelper):
     class Meta:
         model = SecondOeuvre
-        fields = ['type', 'est_remarquable', 'conservation', 'commentaire']
+        fields = ["type", "est_remarquable", "conservation", "commentaire"]
+
 
 class MateriauFinFinitionStructureForm(ChildFormHelper):
     class Meta:
         model = MateriauxFinFinitionStructure
-        fields = ['materiaux_fin', 'finition']
+        fields = ["materiaux_fin", "finition"]
+
 
 class MateriauFinFinitionSecondOeuvreForm(ChildFormHelper):
     class Meta:
         model = MateriauxFinFinitionSecondOeuvre
-        fields = ['materiaux_fin', 'finition']
+        fields = ["materiaux_fin", "finition"]
+
 
 class IllustrationForm(ChildFormHelper):
     class Meta:
         model = Illustration
-        fields = ['type', 'fichier_src', 'auteur', 'date']
+        fields = ["type", "fichier_src", "auteur", "date"]
