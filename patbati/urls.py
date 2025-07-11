@@ -26,20 +26,20 @@ admin.autodiscover()
 
 urlpatterns = [
     path(
-        '',
-        RedirectView.as_view(url=reverse_lazy('bati:bati_list'), permanent=True),
-        name='home',
+        "",
+        RedirectView.as_view(url=reverse_lazy("bati:bati_list"), permanent=True),
+        name="home",
     ),
-    path('', include('patbati.bati.urls')),
-    path('', include('mapentity.urls')),
-    path('paperclip/', include('paperclip.urls')),
-    path('admin/', admin.site.urls),
-    path('i18n/', include('django.conf.urls.i18n')),
-    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path("", include("patbati.bati.urls")),
+    path("", include("mapentity.urls")),
+    path("paperclip/", include("paperclip.urls")),
+    path("admin/", admin.site.urls),
+    path("i18n/", include("django.conf.urls.i18n")),
+    path("login/", auth_views.LoginView.as_view(), name="login"),
     path(
-        'logout/',
+        "logout/",
         auth_views.LogoutView.as_view(),
-        {'next_page': '/'},
-        name='logout',
+        {"next_page": "/"},
+        name="logout",
     ),
 ]

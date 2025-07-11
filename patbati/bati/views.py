@@ -111,8 +111,8 @@ class BatiDetail(MapEntityDetail):
             )
             demandes_travaux_sorted.append((demande, travaux_sorted))
 
-        context['demandes_travaux_sorted'] = demandes_travaux_sorted
-        context['form'] = IllustrationForm()
+        context["demandes_travaux_sorted"] = demandes_travaux_sorted
+        context["form"] = IllustrationForm()
 
         return context
 
@@ -139,6 +139,10 @@ class BatiViewSet(MapEntityViewSet):
     geojson_serializer_class = BatiGeojsonSerializer
     filterset_class = BatiFilterSet
     queryset = Bati.objects.all()
+
+    def get_view_perm(self):
+        """use by view_permission_required decorator"""
+        return "bati.view_bati"
 
 
 class EnquetesCreate(ChildFormViewMixin, CreateView):
@@ -368,20 +372,22 @@ class SecondOeuvreFinitionDelete(ChildDeleteViewMixin, DeleteView):
     model = MateriauxFinFinitionSecondOeuvre
     parent_model = SecondOeuvre
 
+
 class IllustrationCreateView(CreateView):
     model = Illustration
     form_class = IllustrationForm
 
     def form_valid(self, form):
-        parent = Bati.objects.get(pk=self.kwargs['parent_pk'])
+        parent = Bati.objects.get(pk=self.kwargs["parent_pk"])
         form.instance.bati = parent
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('bati:bati_detail', kwargs={'pk': self.object.bati.pk})
+        return reverse("bati:bati_detail", kwargs={"pk": self.object.bati.pk})
 
-      
+
 from mapentity.views.generic import MapEntityDocumentWeasyprint
+
 
 class BatiDocumentPdfPublic(MapEntityDocumentWeasyprint):
     model = Bati
@@ -396,4 +402,4 @@ class BatiDocumentPdfDetail(MapEntityDocumentWeasyprint):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.template_name = 'bati/bati_detail_pdf.html'
+        self.template_name = "bati/bati_detail_pdf.html"

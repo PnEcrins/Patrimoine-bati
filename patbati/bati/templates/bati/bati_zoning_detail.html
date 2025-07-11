@@ -1,0 +1,17 @@
+
+{% load mapentity_tags %}
+
+<div id="zonage" class="tab-pane">
+
+<table class="table table-striped">
+
+    {% for area in  object.areas %}
+        <tr>
+            
+            <th>{{area.type.name}}</th>
+            <td>{{area.name}}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+</div>

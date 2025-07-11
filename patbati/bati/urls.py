@@ -158,9 +158,9 @@ urlpatterns += [
         name="second_finition_delete",
     ),
     path(
-      '<int:parent_pk>/illustration/add/', 
-      IllustrationCreateView.as_view(), 
-      name="illustration_add",
+        "<int:parent_pk>/illustration/add/",
+        IllustrationCreateView.as_view(),
+        name="illustration_add",
     ),
     path(
         "bati/<int:pk>/public_pdf/",
