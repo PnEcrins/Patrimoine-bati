@@ -1,5 +1,5 @@
 {% extends "mapentity/mapentity_detail.html" %}
-{% load static %}
+{% load static mapentity_tags %}
 
 {% block download %}
   </div>
@@ -29,13 +29,35 @@
     <span class="d-none d-sm-inline">Gros et Second Oeuvre</span></a>
 </li>
 
+<li class="nav-item">
+    <a id="tab-structure" class="nav-link" href="#zonage" 
+    data-toggle="tab"> 
+        <i class="bi bi-geo-alt"></i>
+    <span class="d-none d-sm-inline">Zonage</span></a>
+</li>
+
 {% endblock %}
 
 
 {% block before_attachments_extra_tab_content %}
 <div id="enq-pers" class="tab-pane">
     <div class="mb-3">
+        <h2>YAHHHHH</h2>
+        <p>
+            {{object.areas}}
+            {% for area in object.areas %}
+                {{area.name}}
+            {% endfor %}
+        </p>
         <!-- Perspectives -->
+         <table class="table">
+
+
+    <tr>
+        <th> Zonages </th>
+        <td>{% valuelist object.areas %}</td>
+    </tr>
+</table>
     <div class="d-flex mb-2 align-items-center">
         <h4 class="mb-0">Perspectives</h4>
         <a href="{% url 'bati:perspectives_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
@@ -450,6 +472,10 @@
         </div>
     </div>
 </div>
+
+{% include "bati/bati_zoning_detail.html" %}
+
+
 {% endblock %}
 
 

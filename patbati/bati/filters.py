@@ -1,10 +1,13 @@
 import django_filters.fields
 from mapentity.filters import BaseMapEntityFilterSet
 
-from attr import field
 import django_filters
 from django import forms
-from .models import Bati, Nomenclature, NomenclatureType
+from patbati.bati.models import Bati
+from zoning.models import Area
+from zoning.filters import AreaIntersectionFilter
+
+
 
 class EmptyLabelChoiceFilterMixin:
     """
@@ -18,6 +21,7 @@ class EmptyLabelChoiceFilterMixin:
             if isinstance(field, django_filters.fields.ModelChoiceField):
                 field.empty_label = field.label
 
+
 class BatiFilterSet(EmptyLabelChoiceFilterMixin, BaseMapEntityFilterSet):
     appelation = django_filters.CharFilter(
         lookup_expr="icontains",
@@ -26,18 +30,44 @@ class BatiFilterSet(EmptyLabelChoiceFilterMixin, BaseMapEntityFilterSet):
     )
 
     # @TODO: ref_geo --> zone geopgraphique sur carte
-    # secteur = django_filters.ModelChoiceFilter(
-    #     queryset=Nomenclature.objects.filter(id_type__code='SECTEUR'),
-    #     label="Secteur",
-    #     empty_label="Secteur"
-    # )
 
+    secteur = AreaIntersectionFilter(
+        queryset=Area.objects.filter(type__code="SEC"),
+        label="Secteurs",
+    )
+
+    communes = AreaIntersectionFilter(
+        queryset=Area.objects.filter(type__code="COM", enable=True),
+        label="Communes",
+    )
+
+    site_inscrits_classse = AreaIntersectionFilter(
+        queryset=Area.objects.filter(type__code__in=("SITE_INSC", "SITE_CLASSES" ), enable=True),
+        label="Sites inscrit et classé",
+    )
+
+    zone_reg = AreaIntersectionFilter(
+        queryset=Area.objects.filter(type__code__in=("PPN", "ZC", "PEC" ), enable=True),
+        label="Zones reglémentées",
+    )
 
     class Meta:
         model = Bati
         fields = [
-            'appelation', 'classe', 'type_bat', 'notepatri', 'conservation', 'exposition',
-            'faitage', 'implantation', 'proprietaire', 'valide', 'indivision', 'bat_suppr', 'protection', 'masques',
-            'risques_nat', 'perspectives'
+            "appelation",
+            "classe",
+            "type_bat",
+            "notepatri",
+            "conservation",
+            "exposition",
+            "faitage",
+            "implantation",
+            "proprietaire",
+            "valide",
+            "indivision",
+            "bat_suppr",
+            "protection",
+            "masques",
+            "risques_nat",
+            "perspectives",
         ]
-

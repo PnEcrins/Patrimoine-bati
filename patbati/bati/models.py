@@ -1,9 +1,12 @@
 from collections import defaultdict
 import django
 from django.db import models
+from django.urls import reverse
 from django.contrib.gis.db import models as gis_models
-from mapentity.models import MapEntityMixin, BaseMapEntityMixin
 from django.contrib.auth.models import User
+from mapentity.models import MapEntityMixin
+
+from zoning.models import Area
 
 
 # Nomenclature models for ref_nomenclatures schema
@@ -31,8 +34,7 @@ class Nomenclature(models.Model):
 
 
 # Main Bati model
-class Bati(MapEntityMixin, models.Model):
-    id = models.AutoField(primary_key=True)  # indexBatiment
+class Bati(MapEntityMixin):
     valide = models.BooleanField(
         default=False, null=True, verbose_name="Validé"
     )  # validé
@@ -43,10 +45,9 @@ class Bati(MapEntityMixin, models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        limit_choices_to={'id_type__code': 'TYPE_BAT'},
-        related_name='batiments_type'
+        limit_choices_to={"id_type__code": "TYPE_BAT"},
+        related_name="batiments_type",
     )
-
 
     # code_classe / classe archi
     classe = models.ForeignKey(
@@ -188,7 +189,8 @@ class Bati(MapEntityMixin, models.Model):
 
     @property
     def type_bat_label(self):
-        return self.type_bat.label if self.type_bat else "" 
+        return self.type_bat.label if self.type_bat else ""
+
     def secteur_label(self):
         return self.secteur.label if self.secteur else ""
 
@@ -196,33 +198,34 @@ class Bati(MapEntityMixin, models.Model):
     def dernier_travaux(self):
         from patbati.bati.models import Travaux
 
-        return (
-            Travaux.objects.filter(demande__bati=self)
-            .order_by('-date')
-            .first()
-        )
+        return Travaux.objects.filter(demande__bati=self).order_by("-date").first()
 
     @property
     def get_structures_with_materials(self):
         structures_with_materials = defaultdict(list)
 
         for struct in self.structure.all():
-            structures_with_materials[struct.type.label].append(struct.materiaux_principal.label)
+            structures_with_materials[struct.type.label].append(
+                struct.materiaux_principal.label
+            )
 
             for mat_fin in struct.materiaux_fin.all():
                 structures_with_materials[struct.type.label].append(mat_fin.label)
 
         structures_with_materials = {
-            struct_type: ', '.join(sorted(set(materials), key=materials.index))
+            struct_type: ", ".join(sorted(set(materials), key=materials.index))
             for struct_type, materials in structures_with_materials.items()
         }
 
         return structures_with_materials
 
     def get_detail_url(self):
-        from django.urls import reverse
 
         return reverse("bati:bati_detail", kwargs={"pk": self.pk})
+
+    @property
+    def areas(self):
+        return Area.objects.filter(geom_4326__intersects=self.geom)
 
     def __str__(self):
         return self.appelation if self.appelation else f"Bâtiment {self.id}"
@@ -392,7 +395,7 @@ class MateriauxFinFinitionStructure(models.Model):
         null=False,
         limit_choices_to={"id_type__code": "MAT_FIN"},
         related_name="materiaux_fin_rel",
-        verbose_name="Materiaux fin",   
+        verbose_name="Materiaux fin",
     )
     finition = models.ForeignKey(
         Nomenclature,
@@ -433,8 +436,8 @@ class SecondOeuvre(models.Model):
         blank=False,
         null=False,
         verbose_name="Etat de conservation",
-        limit_choices_to={'id_type__code': 'CONSERVATION'},
-        related_name="second_oeuvre_conservation"
+        limit_choices_to={"id_type__code": "CONSERVATION"},
+        related_name="second_oeuvre_conservation",
     )
     commentaire = models.TextField(null=True, verbose_name="Commentaire")
     est_remarquable = models.BooleanField(
@@ -578,13 +581,12 @@ class Illustration(models.Model):
         limit_choices_to={"id_type__code": "TYPE_ILLUSTRATION"},
         related_name="illustration_type",
     )
-    auteur = models.ForeignKey (
-        User,
-        on_delete=models.PROTECT,
-        null=True,
-        related_name="ilustration_auteur"
-    ) 
-    fichier_src = models.ImageField(null=False, verbose_name="fichier source", upload_to="post_images/")
+    auteur = models.ForeignKey(
+        User, on_delete=models.PROTECT, null=True, related_name="ilustration_auteur"
+    )
+    fichier_src = models.ImageField(
+        null=False, verbose_name="fichier source", upload_to="post_images/"
+    )
     date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
     indexajaris = models.IntegerField(null=True, verbose_name="index photothèque")
 

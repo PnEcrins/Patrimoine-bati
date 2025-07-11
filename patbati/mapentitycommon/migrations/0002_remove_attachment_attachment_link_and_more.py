@@ -7,16 +7,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mapentitycommon', '0001_initial'),
+        ("mapentitycommon", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='attachment',
-            name='attachment_link',
+            model_name="attachment",
+            name="attachment_link",
         ),
         migrations.RemoveField(
-            model_name='attachment',
-            name='attachment_video',
-        )
+            model_name="attachment",
+            name="attachment_video",
+        ),
     ]
