@@ -677,3 +677,26 @@ class MateriauGeMiseEnOeuvre(models.Model):
         limit_choices_to={"id_type__code": "MEOEUVRE"},
         related_name="mise_en_oeuvre_materiaux_ge",
     )
+
+class ClasseArchiNature(models.Model):
+    """__summary__
+
+    rel_recommande
+    """
+
+    classe = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={"id_type__code": "CL_ARCHI"},
+        related_name="classe_archi_nature",
+    )
+    nature = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        limit_choices_to={"id_type__code": "NATURE_TRAVAUX"},
+        related_name="nature_classe_archi"
+    )

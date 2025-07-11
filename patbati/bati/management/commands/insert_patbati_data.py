@@ -6,6 +6,9 @@ from psycopg2.extras import NamedTupleCursor
 
 from patbati.bati.models import (
     Bati,
+    ClasseArchiNature,
+    MateriauGeMiseEnOeuvre,
+    MateriauxFinFinition,
     Nomenclature,
     NomenclatureType,
     Travaux,
@@ -394,47 +397,61 @@ class Command(BaseCommand):
                         )
                         mat_sec_object.save()
 
-                # # inserer bon numero de type de batiment en fonction de appelation
-                # # # Type de batiment
-                # types = {
-                #     "abri": 498,
-                #     "hangar": 499,
-                #     "cabane": 500,
-                #     "bergerie": 501,
-                #     "microcentrale": 502,
-                #     "chalets": 503,
-                #     "chapelle": 504,
-                #     "ferme": 505,
-                #     "gite": 506,
-                #     "grange": 507,
-                #     "maison": 508,
-                #     "oratoire": 509,
-                #     "refuge": 510,
-                #     "ruine": 511 
-                # }
-                
-                # sql_type_batiment = """
-                # SELECT appelation
-                # FROM patbati.identification
-                # ORDER BY appelation
-                # """
+            # rel_recommande
+            classe_archi_nature_sql = """
+                SELECT *
+                FROM patbati.rel_recommande
+                JOIN patbati.bib_classe_archi USING(codeclasse)
+                JOIN patbati.bib_nature USING(codenature)
+                """
 
-                # cursor.execute(sql_type_batiment)
-                # appelation = namedtuplefetchall(cursor)
-                # for app in appelation:
-                #     app_name = app.appelation.lower() if app.appelation else ""
-                #     for key in types:
-                #         if key in app_name:
-                #             print(f"'{key}' trouvé dans appelation '{app.appelation}', code = {types[key]}")
-                #             # ajoute numero de type dans la colone du batiment
-                #             bati.type_bat.set(get_nomenclature[key.type_bat])
-                #             break
+            cursor.execute(classe_archi_nature_sql)
+            results = namedtuplefetchall(cursor)
+            for r in results:
+                cl_nat_object = ClasseArchiNature(
+                    classe = get_nomenclature(r.classe, "CL_ARCHI"),
+                    nature = get_nomenclature(r.nature, "NATURE_TRAVAUX"),
+                )
+                cl_nat_object.save()
 
+            # rel_matfins_finition
+            matfins_finition_sql = """
+             SELECT *
+                FROM patbati.rel_matfins_finition
+                JOIN patbati.bib_materiaux_fins USING(codematfins)
+                JOIN patbati.bib_finition USING(codefinition)
+            """
+            
+            cursor.execute(matfins_finition_sql)
+            results = namedtuplefetchall(cursor)
+            for r in results:
+                matfin_finition_obj = MateriauxFinFinition(
+                    materiaux_fin = get_nomenclature(r.matfins, "MAT_FIN"),
+                    finition = get_nomenclature(r.finition, "FIN")
+                )
+
+                matfin_finition_obj.save()   
+
+            # rel_matge_meo
+            matge_meo_sql = """
+             SELECT *
+                FROM patbati.rel_matge_meo
+                JOIN patbati.bib_materiaux_ge USING(codematge)
+                JOIN patbati.bib_meoeuvre USING(codemeo)
+            """
+            
+            cursor.execute(matge_meo_sql)
+            results = namedtuplefetchall(cursor)
+            for r in results:
+                print(r)
+                matge_meo_obj = MateriauGeMiseEnOeuvre(
+                    materiaux_ge = get_nomenclature(r.matge, "MAT_GE"),
+                    mise_en_oeuvre = get_nomenclature(r.meoeuvre, "MEOEUVRE")
+                )
+
+                matge_meo_obj.save() 
 # TODO :
 # enquetes
-# type batiment
+# images
 # rel_protection = ref_geo
-# rel_matfins_finition = relation entre nomenclature
-# rel_matge_meo = relation entre nomenclature
-# rel_recommande = relation entre nomenclature
 # rel_remplace = vide
