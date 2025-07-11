@@ -1,4 +1,4 @@
-{% load static mapentity_tags %}
+{% load static attachments_tags %}
 <link rel="stylesheet" href="{% static 'bati_public_pdf.css' %}">
 
 {% block content %}
@@ -9,15 +9,15 @@
   <strong> Secteur : {{ object.secteur|default:"-" }}</strong> 
 </p>
 
-{% if object.illustrations.all %}
-<div class="image-row">
-  {% for img in object.illustrations.all|slice:":2" %}
-    {% if img.fichier_src %}
-    <img src="file://{{ img.fichier_src.path }}" alt="Illustration {{ forloop.counter }}">
+<h5> Fichiers attachés :</h5> 
+  {% get_attachments_for object as "my_attachments" %}
+  {% for att in my_attachments|slice:"2" %}
+    {% if att.is_image %}
+      <img src="{% get_media_prefix %}{{att.attachment_file}}" alt="" style="height:50%; width:50%;">
+    {% elif att.attachment_link %}
+      <img class="img-thumbnail" src="{{ att.attachment_link }}" alt="{{ att.title|default:att.filename }}" title="{{ att.title|default:att.filename }}">
     {% endif %}
   {% endfor %}
-</div>
-{% endif %}
 
 <section>
   <h2>Informations générales</h2>

@@ -178,7 +178,7 @@
   {% get_attachments_for object as "my_attachments" %}
   {% for att in my_attachments %}
    {% if att.is_image %}
-      <img src="{% get_media_prefix %}{{att.attachment_file}}" alt="">
+      <img src="{% get_media_prefix %}{{att.attachment_file}}" alt="" style="height:50%; width:50%;">
     {% elif att.attachment_link %}
         <img class="img-thumbnail" src="{{ att.attachment_link }}" alt="{{ att.title|default:att.filename }}" title="{{ att.title|default:att.filename }}">
     {% endif %}
