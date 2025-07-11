@@ -443,7 +443,6 @@ class Command(BaseCommand):
             cursor.execute(matge_meo_sql)
             results = namedtuplefetchall(cursor)
             for r in results:
-                print(r)
                 matge_meo_obj = MateriauGeMiseEnOeuvre(
                     materiaux_ge = get_nomenclature(r.matge, "MAT_GE"),
                     mise_en_oeuvre = get_nomenclature(r.meoeuvre, "MEOEUVRE")
