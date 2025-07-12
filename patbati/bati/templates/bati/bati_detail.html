@@ -42,22 +42,7 @@
 {% block before_attachments_extra_tab_content %}
 <div id="enq-pers" class="tab-pane">
     <div class="mb-3">
-        <h2>YAHHHHH</h2>
-        <p>
-            {{object.areas}}
-            {% for area in object.areas %}
-                {{area.name}}
-            {% endfor %}
-        </p>
-        <!-- Perspectives -->
-         <table class="table">
 
-
-    <tr>
-        <th> Zonages </th>
-        <td>{% valuelist object.areas %}</td>
-    </tr>
-</table>
     <div class="d-flex mb-2 align-items-center">
         <h4 class="mb-0">Perspectives</h4>
         <a href="{% url 'bati:perspectives_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
