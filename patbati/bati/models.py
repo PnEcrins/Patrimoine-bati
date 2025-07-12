@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from mapentity.models import MapEntityMixin
 
 from zoning.models import Area
+from zoning.mixins import AreaPropertyMixin
 
 
 # Nomenclature models for ref_nomenclatures schema
@@ -34,7 +35,9 @@ class Nomenclature(models.Model):
 
 
 # Main Bati model
-class Bati(MapEntityMixin):
+class Bati(AreaPropertyMixin, MapEntityMixin):
+    AREA_GEOM_COLUMN = "geom_4326"
+
     valide = models.BooleanField(
         default=False, null=True, verbose_name="Validé"
     )  # validé
@@ -222,10 +225,6 @@ class Bati(MapEntityMixin):
     def get_detail_url(self):
 
         return reverse("bati:bati_detail", kwargs={"pk": self.pk})
-
-    @property
-    def areas(self):
-        return Area.objects.filter(geom_4326__intersects=self.geom)
 
     def __str__(self):
         return self.appelation if self.appelation else f"Bâtiment {self.id}"

@@ -8,7 +8,6 @@ from zoning.models import Area
 from zoning.filters import AreaIntersectionFilter
 
 
-
 class EmptyLabelChoiceFilterMixin:
     """
     Put empty label = verbose name for ChoiceField
@@ -42,12 +41,14 @@ class BatiFilterSet(EmptyLabelChoiceFilterMixin, BaseMapEntityFilterSet):
     )
 
     site_inscrits_classse = AreaIntersectionFilter(
-        queryset=Area.objects.filter(type__code__in=("SITE_INSC", "SITE_CLASSES" ), enable=True),
+        queryset=Area.objects.filter(
+            type__code__in=("SITE_INSC", "SITE_CLASSES"), enable=True
+        ),
         label="Sites inscrit et classé",
     )
 
     zone_reg = AreaIntersectionFilter(
-        queryset=Area.objects.filter(type__code__in=("PPN", "ZC", "PEC" ), enable=True),
+        queryset=Area.objects.filter(type__code__in=("PPN", "ZC", "PEC"), enable=True),
         label="Zones reglémentées",
     )
 

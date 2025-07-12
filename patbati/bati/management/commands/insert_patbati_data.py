@@ -127,7 +127,7 @@ class Command(BaseCommand):
                     "maison": 608,
                     "oratoire": 609,
                     "refuge": 610,
-                    "ruine": 611 
+                    "ruine": 611,
                 }
 
                 found = False
@@ -136,7 +136,9 @@ class Command(BaseCommand):
                     for key, nom_id in types.items():
                         if key in app_name:
                             try:
-                                bati.type_bat = Nomenclature.objects.get(id_nomenclature=nom_id)
+                                bati.type_bat = Nomenclature.objects.get(
+                                    id_nomenclature=nom_id
+                                )
                                 found = True
                                 break
                             except Nomenclature.DoesNotExist:
