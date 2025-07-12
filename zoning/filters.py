@@ -4,6 +4,7 @@ from django.db.models import Q
 
 from .models import Area
 
+
 class AreaIntersectionFilter(django_filters.ModelMultipleChoiceFilter):
     model = Area
 

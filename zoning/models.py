@@ -20,7 +20,7 @@ class AreaType(models.Model):
     num_version = models.CharField(50)
     size_hierarchy = models.IntegerField()
 
-
+print("AAAA", settings)
 class Area(models.Model):
     class Meta:
         db_table = "l_areas"
@@ -30,8 +30,8 @@ class Area(models.Model):
     type = models.ForeignKey(AreaType, on_delete=models.CASCADE, db_column="id_type")
     name = models.CharField(250, db_column="area_name")
     code = models.CharField(25, db_column="area_code")
-    geom = gis_models.MultiPolygonField(srid=settings.LOCAL_SRID)
-    centroid = gis_models.PointField(srid=settings.LOCAL_SRID)
+    geom = gis_models.MultiPolygonField(srid=settings.ZONING_CONFIG["LOCAL_SRID"])
+    centroid = gis_models.PointField(srid=settings.ZONING_CONFIG["LOCAL_SRID"])
     source = models.CharField(255)
     comment = models.TextField()
     enable = models.BooleanField()
