@@ -20,7 +20,6 @@ class AreaType(models.Model):
     num_version = models.CharField(50)
     size_hierarchy = models.IntegerField()
 
-print("AAAA", settings)
 class Area(models.Model):
     class Meta:
         db_table = "l_areas"
