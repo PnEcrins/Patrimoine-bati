@@ -566,47 +566,6 @@ class AuteurPhoto(models.Model):
 # TODO aggreger AuteurPhoto + User pour la liste des auteur des illustrations
 
 
-class Illustration(models.Model):
-    bati = models.ForeignKey(
-        "Bati",
-        on_delete=models.CASCADE,
-        null=False,
-        related_name="illustrations",
-    )
-    type = models.ForeignKey(
-        "Nomenclature",
-        on_delete=models.PROTECT,
-        null=True,
-        limit_choices_to={"id_type__code": "TYPE_ILLUSTRATION"},
-        related_name="illustration_type",
-    )
-    auteur = models.ForeignKey(
-        User, on_delete=models.PROTECT, null=True, related_name="ilustration_auteur"
-    )
-    fichier_src = models.ImageField(
-        null=False, verbose_name="fichier source", upload_to="post_images/"
-    )
-    date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
-    indexajaris = models.IntegerField(null=True, verbose_name="index photothèque")
-
-    def __str__(self):
-        return f"Illustration {self.id} pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
-
-
-class DocumentAttache(models.Model):
-    bati = models.ForeignKey(
-        "Bati",
-        on_delete=models.CASCADE,
-        null=False,
-        related_name="documents_attaches",
-    )
-    fichier_src = models.FileField(null=False, verbose_name="document")
-    date = models.DateField(default=django.utils.timezone.now, blank=True, null=True)
-
-    def __str__(self):
-        return f"Document attaché {self.id} pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
-
-
 class Perspective(models.Model):
     """_summary_
 

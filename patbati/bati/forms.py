@@ -12,7 +12,6 @@ from .models import (
     Enquetes,
     Bati,
     DemandeTravaux,
-    Illustration,
     MateriauxFinFinitionSecondOeuvre,
     MateriauxFinFinitionStructure,
     Perspective,
@@ -129,8 +128,3 @@ class MateriauFinFinitionSecondOeuvreForm(ChildFormHelper):
         model = MateriauxFinFinitionSecondOeuvre
         fields = ["materiaux_fin", "finition"]
 
-
-class IllustrationForm(ChildFormHelper):
-    class Meta:
-        model = Illustration
-        fields = ["type", "fichier_src", "auteur", "date"]

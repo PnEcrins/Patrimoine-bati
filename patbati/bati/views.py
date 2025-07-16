@@ -21,7 +21,6 @@ from patbati.bati.forms import (
     DemandeTravauxForm,
     EnquetesForm,
     BatiForm,
-    IllustrationForm,
     MateriauFinFinitionSecondOeuvreForm,
     PerspectiveForm,
     SecondOeuvreForm,
@@ -33,7 +32,6 @@ from .models import (
     Bati,
     DemandeTravaux,
     Enquetes,
-    Illustration,
     MateriauxFinFinitionSecondOeuvre,
     MateriauxFinFinitionStructure,
     Perspective,
@@ -112,7 +110,6 @@ class BatiDetail(MapEntityDetail):
             demandes_travaux_sorted.append((demande, travaux_sorted))
 
         context["demandes_travaux_sorted"] = demandes_travaux_sorted
-        context["form"] = IllustrationForm()
 
         return context
 
@@ -372,18 +369,6 @@ class SecondOeuvreFinitionDelete(ChildDeleteViewMixin, DeleteView):
     model = MateriauxFinFinitionSecondOeuvre
     parent_model = SecondOeuvre
 
-
-class IllustrationCreateView(CreateView):
-    model = Illustration
-    form_class = IllustrationForm
-
-    def form_valid(self, form):
-        parent = Bati.objects.get(pk=self.kwargs["parent_pk"])
-        form.instance.bati = parent
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse("bati:bati_detail", kwargs={"pk": self.object.bati.pk})
 
 
 from mapentity.views.generic import MapEntityDocumentWeasyprint

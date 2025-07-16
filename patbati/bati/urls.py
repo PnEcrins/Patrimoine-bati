@@ -12,7 +12,6 @@ from patbati.bati.views import (
     EnquetesCreate,
     EnquetesUpdate,
     EnquetesDelete,
-    IllustrationCreateView,
     PerspectiveCreate,
     PerspectiveDelete,
     PerspectiveUpdate,
@@ -156,11 +155,6 @@ urlpatterns += [
         "bati/<int:parent_pk>/second_oeuvre/<int:second_pk>/finition/<int:pk>/delete/",
         SecondOeuvreFinitionDelete.as_view(),
         name="second_finition_delete",
-    ),
-    path(
-        "<int:parent_pk>/illustration/add/",
-        IllustrationCreateView.as_view(),
-        name="illustration_add",
     ),
     path(
         "bati/<int:pk>/public_pdf/",
