@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.functional import cached_property
 
 from .settings import app_settings
 
@@ -11,7 +12,7 @@ class AreaPropertyMixin:
     # geom column of the join model on which make the intersection
     MODEL_GEOM_COLUMN = "geom"
 
-    @property
+    @cached_property
     def areas(self):
         # dynamicly build a filter with AREA_GEOM_COLUMN and MODEL_GEOM_COLUMN
         # at the end it looks like this : Area.objects.filter(geom_4326__intersects=self.geom)
@@ -21,7 +22,6 @@ class AreaPropertyMixin:
             )
         }
         qs = Area.objects.filter(**filter)
-        print(qs)
         if app_settings["AREA_TYPE_LIMITED"]:
             qs = qs.filter(type__code__in=settings.ZONING_CONFIG["AREA_TYPE_LIMITED"])
         return qs
