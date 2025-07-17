@@ -61,6 +61,7 @@ def insert_filetypes(apps, schema_editor):
         "Plan bâtiment",
         "Coupe",
         "Elévation",
+        "Autre"
     ]
 
     for type in filetypes:

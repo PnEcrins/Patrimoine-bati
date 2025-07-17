@@ -1,8 +1,12 @@
+import shutil
+from argparse import FileType
 from datetime import datetime
 from collections import namedtuple
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 from psycopg2.extras import NamedTupleCursor
+from pathlib import Path
+
 
 from patbati.bati.models import (
     Bati,
@@ -15,15 +19,17 @@ from patbati.bati.models import (
     DemandeTravaux,
     Equipement,
     ElementPaysager,
-    Illustration,
     AuteurPhoto,
-    DocumentAttache,
     Perspective,
     Structure,
     MateriauxFinFinitionStructure,
     SecondOeuvre,
     MateriauxFinFinitionSecondOeuvre,
 )
+from patbati.mapentitycommon.models import Attachment, License, FileType
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
+from django.conf import settings
 
 
 def dictfetchall(cursor):
@@ -52,6 +58,12 @@ def get_nomenclature(label, code_id_type):
         return Nomenclature.objects.get(label=label, id_type__code=code_id_type)
     except Nomenclature.DoesNotExist as e:
         print(f"Not found for {label} - type {code_id_type} ")
+
+def get_key_from_value(d, target_value):
+    for key, value in d.items():
+        if value == target_value:
+            return key
+    return None
 
 
 class Command(BaseCommand):
@@ -266,42 +278,111 @@ class Command(BaseCommand):
                     )
                     element.save()
 
+                # IMAGES
                 illustrations_sql = """SELECT * FROM patbati.illustration ill 
+                    JOIN patbati.bib_illustration USING (codeillustration)
                     LEFT JOIN patbati.bib_personnes USING(codepersonne) 
                     where indexbatiment = %s
                     """
                 cursor.execute(illustrations_sql, [r.indexbatiment])
                 illustrations = namedtuplefetchall(cursor)
+                
+                content_type = ContentType.objects.filter(model="bati").first()
+                user = User.objects.filter(username="admin").first()
+                nas = Path('/home/leopold/Documents/images')
+                paperclip = Path(settings.BASE_DIR + '/media/paperclip/bati_bati')
+                
                 for ill in illustrations:
+                    from PIL import Image
+                    fichier_source = Path(ill.fichier_source)
+                    (paperclip / str(bati.id)).mkdir(parents=True, exist_ok=True)
+                    # Copy original image
+                    shutil.copy(nas / ill.fichier_source, paperclip / str(bati.id) / fichier_source)
 
-                    illustration = Illustration(
-                        bati=bati,
-                        # TODO convertir les binaires en fichiers
-                        fichier_src="test",
-                        date=ill.date_illustration,
-                        indexajaris=ill.indexajaris,
+                    # Create thumbnail
+                    thumb_name = fichier_source.stem + ".150x150_q85" + fichier_source.suffix
+                    thumb_path = paperclip / str(bati.id) / thumb_name
+                    try:
+                        if thumb_path.name.endswith("pdf"):
+                            continue
+                        with Image.open(nas / ill.fichier_source) as img:
+                            img.thumbnail((150, 150), Image.LANCZOS)
+                            img.save(thumb_path, quality=85)
+                    except Exception as e:
+                        print(f"Error creating thumbnail for {ill.fichier_source}: {e}")
+                    
+                    filetype = FileType.objects.filter(type=ill.illustration).first()
+                    illustration = Attachment(
+                        content_type=content_type,
+                        object_id=bati.id,
+                        attachment_file=f"paperclip/bati_bati/{bati.id}/{ill.fichier_source}",
+                        author="",
+                        title="",
+                        legend="",
+                        starred=False,
+                        is_image=True,
+                        date_insert=ill.date_illustration,
+                        date_update=ill.date_illustration,
+                        random_suffix="-",
+                        creator=user,
+                        filetype=filetype,
                     )
-                    if ill.personne:
-                        try:
-                            auteur = AuteurPhoto.objects.get(nom__contains=ill.personne)
-                            illustration.auteur = auteur
-                        except AuteurPhoto.DoesNotExist:
-                            pass
+
+                    # if ill.personne:
+                    #     try:
+                    #         auteur = AuteurPhoto.objects.get(nom__contains=ill.personne)
+                    #         illustration.auteur = auteur
+                    #     except AuteurPhoto.DoesNotExist:
+                    #         pass
                     illustration.save()
 
-                # Documents attachés
-                documents_sql = (
-                    "SELECT * FROM patbati.documents where indexbatiment = %s"
-                )
+                # DOCUMENTS
+                documents_sql = """
+                SELECT * 
+                FROM patbati.documents doc
+                WHERE indexbatiment = %s
+                """
                 cursor.execute(documents_sql, [r.indexbatiment])
                 documents = namedtuplefetchall(cursor)
+
+                docs_nas = Path('/home/leopold/Documents/documents')
+
                 for doc in documents:
-                    document = DocumentAttache(
-                        bati=bati,
-                        fichier_src=doc.fichier_source,
-                        date=doc.date_document,
-                    )
-                    document.save()
+                    fichier_source = Path(doc.fichier_source)
+                    (paperclip / str(bati.id)).mkdir(parents=True, exist_ok=True)
+
+                    try:
+                        import unicodedata
+
+                        normalized_name = unicodedata.normalize('NFKD', fichier_source.name).encode('ASCII', 'ignore').decode('ASCII')
+                        dest_filename = normalized_name.lower().replace(" ", "-").replace("..", ".")
+                        dest_path = paperclip / str(bati.id) / dest_filename
+                        print(dest_filename)
+                        shutil.copy(docs_nas / doc.fichier_source, dest_path)
+
+                        pdf = FileType.objects.filter(type="PDF").first()
+                        autre = FileType.objects.filter(type="Autre").first()
+
+                        document = Attachment(
+                            content_type=content_type,
+                            object_id=bati.id,
+                            attachment_file=f"paperclip/bati_bati/{bati.id}/{dest_filename}",
+                            author="",
+                            title="",
+                            legend="",
+                            starred=False,
+                            is_image=True if dest_filename.split(".")[1] == "jpg" else False,
+                            date_insert=doc.date_document,     
+                            date_update=doc.date_document,
+                            random_suffix="-",
+                            creator=user,
+                            filetype=pdf if dest_filename.split(".")[1] == "pdf" else autre,
+                        )
+                        document.save()
+
+                    except Exception as e:
+                        print(f"Error copying document {doc.fichier_source}: {e}")
+                        continue
 
                 # PERSPECTIVES
                 perspectives_sql = """SELECT * FROM patbati.rel_ident_perspective 
@@ -453,6 +534,6 @@ class Command(BaseCommand):
                 matge_meo_obj.save() 
 # TODO :
 # enquetes
-# images
+# images (binaires) et document attaché dans mapentitycommon_attachement
 # rel_protection = ref_geo
 # rel_remplace = vide

@@ -159,6 +159,7 @@ PAPERCLIP_ENABLE_LINK = False
 PAPERCLIP_FILETYPE_MODEL = "mapentitycommon.FileType"
 PAPERCLIP_LICENSE_MODEL = "mapentitycommon.License"
 PAPERCLIP_ATTACHMENT_MODEL = "mapentitycommon.Attachment"
+PAPERCLIP_RANDOM_SUFFIX_SIZE = 0
 
 PAPERCLIP_ALLOWED_EXTENSIONS = [
     "jpeg",
@@ -254,5 +255,5 @@ PASSWORD_HASHERS = [
 ENV = os.getenv("ENV", "prod")
 # Load custom settings file
 if ENV != "tests":
-    with open("./patbati/settings_local.py") as f:
+    with open("./patbati/local_settings.py") as f:
         exec(f.read())
