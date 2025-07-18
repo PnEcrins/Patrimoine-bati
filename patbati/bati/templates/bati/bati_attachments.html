@@ -1,0 +1,61 @@
+{% load static mapentity_tags attachments_tags %}
+
+{% get_attachments_for object as "my_attachments" %}
+{% if my_attachments %}
+<div style="max-width: 700px; margin: 0 auto;">
+  <div id="carouselExampleIndicators" class="carousel slide mb-3" data-ride="carousel">
+    <ol class="carousel-indicators">
+      {% with image_index=0 %}
+        {% for att in my_attachments %}
+          {% if att.is_image %}
+            <li data-target="#carouselExampleIndicators" data-slide-to="{{ image_index }}" class="{% if image_index == 0 %}active{% endif %}"></li>
+            {% widthratio image_index|add:"1" 1 1 as image_index %}
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    </ol>
+    <div class="carousel-inner">
+      {% with image_index=0 %}
+        {% for att in my_attachments %}
+          {% if att.is_image %}
+            <div class="carousel-item {% if image_index == 0 %}active{% endif %}">
+              <a href="{{ att.attachment_file.url }}" target="_blank">
+                <img class="d-block w-100" style="max-height:400px;object-fit:contain;" src="{% get_media_prefix %}{{ att.attachment_file }}" alt="{{ att.title|default:att.filename }}">
+                <div class="carousel-caption d-none d-md-block rounded px-2 py-2" style="background: rgba(60, 60, 60, 0.65);">
+                  <h5 class="text-light mb-0">{{ att.filetype }}</h5>
+                </div>
+              </a>
+            </div>
+            {% widthratio image_index|add:"1" 1 1 as image_index %}
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev"
+      style="width:50px; background: rgba(60, 60, 60, 0.5); border-radius: 0.5rem;">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next"
+      style="width:50px; background: rgba(60, 60, 60, 0.5); border-radius: 0.5rem;">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+  </div>
+</div>
+
+<ul class="list-unstyled">
+  {% for att in my_attachments %}
+    {% if not att.is_image %}
+      <li class="mb-2">
+        <a href="{% get_media_prefix %}{{ att.attachment_file }}" target="_blank">
+          <img src="{% get_static_prefix %}paperclip/fileicons/{{ att|icon_name }}.png" alt="{{ att.title|default:att.filename }}">
+          {{ att.title|default:att.filename }}
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+{% else %}
+  <p class="text-muted">Aucune pièce jointe disponible.</p>
+{% endif %}

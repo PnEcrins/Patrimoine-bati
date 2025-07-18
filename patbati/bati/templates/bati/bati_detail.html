@@ -9,6 +9,10 @@
     <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_export_public' object.pk %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Fiche resumé</a>
 {% endblock download %}
 
+{% block attachmentspanel %}
+{% include "bati/bati_attachments.html" %}
+{% endblock %}
+
 {% block before_attachments_extra_tab_nav %}
 <li class="nav-item">
     <a id="tab-travaux" class="nav-link" href="#travaux" 
