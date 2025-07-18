@@ -1,112 +1,56 @@
 {% load static attachments_tags %}
-
 <link rel="stylesheet" href="{% static 'bati_detail_pdf.css' %}">
 
 {% block content %}
 
-<title>{{ object.appelation }}</title>
 
-<h2 class="title">{{ object.appelation }} Alt.: {{ object.altitude }} m</h2>
-<p class="subtitle">
-  <strong> Secteur : {{ object.secteur|default:"-" }}</strong> 
-</p>
+<h1 class="title">{{ object.appelation }}</h1>
 
-<h3>Renseignements</h3>
-<table>
-  <tr><th>Nouveau numéro</th><td>{{ object.id }}</td></tr>
+<h2>Informations générales</h2>
+<table class="table">
+  <tr><th>ID</th><td>{{ object.id }}</td></tr>
+  <tr><th>Appellation</th><td>{{ object.appelation|default:"-" }}</td></tr>
   <tr><th>Ancien numéro</th><td>{{ object.ancien_index|default:"-" }}</td></tr>
-  <tr><th>Valeur patrimoniale</th><td>{{ object.notepatri }}</td></tr>
-  <tr><th>Patrimonialité</th><td>{{ object.patrimonialite|default:"-" }}</td></tr>
-  <tr><th>Classe d'architecture</th><td>{{ object.classe|default:"-" }}</td></tr>
+  <tr><th>Type de bâtiment</th><td>{{ object.type_bat.label|default:"-" }}</td></tr>
+  <tr><th>Classe d'architecture</th><td>{{ object.classe.description|default:"-" }}</td></tr>
+  <tr><th>Implantation</th><td>{{ object.implantation.label|default:"-" }}</td></tr>
+  <tr><th>Faitage</th><td>{{ object.faitage.label|default:"-" }}</td></tr>
   <tr><th>Propriétaire</th><td>{{ object.proprietaire|default:"-" }}</td></tr>
-  <tr><th>Bâtiment en indivision</th><td>{{ object.indivision|yesno:"Oui,Non" }}</td></tr>
-  <tr><th>Règlementation</th>
-    <td>
-      {% for reg in object.protection.all %}
-        {{ reg.label }}{% if not forloop.last %}, {% endif %}
-      {% empty %}
-        Aucun règlement associé
-      {% endfor %}
-    </td>
-  </tr>
+  <tr><th>Indivision</th><td>{{ object.indivision|yesno:"Oui,Non" }}</td></tr>
+  <tr><th>N° de parcelle cadastrale : </th><td>{{ object.cadastre|default:"-" }}</td></tr>
+  <tr><th>Lieu-dit</th><td>{{ object.lieu_dit|default:"-" }}</td></tr>
+  <tr><th>Altitude</th><td>{{ object.altitude|default:"-" }}</td></tr>
+  <tr><th>Coordonnées Lambert 93 : </th><td>x: {{ object.x|default:"-" }}<br> y: {{ object.y|default:"-" }}</td></tr>
+  <tr><th>Situation géographique</th><td>{{ object.situation_geo|default:"-" }}</td></tr>
   <tr><th>Capacité</th><td>{{ object.capacite|default:"-" }}</td></tr>
+  <tr><th>Pente</th><td>{{ object.pente|default:"-" }}</td></tr>
+  <tr><th>Exposition</th><td>{{ object.exposition.label|default:"-" }}</td></tr>
   <tr><th>Date d'insertion</th><td>{{ object.date_insert|date:"d/m/Y" }}</td></tr>
   <tr><th>Date de mise à jour</th><td>{{ object.date_update|date:"d/m/Y" }}</td></tr>
   <tr><th>Bâtiment supprimé</th><td>{{ object.bat_suppr|yesno:"Oui,Non" }}</td></tr>
-  <tr><th>État général</th><td>{{ object.conservation }}</td></tr>
+  <tr><th>Valeur patrimoniale</th><td>{{ object.notepatri.label|default:"-" }}/6</td></tr>
+  <tr><th>Patrimonialité</th><td>{{ object.patrimonialite|default:"-" }}</td></tr>
+  <tr><th>État général</th><td>{{ object.conservation.label|default:"-" }}</td></tr>
+  <tr><th>Remarque générale</th><td>{{ object.remarque_generale|default:"-" }}</td></tr>
 </table>
 
-<h3>Géographie</h3>
-<table>
-  <tr><th>Secteur</th><td>{{ object.secteur }}</td></tr>
-  <tr><th>Lieu-dit</th><td>{{ object.lieu_dit }}</td></tr>
-  <tr><th>Cadastre</th><td>{{ object.cadastre }}</td></tr>
-  <tr><th>Coordonnée X</th><td>{{ object.x }}</td></tr>
-  <tr><th>Coordonnée Y</th><td>{{ object.y }}</td></tr>
-  <tr><th>Altitude</th><td>{{ object.altitude|default:"-" }}</td></tr>
-  <tr><th>Dénivelé</th><td>{{ object.denivelle|default:"-" }}</td></tr>
-</table>
-
-<h3>Liste des enquêtes</h3>
-{% if object.enquetes.exists %}
-<table>
-  <thead>
-    <tr>
-      <th>Enquêteur</th>
-      <th>Date de l'enquête</th>
-      <th>Date de rédaction</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for e in object.enquetes.all %}
-    <tr>
-      <td>{{ e.personne|default:"-" }}</td>
-      <td>{{ e.date_enquete|date:"d/m/Y" }}</td>
-      <td>{{ e.date_redaction|date:"d/m/Y" }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>Aucune enquête renseignée.</p>
-{% endif %}
-
-<h3>État et perspectives</h3>
-<table>
-  <tr><th>État général</th><td>{{ object.conservation }}</td></tr>
-  <tr><th>Commentaires</th><td>{{ object.remarque_generale|default:"-" }}</td></tr>
-  <tr><th>Perspectives</th>
+<h2>Géographie et zonage</h2>
+<table class="table">
+  <tr><th>Secteur</th><td>{{ object.secteur_name|default:"-" }}</td></tr>
+  <tr><th>Commune</th><td>{{ object.commune_name|default:"-" }}</td></tr>
+  <tr><th>Règlementation / Protection</th>
     <td>
-      {% for p in object.perspective_set.all %}
-        {{ p.perspective }}{% if not forloop.last %}, {% endif %}
-      {% empty %}Aucune{% endfor %}
+      {% if object.protection_names %}
+        {{ object.protection_names }}
+      {% else %}
+        Aucun règlement associé
+      {% endif %}
     </td>
   </tr>
 </table>
 
-
-<h3>Situation</h3>
-<table>
-  <tr><th>Implantation</th><td>{{ object.implantation }}</td></tr>
-  <tr><th>Faitage</th><td>{{ object.faitage }}</td></tr>
-  <tr><th>Situation géographique</th><td>{{ object.situation_geo }}</td></tr>
-  <tr><th>Exposition</th><td>{{ object.exposition }}</td></tr>
-  <tr><th>Pente</th><td>{{ object.pente }}</td></tr>
-</table>
-
-<h3>Contexte naturel</h3>
-<table>
-  <tr>
-    <th>Risques naturels</th>
-    <td>
-      {% for risque in object.risques_nat.all %}
-        {{ risque.label }}{% if not forloop.last %}, {% endif %}
-      {% empty %}
-        Aucun risque naturel
-      {% endfor %}
-    </td>
-  </tr>
-  <tr><th>Remarque risque naturel</th><td>{{ object.remarque_risque|default:"-" }}</td></tr>
+<h2>Masques</h2>
+<table class="table">
   <tr>
     <th>Masques</th>
     <td>
@@ -120,69 +64,197 @@
   <tr><th>Commentaire masque</th><td>{{ object.commentaire_masque|default:"-" }}</td></tr>
 </table>
 
-<h3>Équipements</h3>
-{% if object.equipements.exists %}
-<table>
+<h2>Risques naturels</h2>
+<table class="table">
+  <tr>
+    <th>Risques naturels</th>
+    <td>
+      {% for risque in object.risques_nat.all %}
+        {{ risque.label }}{% if not forloop.last %}, {% endif %}
+      {% empty %}
+        Aucun risque naturel
+      {% endfor %}
+    </td>
+  </tr>
+  <tr><th>Remarque risque naturel</th><td>{{ object.remarque_risque|default:"-" }}</td></tr>
+</table>
+
+<h2>Demandes et Travaux</h2>
+
+{% for demande in object.demandes_travaux.all %}
+<div class="mb-4 p-3 border rounded" style="background-color: #f9f9f9;">
+
+  <!-- Demande Table -->
+  <table class="table table-bordered table-sm mb-2">
+    <thead class="thead-light">
+      <tr>
+        <th colspan="5" class="bg-primary text-white">Demande de permis</th>
+      </tr>
+      <tr>
+        <th>Déposée</th>
+        <th>Date demande</th>
+        <th>Autorisation</th>
+        <th>Date permis</th>
+        <th>Numéro</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ demande.demande_dep|yesno:"Oui,Non" }}</td>
+        <td>{{ demande.date_demande_permis|date:"d/m/Y"|default:"-" }}</td>
+        <td>{{ demande.autorisation_p|yesno:"Oui,Non" }}</td>
+        <td>{{ demande.date_permis|date:"d/m/Y"|default:"-" }}</td>
+        <td>{{ demande.num_permis|default:"-" }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Travaux Table -->
+  {% if demande.travaux.all %}
+  <table class="table table-bordered table-striped table-sm">
+    <thead>
+      <tr>
+        <th colspan="5" class="text-muted">Travaux associés</th>
+      </tr>
+      <tr>
+        <th>Date</th>
+        <th>Autorisation parc</th>
+        <th>Subvention</th>
+        <th>Nature</th>
+        <th>Usage</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for travaux in demande.travaux.all %}
+      <tr>
+        <td>{{ travaux.date|date:"d/m/Y"|default:"-" }}</td>
+        <td>{{ travaux.autorisation|yesno:"Oui,Non" }}</td>
+        <td>{{ travaux.subvention_pne|default:"-" }}</td>
+        <td>{{ travaux.nature.label|default:"-" }}</td>
+        <td>{{ travaux.usage.label|default:"-" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted"><em>Aucun travaux associé à cette demande.</em></p>
+  {% endif %}
+
+</div>
+{% empty %}
+<p class="text-muted">Aucune demande de travaux renseignée.</p>
+{% endfor %}
+
+<h2>Gros Oeuvre</h2>
+{% for struct in object.structure.all %}
+<table class="table">
+  <thead><strong>{{ struct.type.label }}</strong></thead>
+  <tr><th>Conservation</th><td>{{ struct.conservation.label }}</td></tr>
+  <tr><th>Matériau principal</th><td>{{ struct.materiaux_principal.label }}</td></tr>
+  <tr><th>Mise en oeuvre</th><td>{{ struct.mise_en_oeuvre.label }}</td></tr>
+  <tr><th>Finitions</th>
+    <td>
+      {% for fin in struct.materiaux_fin.all %}
+        {{ fin.label }}{% if not forloop.last %}, {% endif %}
+      {% empty %}-{% endfor %}
+    </td>
+  </tr>
+  <tr><th>Remarquable</th><td>{{ struct.est_remarquable|yesno:"Oui,Non" }}</td></tr>
+  <tr><th>Infos structure</th><td>{{ struct.info_structure|default:"-" }}</td></tr>
+</table>
+{% empty %}
+<p class="text-muted">Aucune structure renseignée.</p>
+{% endfor %}
+
+<h2>Second œuvre</h2>
+{% for so in object.second_oeuvre.all %}
+<table class="table">
+  <thead><strong>{{ so.type.label }}</strong></thead>
+  <tr><th>Conservation</th><td>{{ so.conservation.label }}</td></tr>
+  <tr><th>Commentaire</th><td>{{ so.commentaire|default:"-" }}</td></tr>
+  <tr><th>Remarquable</th><td>{{ so.est_remarquable|yesno:"Oui,Non" }}</td></tr>
+  <tr><th>Finitions</th>
+    <td>
+      {% for fin in so.materiaux_fin.all %}
+        {{ fin.label }}{% if not forloop.last %}, {% endif %}
+      {% empty %}-{% endfor %}
+    </td>
+  </tr>
+</table>
+{% empty %}
+<p class="text-muted">Aucun second œuvre renseigné.</p>
+{% endfor %}
+
+<h2>Équipements</h2>
+{% for equipement in object.equipements.all %}
+<table class="table">
+  <thead><strong>{{ equipement.type.label }}</strong></thead>
+  <tr><th>Conservation</th><td>{{ equipement.conservation.label }}</td></tr>
+  <tr><th>Commentaire</th><td>{{ equipement.commentaire|default:"-" }}</td></tr>
+  <tr><th>Remarquable</th><td>{{ equipement.est_remarquable|yesno:"Oui,Non" }}</td></tr>
+</table>
+{% empty %}
+<p class="text-muted">Aucun équipement associé.</p>
+{% endfor %}
+
+<h2>Éléments paysagers</h2>
+{% for element in object.elements_paysagers.all %}
+<table class="table">
+  <thead><strong>{{ element.type.label }}</strong></thead>
+  <tr><th>Conservation</th><td>{{ element.conservation.label }}</td></tr>
+  <tr><th>Commentaire</th><td>{{ element.commentaire|default:"-" }}</td></tr>
+  <tr><th>Remarquable</th><td>{{ element.est_remarquable|yesno:"Oui,Non" }}</td></tr>
+</table>
+{% empty %}
+<p class="text-muted">Aucun élément paysager associé.</p>
+{% endfor %}
+
+<h2>Perspectives</h2>
+<table class="table">
+  <tr>
+    <th>Perspectives</th>
+    <td>
+      {% for p in object.perspective_set.all %}
+        {{ p.perspective.label|default:"-" }}{% if p.date %} ({{ p.date|date:"d/m/Y" }}){% endif %}{% if not forloop.last %}, {% endif %}
+      {% empty %}Aucune{% endfor %}
+    </td>
+  </tr>
+</table>
+
+<h2>Liste des enquêtes</h2>
+{% if object.enquetes.exists %}
+<table class="table">
   <thead>
     <tr>
-      <th>Type</th>
-      <th>Conservation</th>
-      <th>Commentaire</th>
-      <th>Est remarquable</th>
+      <th>Enquêteur</th>
+      <th>Date de l'enquête</th>
+      <th>Date de rédaction</th>
     </tr>
   </thead>
   <tbody>
-    {% for equipement in object.equipements.all %}
+    {% for e in object.enquetes.all %}
     <tr>
-      <td>{{ equipement.type|default:"-" }}</td>
-      <td>{{ equipement.conservation|default:"-" }}</td>
-      <td>{{ equipement.commentaire|default:"-" }}</td>
-      <td>{{ equipement.est_remarquable|yesno:"Oui,Non" }}</td>
+      <td>{{ e.personne.label|default:"-" }}</td>
+      <td>{{ e.date_enquete|date:"d/m/Y" }}</td>
+      <td>{{ e.date_redaction|date:"d/m/Y" }}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 {% else %}
-<p>Aucun équipement associé.</p>
+<p class="text-muted">Aucune enquête renseignée.</p>
 {% endif %}
 
-<h3>Éléments paysagers</h3>
-{% if object.elements_paysagers.exists %}
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Conservation</th>
-      <th>Commentaire</th>
-      <th>Est remarquable</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for element in object.elements_paysagers.all %}
-    <tr>
-      <td>{{ element.type|default:"-" }}</td>
-      <td>{{ element.conservation|default:"-" }}</td>
-      <td>{{ element.commentaire|default:"-" }}</td>
-      <td>{{ element.est_remarquable|yesno:"Oui,Non" }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>Aucun élément paysager associé.</p>
-{% endif %}
-
-<div class="map-panel" style="margin-top: 2em;"></div>
-
-<h5> Fichiers attachés :</h5> 
-  {% get_attachments_for object as "my_attachments" %}
+<h2>Fichiers attachés</h2>
+{% get_attachments_for object as "my_attachments" %}
+<div class="images-flex">
   {% for att in my_attachments %}
-   {% if att.is_image %}
-      <img src="{% get_media_prefix %}{{att.attachment_file}}" alt="" style="height:50%; width:50%;">
-    {% elif att.attachment_link %}
-        <img class="img-thumbnail" src="{{ att.attachment_link }}" alt="{{ att.title|default:att.filename }}" title="{{ att.title|default:att.filename }}">
+    {% if att.is_image %}
+      <div class="image-block">
+        <em style="font-size:7pt;">{{ att.filetype }}</em><br>
+        <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="">
+      </div>
     {% endif %}
   {% endfor %}
-
-
+</div>
 {% endblock %}
