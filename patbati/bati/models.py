@@ -62,7 +62,6 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     )
 
     # codepem / Implantation
-    # TODO : a enlever l'implantion doit être danns ref_geo
     implantation = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
@@ -82,8 +81,6 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
         related_name="batiments_faitage",
     )
 
-    # @TODO : Commune --> ref Geo
-
     appelation = models.CharField(max_length=200, blank=True, null=True)  # appellation
     indivision = models.BooleanField(default=False, null=True)  # indivision
     proprietaire = models.CharField(
@@ -99,23 +96,17 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     )  # description de la situation géographique
     denivelle = models.FloatField(blank=True, null=True)  # dénivellé
 
-    # secteur
-    secteur = models.ForeignKey(
-        Nomenclature,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        limit_choices_to={"id_type__code": "SECTEUR"},
-        related_name="batiments_secteur",
-    )
+    # secteur ref_geo
+    @property
+    def secteur_name(self):
+        secteur = self.areas.filter(type__code="SEC").first()
+        return secteur.name if secteur else None
 
-    # protection = zone coeur
-    # TODO a connecter au ref_geo
-    protection = models.ManyToManyField(
-        Nomenclature,
-        limit_choices_to={"id_type__code": "PROT"},
-        related_name="batiments_protection",
-    )
+    # protection/ reglementation ref_geo
+    @property
+    def protection_names(self):
+        protections = self.areas.filter(type__code__in=["PPN", "ZC", "PEC", "SITE_INSC", "SITE_CLASSES"])
+        return ", ".join([p.name for p in protections]) if protections else None
 
     # exposition
     exposition = models.ForeignKey(
@@ -189,6 +180,12 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
 
     def appelation_link(self):
         return f'<a data-pk="{self.pk}" href="{self.get_detail_url()}" title="{self.appelation}">{self.appelation}</a>'
+
+    # Commune --> ref Geo
+    @property
+    def commune_name(self):
+        commune = self.areas.filter(type__code="COM").first()
+        return commune.name if commune else None
 
     @property
     def type_bat_label(self):

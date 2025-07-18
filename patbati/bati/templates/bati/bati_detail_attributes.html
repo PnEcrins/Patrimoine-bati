@@ -26,13 +26,7 @@
             <tr><th>Type de batiment</th><td>{{ object.type_bat|default:"-" }}</td></tr>
             <tr>
               <th>Règlementation</th>
-              <td>
-                {% for reg in object.protection.all %}
-                  {{ reg.label }}{% if not forloop.last %}, {% endif %}
-                {% empty %}
-                  Aucun règlement associé
-                {% endfor %}
-              </td>
+              <td>{{ object.protection_names|default:"-" }}</td>
             </tr>
             <tr><th>Capacité</th><td>{{ object.capacite|default:"-" }}</td></tr>
             <tr><th>Date d'insertion</th><td>{{ object.date_insert }}</td></tr>
@@ -62,7 +56,7 @@
       <div class="card-body p-0">
         <table class="table table-striped table-bordered mb-0">
           <tbody>
-            <tr><th>Secteur</th><td>{{ object.secteur }}</td></tr>
+            <tr><th>Secteur</th><td>{{ object.secteur_name }}</td></tr>
             <tr><th>Lieu-dit</th><td>{{ object.lieu_dit }}</td></tr>
             <tr><th>Cadastre</th><td>{{ object.cadastre }}</td></tr>
             <tr><th>Coordonnée X</th><td>{{ object.x }}</td></tr>

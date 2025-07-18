@@ -67,7 +67,6 @@ class BatiFilterSet(EmptyLabelChoiceFilterMixin, BaseMapEntityFilterSet):
             "valide",
             "indivision",
             "bat_suppr",
-            "protection",
             "masques",
             "risques_nat",
             "perspectives",
