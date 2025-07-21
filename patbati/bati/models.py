@@ -2,12 +2,15 @@ from collections import defaultdict
 import django
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import classproperty
 from django.contrib.gis.db import models as gis_models
 from django.contrib.auth.models import User
 from mapentity.models import MapEntityMixin
 
 from zoning.models import Area
 from zoning.mixins import AreaPropertyMixin
+
+
 
 
 # Nomenclature models for ref_nomenclatures schema
@@ -186,6 +189,17 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     def commune_name(self):
         commune = self.areas.filter(type__code="COM").first()
         return commune.name if commune else None
+
+    @property
+    def secteurs(self):
+        secteur = self.areas.filter(type__code="SEC").first()
+        return secteur.name if secteur else None
+
+    @classproperty
+    def secteurs_verbose_name(cls):
+        return "Secteur"
+
+
 
     @property
     def type_bat_label(self):
