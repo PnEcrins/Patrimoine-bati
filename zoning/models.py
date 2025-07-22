@@ -8,7 +8,7 @@ from django.contrib.gis.db import models as gis_models
 
 class AreaType(models.Model):
     class Meta:
-        db_table = "bib_areas_types"
+        db_table = "ref_geo.bib_areas_types"
         managed = False
 
     id_type = models.AutoField(primary_key=True)
@@ -22,7 +22,7 @@ class AreaType(models.Model):
 
 class Area(models.Model):
     class Meta:
-        db_table = "l_areas"
+        db_table = "ref_geo.l_areas"
         managed = False
 
     id_area = models.AutoField(primary_key=True)

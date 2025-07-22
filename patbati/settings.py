@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "patbati.bati",
     "authent",
     "django_filters",
+    "codecov",
 ]
 
 MIDDLEWARE = [
@@ -72,7 +73,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "patbati.urls"
-print(BASE_DIR)
 from pathlib import Path
 
 TEMPLATES = [
