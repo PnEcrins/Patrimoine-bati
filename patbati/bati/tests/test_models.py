@@ -1,6 +1,7 @@
 import datetime
 from django.test import TestCase
 from django.contrib.gis.geos import Point
+from django.urls import reverse
 from patbati.bati.models import (
     Bati, Nomenclature, NomenclatureType,
     Enquetes, DemandeTravaux, Travaux, Structure,
@@ -272,8 +273,17 @@ class BatiModelTest(TestCase):
         nom = Nomenclature.objects.first()
         self.assertEqual(str(nom), nom.label)
 
+    # enquetes
     def test_enquetes_str(self):
         self.assertIn("Enquête", str(self.enquete))
+
+    def test_enquetes_get_list_url(self):
+        url = Enquetes.get_list_url(Enquetes)
+        self.assertEqual(url, reverse("bati:bati_list"))
+
+    def test_enquetes_get_detail_url(self):
+        enquete = self.enquete
+        self.assertEqual(enquete.get_detail_url(), enquete.bati.get_detail_url())
 
     def test_demande_travaux_str(self):
         self.assertIn("Demande de travaux", str(self.demande))
@@ -287,11 +297,19 @@ class BatiModelTest(TestCase):
     def test_mff_structure_str(self):
         self.assertIn("Finition de structure", str(self.mff_structure))
 
+    def test_mff_structure_get_detail_url(self):
+        mff = self.mff_structure
+        self.assertEqual(mff.get_detail_url(), mff.structure.get_detail_url())
+
     def test_second_oeuvre_str(self):
         self.assertIn("Structure de", str(self.second_oeuvre))
 
     def test_mff_second_oeuvre_str(self):
         self.assertIn("Finition de second oeuvre", str(self.mff_second_oeuvre))
+
+    def test_mff_second_oeuvre_get_detail_url(self):
+        mff_so = self.mff_second_oeuvre
+        self.assertEqual(mff_so.get_detail_url(), mff_so.second_oeuvre.get_detail_url())
 
     def test_equipement_str(self):
         self.assertIn("Equipement de", str(self.equipement))
