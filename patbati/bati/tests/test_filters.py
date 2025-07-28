@@ -3,10 +3,6 @@ from django.test import TestCase
 from django.contrib.gis.geos import Point
 from patbati.bati.models import (
     Bati, Nomenclature, NomenclatureType,
-    Enquetes, DemandeTravaux, Travaux, Structure,
-    MateriauxFinFinitionStructure, SecondOeuvre,
-    MateriauxFinFinitionSecondOeuvre, Equipement,
-    ElementPaysager, Perspective
 )
 from patbati.bati.serializers import BatiGeojsonSerializer, BatiSerializer
 
