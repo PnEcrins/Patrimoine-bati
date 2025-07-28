@@ -192,7 +192,6 @@ class BatiModelTest(TestCase):
         )
 
     def test_bati_count(self):
-        print(Bati.objects.first())
         self.assertEqual(Bati.objects.count(), 3)
 
     def test_bati1_fields(self):
