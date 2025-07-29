@@ -99,18 +99,6 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     )  # description de la situation géographique
     denivelle = models.FloatField(blank=True, null=True)  # dénivellé
 
-    # secteur ref_geo
-    @property
-    def secteur_name(self):
-        secteur = self.areas.filter(type__code="SEC").first()
-        return secteur.name if secteur else None
-
-    # protection/ reglementation ref_geo
-    @property
-    def protection_names(self):
-        protections = self.areas.filter(type__code__in=["PPN", "ZC", "PEC", "SITE_INSC", "SITE_CLASSES"])
-        return ", ".join([p.name for p in protections]) if protections else None
-
     # exposition
     exposition = models.ForeignKey(
         Nomenclature,
@@ -194,14 +182,23 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     def secteurs_verbose_name(cls):
         return "Secteur"
 
+    @property
+    def secteurs(self):
+        secteur = self.areas.filter(type__code="SEC").first()
+        return secteur.name if secteur else None
 
+    # protection/ reglementation ref_geo
+    @property
+    def protection_names(self):
+        protections = self.areas.filter(type__code__in=["PPN", "ZC", "PEC", "SITE_INSC", "SITE_CLASSES"])
+        return ", ".join([p.name for p in protections]) if protections else None
 
     @property
     def type_bat_label(self):
         return self.type_bat.label if self.type_bat else ""
 
     def secteur_label(self):
-        return self.secteur.label if self.secteur else ""
+        return self.secteur.label if self.secteur else "aaa"
 
     @property
     def dernier_travaux(self):

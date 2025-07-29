@@ -173,20 +173,20 @@ class Command(BaseCommand):
                     [get_nomenclature(risque.risque, "RISQUE") for risque in risques]
                 )
 
-                # get protection
-                protection_query = """
-                    SELECT * FROM patbati.rel_protection rel
-                    JOIN patbati.bib_protection bib USING(codeprotection)
-                    WHERE indexbatiment = %s
-                """
-                cursor.execute(protection_query, [r.indexbatiment])
-                protections = namedtuplefetchall(cursor)
-                bati.protection.set(
-                    [
-                        get_nomenclature(protection.protection, "PROT")
-                        for protection in protections
-                    ]
-                )
+                # # get protection
+                # protection_query = """
+                #     SELECT * FROM patbati.rel_protection rel
+                #     JOIN patbati.bib_protection bib USING(codeprotection)
+                #     WHERE indexbatiment = %s
+                # """
+                # cursor.execute(protection_query, [r.indexbatiment])
+                # protections = namedtuplefetchall(cursor)
+                # bati.protection.set(
+                #     [
+                #         get_nomenclature(protection.protection, "PROT")
+                #         for protection in protections
+                #     ]
+                # )
 
                 # masques
                 masque_query = """

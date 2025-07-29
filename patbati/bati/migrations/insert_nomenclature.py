@@ -77,7 +77,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # migrations.RunPython(import_nomenclaturetype_from_csv),
-        # migrations.RunPython(import_nomenclatures_from_csv),
-        # migrations.RunPython(insert_filetypes),
+        migrations.RunPython(import_nomenclaturetype_from_csv),
+        migrations.RunPython(import_nomenclatures_from_csv),
+        migrations.RunPython(insert_filetypes),
     ]
