@@ -190,11 +190,6 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
         commune = self.areas.filter(type__code="COM").first()
         return commune.name if commune else None
 
-    @property
-    def secteurs(self):
-        secteur = self.areas.filter(type__code="SEC").first()
-        return secteur.name if secteur else None
-
     @classproperty
     def secteurs_verbose_name(cls):
         return "Secteur"
