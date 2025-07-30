@@ -66,10 +66,15 @@ def get_key_from_value(d, target_value):
     return None
 
 
+
 class Command(BaseCommand):
     help = "Insert data from historical database"
 
+    def add_arguments(self, parser):
+        parser.add_argument("path", type=str, help="path where medias are stored")
+
     def handle(self, *args, **options):
+        MEDIA_PATH = options["path"]
         with connections["default"].cursor() as cursor:
             # PERSONNES
             sqlquery = "SELECT * FROM patbati.bib_personnes"
@@ -289,7 +294,7 @@ class Command(BaseCommand):
                 
                 content_type = ContentType.objects.filter(model="bati").first()
                 user = User.objects.filter(username="admin").first()
-                nas = Path('/home/leopold/Documents/images')
+                nas = Path(MEDIA_PATH) / "images"
                 paperclip = Path(settings.BASE_DIR + '/media/paperclip/bati_bati')
                 
                 for ill in illustrations:
@@ -345,7 +350,7 @@ class Command(BaseCommand):
                 cursor.execute(documents_sql, [r.indexbatiment])
                 documents = namedtuplefetchall(cursor)
 
-                docs_nas = Path('/home/leopold/Documents/documents')
+                docs_nas = Path(MEDIA_PATH) / "documents"
 
                 for doc in documents:
                     fichier_source = Path(doc.fichier_source)
