@@ -188,8 +188,8 @@ class BatiFactory(factory.django.DjangoModelFactory):
         if demandes_travaux:
             obj.demandes_travaux.set(demandes_travaux)
             return
-        DemandeTravauxFactory.create(bati=obj)
-        DemandeTravauxFactory.create(bati=obj)
+        DemandeTravauxFactory.create(bati=obj, date_demande_permis="1900-01-01")
+        DemandeTravauxFactory.create(bati=obj, date_demande_permis="2025-01-01")
 
     @factory.post_generation
     def structure(obj, create, structure):

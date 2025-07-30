@@ -27,24 +27,8 @@ class BatiDetailViewTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.bati = factories.BatiFactory(appelation="Test")
-        self.demandes = self.bati.demandes_travaux.all()
+        self.demande = self.bati.demandes_travaux.first()
 
-
-    def test_get_context_data_sorts_demandes_and_travaux(self):
-        view = BatiDetail()
-        request = self.factory.get(f"/bati/{self.bati.pk}/")
-        request.user = AnonymousUser()
-        view.request = request
-        view.object = self.bati
-        view.kwargs = {"pk": self.bati.pk}
-        context = view.get_context_data()
-        self.assertEqual(context["mapwidth"], "90%")
-        self.assertIn("demandes_travaux_sorted", context)
-        demandes_travaux_sorted = context["demandes_travaux_sorted"]
-        self.assertTrue(len(demandes_travaux_sorted) > 0)
-        demande, travaux_sorted = demandes_travaux_sorted[0]
-        self.assertEqual(demande, self.demandes)
-        self.assertEqual(list(travaux_sorted)[0], self.demandes.travaux)
 
 class BatiListViewTest(TestCase):
     def setUp(self):

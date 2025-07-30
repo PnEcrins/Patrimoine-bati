@@ -1,4 +1,6 @@
 import datetime
+
+from itertools import pairwise
 from django.test import TestCase
 from django.contrib.gis.geos import Point
 from django.urls import reverse
@@ -112,6 +114,17 @@ class BatiModelTest(TestCase):
         b = self.bati1
         self.assertIn("href", b.appelation_link())
         self.assertIn(b.appelation, b.appelation_link())
+
+    def test_bati_order_demande_travaux(self):
+        bati = Bati.objects.first()
+        demandes = bati.demandes_travaux.all()
+        date_list = map(lambda dem: dem.date_demande_permis, demandes)
+        self.assertTrue(all(dem1 >= dem2 for dem1, dem2 in pairwise(date_list)))
+
+        for dem in demandes:
+            travaux = dem.travaux.all()
+            date_list = map(lambda tra: tra.date, travaux)
+            self.assertTrue(all(trav1 >= trav2 for trav1, trav2 in pairwise(date_list)))
 
 
 class NomenclatureModelTest(TestCase):

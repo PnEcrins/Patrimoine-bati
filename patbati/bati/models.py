@@ -264,6 +264,9 @@ class Enquetes(models.Model):
 
 
 class DemandeTravaux(models.Model):
+    class Meta:
+        ordering = ["-date_demande_permis"]
+
     bati = models.ForeignKey(
         "Bati",
         on_delete=models.CASCADE,
@@ -281,6 +284,9 @@ class DemandeTravaux(models.Model):
 
 
 class Travaux(models.Model):
+    class Meta:
+        ordering = ["-date"]
+
     date = models.DateField(
         null=False,
         db_comment="Ce champs est non null depuis la v2, remplie avec 1800-01-01 quand l'info était absente",
