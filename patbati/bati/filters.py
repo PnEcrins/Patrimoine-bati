@@ -1,7 +1,7 @@
-import django_filters.fields
-from mapentity.filters import BaseMapEntityFilterSet
-
 import django_filters
+from mapentity.filters import BaseMapEntityFilterSet
+from django.db.models import Exists, OuterRef
+
 from django import forms
 from patbati.bati.models import Bati
 from zoning.models import Area
@@ -20,6 +20,12 @@ class EmptyLabelChoiceFilterMixin:
             if isinstance(field, django_filters.fields.ModelChoiceField):
                 field.empty_label = field.label
 
+class SiteInscritClassFilter(django_filters.ChoiceFilter):
+    def filter(self, qs, value):
+        if value:
+            matching_areas = Area.objects.filter(geom_4326__intersects=OuterRef("geom")).filter(type__code__in=["SITE_INSC", "SITE_CLASSES"])
+            return qs.filter(Exists(matching_areas))
+        return qs
 
 class BatiFilterSet(EmptyLabelChoiceFilterMixin, BaseMapEntityFilterSet):
     appelation = django_filters.CharFilter(
@@ -27,8 +33,6 @@ class BatiFilterSet(EmptyLabelChoiceFilterMixin, BaseMapEntityFilterSet):
         label="Recherche par nom",
         widget=forms.TextInput(attrs={"placeholder": "Nom du bâtiment"}),
     )
-
-    # @TODO: ref_geo --> zone geopgraphique sur carte
 
     secteur = AreaIntersectionFilter(
         queryset=Area.objects.filter(type__code="SEC"),
@@ -40,16 +44,14 @@ class BatiFilterSet(EmptyLabelChoiceFilterMixin, BaseMapEntityFilterSet):
         label="Communes",
     )
 
-    site_inscrits_classse = AreaIntersectionFilter(
-        queryset=Area.objects.filter(
-            type__code__in=("SITE_INSC", "SITE_CLASSES"), enable=True
-        ),
-        label="Sites inscrit et classé",
-    )
-
     zone_reg = AreaIntersectionFilter(
         queryset=Area.objects.filter(type__code__in=("PPN", "ZC", "PEC"), enable=True),
         label="Zones reglémentées",
+    )
+
+    site_inscrits_classse = SiteInscritClassFilter(
+        choices=[(True, "Oui")],
+        empty_label='Sites inscrit et classé'
     )
 
     class Meta:
