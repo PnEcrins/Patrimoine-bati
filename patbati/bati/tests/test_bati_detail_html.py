@@ -280,6 +280,10 @@ class BatiListTestCase(TestCase):
         valeur_patri = soup.find("th", {"data-qa": "valeurPat"}).find_next("td")
         self.assertEqual(valeur_patri.text.strip(), "-")
 
+        # empty bool
+        indivision = soup.find("th", {"data-qa": "indiv"}).find_next("td")
+        self.assertEqual(indivision.text, "Non") # default for empty bool is Non
+
         # empty date
         date_td = soup.find("th", {"data-qa": "date"}).find_next("td")
         self.assertEqual(date_td.text.strip(), "-")
