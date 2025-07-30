@@ -195,36 +195,7 @@ User = get_user_model()
 
 class BatiListTestCase(TestCase):
     def setUp(self):
-        self.user = User.objects.create_superuser('testuser', 'test@example.com', 'password')
-        # Create needed NomenclatureTypes and Nomenclatures
-        ntype = NomenclatureType.objects.create(label="NOTE_PAT", code="NOTE_PAT")
-        note_nomenclature = Nomenclature.objects.create(id_type=ntype, label="5")
-        typebat_type = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        typebat_nom = Nomenclature.objects.create(id_type=typebat_type, label="TYPE_BAT_label")
-        class_type = NomenclatureType.objects.create(label="CL_ARCHI", code="CL_ARCHI")
-        class_nom = Nomenclature.objects.create(id_type=class_type, label="CL_ARCHI_label")
-
-        # filled bati
-        self.bati1 = Bati.objects.create(
-            appelation="TestBati",  # str
-            type_bat=typebat_nom,   # FK
-            classe=class_nom,       # FK
-            notepatri=note_nomenclature,  # int
-            indivision=True,        # bool
-            date_insert=datetime.datetime(2024, 1, 1, tzinfo=datetime.timezone.utc),  # date
-            geom=Point(1.23, 4.56), # point
-        )        
-
-        # empty bati
-        self.bati2 = Bati.objects.create(
-            appelation="",  # empty string
-            type_bat=typebat_nom,
-            classe=class_nom,
-            notepatri=None,  # empty int/float (FK)
-            indivision=None,  # empty bool
-            date_insert=None,  # empty date
-            geom=Point(0, 0),
-        )
+        self.user = User.objects.create_superuser('testuser', 'test@example.com', 'password')      
 
     def test_bati_list_html_structure(self):
         self.client.force_login(self.user)
@@ -243,47 +214,190 @@ class BatiListTestCase(TestCase):
         for header in expected_headers:
             self.assertIn(header, headers)
 
-    def test_bati_detail_attributes_fields(self):
+class BatiDetailTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_superuser('testuser', 'test@example.com', 'password')
+
+        # Nomenclatures
+        ntype = NomenclatureType.objects.create(label="NOTE_PAT", code="NOTE_PAT")
+        note_nom = Nomenclature.objects.create(id_type=ntype, label="5")
+        ntype2 = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
+        typebat_nom = Nomenclature.objects.create(id_type=ntype2, label="TYPE_BAT_label")
+        ntype3 = NomenclatureType.objects.create(label="CL_ARCHI", code="CL_ARCHI")
+        classe_nom = Nomenclature.objects.create(id_type=ntype3, label="CL_ARCHI_label")
+        ntype4 = NomenclatureType.objects.create(label="PERSONNES", code="PERSONNES")
+        personne_nom = Nomenclature.objects.create(id_type=ntype4, label="John Doe")
+
+        # Full Bati
+        self.bati = Bati.objects.create(
+            appelation="TestBati",
+            type_bat=typebat_nom,
+            classe=classe_nom,
+            notepatri=note_nom,
+            indivision=True,
+            date_insert=datetime.datetime(2024, 1, 1, tzinfo=datetime.timezone.utc),
+            geom=Point(1.23, 4.56),
+        )
+
+        # Perspective
+        self.perspective = Perspective.objects.create(
+            bati=self.bati,
+            date=datetime.datetime(2024, 2, 2, tzinfo=datetime.timezone.utc),
+            perspective=note_nom
+        )
+
+        # Enquete
+        self.enquete = Enquetes.objects.create(
+            bati=self.bati,
+            personne=personne_nom,
+            date_enquete=datetime.datetime(2024, 3, 3, tzinfo=datetime.timezone.utc),
+            date_redaction=datetime.datetime(2024, 3, 4, tzinfo=datetime.timezone.utc)
+        )
+
+        # DemandeTravaux
+        self.demande = DemandeTravaux.objects.create(
+            bati=self.bati,
+            date_demande_permis=datetime.datetime(2024, 4, 4, tzinfo=datetime.timezone.utc),
+            autorisation_p=True,
+            date_permis=datetime.datetime(2024, 4, 5, tzinfo=datetime.timezone.utc),
+            num_permis="1234"
+        )
+
+        # Travaux
+        self.travaux = Travaux.objects.create(
+            demande=self.demande,
+            date=datetime.datetime(2024, 5, 5, tzinfo=datetime.timezone.utc),
+            autorisation=True,
+            subvention_pne=1000,
+            nature=note_nom,
+            usage=note_nom
+        )
+
+        # Structure
+        self.structure = Structure.objects.create(
+            bati=self.bati,
+            type=note_nom,
+            est_remarquable=True,
+            conservation=note_nom,
+            materiaux_principal=note_nom,
+            mise_en_oeuvre=note_nom,
+            info_structure="Structure info"
+        )
+
+        # MateriauxFinFinitionStructure
+        self.mff = MateriauxFinFinitionStructure.objects.create(
+            structure=self.structure,
+            materiaux_fin=note_nom,
+            finition=note_nom
+        )
+
+        # SecondOeuvre
+        self.second_oeuvre = SecondOeuvre.objects.create(
+            bati=self.bati,
+            type=note_nom,
+            est_remarquable=True,
+            conservation=note_nom,
+            commentaire="Second oeuvre comment"
+        )
+
+        # MateriauxFinFinitionSecondOeuvre
+        self.mff_so = MateriauxFinFinitionSecondOeuvre.objects.create(
+            second_oeuvre=self.second_oeuvre,
+            materiaux_fin=note_nom,
+            finition=note_nom
+        )
+
+        # Empty Bati
+        ntype2_empty = NomenclatureType.objects.create(label="TYPE_BAT_EMPTY", code="TYPE_BAT_EMPTY")
+        typebat_nom_empty = Nomenclature.objects.create(id_type=ntype2_empty, label="EMPTY")
+        ntype3_empty = NomenclatureType.objects.create(label="CL_ARCHI_EMPTY", code="CL_ARCHI_EMPTY")
+        classe_nom_empty = Nomenclature.objects.create(id_type=ntype3_empty, label="EMPTY")
+
+        self.bati_empty = Bati.objects.create(
+            appelation="",
+            type_bat=typebat_nom_empty,
+            classe=classe_nom_empty,
+            notepatri=None,
+            indivision=None,
+            date_insert=None,
+            geom=Point(0, 0),
+        )
+
+    def get_soup(self, pk):
         self.client.force_login(self.user)
-        response = self.client.get(f'/bati/{self.bati1.pk}/')
+        response = self.client.get(f'/bati/{pk}/')
         self.assertEqual(response.status_code, 200)
-        soup = BeautifulSoup(response.content)
+        return BeautifulSoup(response.content)
 
-        # String field
-        nom_td = soup.find("th", {"data-qa": "nom"}).find_next("td")
-        self.assertIn("TestBati", nom_td.text)
+    def test_perspectives(self):
+        # Filled
+        soup = self.get_soup(self.bati.pk)
+        self.assertIn("5", soup.select_one('[data-qa="perspective-label"]').text)
+        self.assertIn("2024", soup.select_one('[data-qa="perspective-date"]').text)
+        # Empty
+        soup_empty = self.get_soup(self.bati_empty.pk)
+        self.assertIn("Aucune perspective associée", soup_empty.select_one('[data-qa="perspective-empty"]').text)
 
-        # Integer/float field
-        valeur_patri = soup.find("th", {"data-qa": "valeurPat"}).find_next("td")
-        self.assertIn("5", valeur_patri.text)
+    def test_enquetes(self):
+        soup = self.get_soup(self.bati.pk)
+        self.assertIn("John Doe", soup.select_one('[data-qa="enquete-personne"]').text)
+        self.assertIn("2024", soup.select_one('[data-qa="enquete-date-enquete"]').text)
+        self.assertIn("2024", soup.select_one('[data-qa="enquete-date-redaction"]').text)
+        soup_empty = self.get_soup(self.bati_empty.pk)
+        self.assertIn("Aucune enquête associée", soup_empty.select_one('[data-qa="enquete-empty"]').text)
 
-        # Boolean field
-        indiv_td = soup.find("th", {"data-qa": "indiv"}).find_next("td")
-        self.assertIn("Oui", indiv_td.text)
+    def test_demande_travaux(self):
+        soup = self.get_soup(self.bati.pk)
+        self.assertIn("2024", soup.select_one('[data-qa="demande-date"]').text)
+        self.assertIn("1234", soup.select_one('[data-qa="demande-numero"]').text)
+        self.assertTrue("&#10003;" in str(soup.select_one('[data-qa="demande-autorisation"]')) or "✓" in soup.select_one('[data-qa="demande-autorisation"]').text)
+        soup_empty = self.get_soup(self.bati_empty.pk)
+        self.assertIn("Aucune demande", soup_empty.select_one('[data-qa="demande-empty"]').text)
 
-        # Date field
-        date_td = soup.find("th", {"data-qa": "date"}).find_next("td")
-        self.assertIn("2024", date_td.text)
+    def test_travaux(self):
+        soup = self.get_soup(self.bati.pk)
+        self.assertIn("2024", soup.select_one('[data-qa="travaux-date"]').text)
+        self.assertIn("1000", soup.select_one('[data-qa="travaux-subvention"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="travaux-nature"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="travaux-usage"]').text)
+        soup_empty = self.get_soup(self.bati_empty.pk)
+        # if no demande travaux table is not rendered -> check for the parent empty state
+        self.assertIn("Aucune demande", soup_empty.text)
 
+    def test_structure(self):
+        soup = self.get_soup(self.bati.pk)
+        self.assertIn("5", soup.select_one('[data-qa="structure-type"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="structure-type-value"]').text)
+        self.assertTrue("&#10003;" in str(soup.select_one('[data-qa="structure-remarquable"]')) or "✓" in soup.select_one('[data-qa="structure-remarquable"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="structure-conservation"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="structure-materiaux-principal"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="structure-mise-en-oeuvre"]').text)
+        self.assertIn("Structure info", soup.select_one('[data-qa="structure-commentaire"]').text)
+        soup_empty = self.get_soup(self.bati_empty.pk)
+        self.assertIn("Aucune structure", soup_empty.select_one('[data-qa="structure-empty"]').text)
 
-    def test_bati_detail_attributes_empty_states(self):
-        self.client.force_login(self.user)
-        response = self.client.get(f'/bati/{self.bati2.pk}/')
-        self.assertEqual(response.status_code, 200)
-        soup = BeautifulSoup(response.content)
+    def test_structure_finitions(self):
+        soup = self.get_soup(self.bati.pk)
+        self.assertIn("5", soup.select_one('[data-qa="structure-materiaux-fin"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="structure-finition"]').text)
+        soup_empty = self.get_soup(self.bati_empty.pk)
+        # If no structure, finitions table is not rendered -> check for the parent empty state
+        self.assertIn("Aucune structure", soup_empty.text)
 
-        # empty str
-        nom_td = soup.find("th", {"data-qa": "nom"}).find_next("td")
-        self.assertIn(str(self.bati2), nom_td.text)
+    def test_second_oeuvre(self):
+        soup = self.get_soup(self.bati.pk)
+        self.assertIn("5", soup.select_one('[data-qa="second-type"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="second-type-value"]').text)
+        self.assertTrue("&#10003;" in str(soup.select_one('[data-qa="second-remarquable"]')) or "✓" in soup.select_one('[data-qa="second-remarquable"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="second-conservation"]').text)
+        self.assertIn("Second oeuvre comment", soup.select_one('[data-qa="second-commentaire"]').text)
+        soup_empty = self.get_soup(self.bati_empty.pk)
+        self.assertIn("Aucun élément de second oeuvre", soup_empty.select_one('[data-qa="second-empty"]').text)
 
-        # empty int
-        valeur_patri = soup.find("th", {"data-qa": "valeurPat"}).find_next("td")
-        self.assertEqual(valeur_patri.text.strip(), "-")
-
-        # empty bool
-        indivision = soup.find("th", {"data-qa": "indiv"}).find_next("td")
-        self.assertEqual(indivision.text, "Non") # default for empty bool is Non
-
-        # empty date
-        date_td = soup.find("th", {"data-qa": "date"}).find_next("td")
-        self.assertEqual(date_td.text.strip(), "-")
+    def test_second_oeuvre_finitions(self):
+        soup = self.get_soup(self.bati.pk)
+        self.assertIn("5", soup.select_one('[data-qa="second-materiaux-fin"]').text)
+        self.assertIn("5", soup.select_one('[data-qa="second-finition"]').text)
+        soup_empty = self.get_soup(self.bati_empty.pk)
+        # If no second oeuvre, finitions table is not rendered -> check for the parent empty state
+        self.assertIn("Aucun élément de second oeuvre", soup_empty.text)

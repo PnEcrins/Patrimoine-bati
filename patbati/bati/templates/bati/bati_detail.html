@@ -3,7 +3,6 @@
 
 {% block download %}
   </div>
-
    <div class="btn-group pull-right">
     <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_detail' object.pk %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Fiche</a>
     <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_export_public' object.pk %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Fiche resumé</a>
@@ -15,99 +14,99 @@
 
 {% block before_attachments_extra_tab_nav %}
 <li class="nav-item">
-    <a id="tab-travaux" class="nav-link" href="#travaux" 
-    data-toggle="tab"> 
+    <a id="tab-travaux" class="nav-link" href="#travaux" data-toggle="tab">
         <i class="bi bi-cone-striped"></i>
-    <span class="d-none d-sm-inline">Travaux</span></a>
+        <span class="d-none d-sm-inline">Travaux</span>
+    </a>
 </li>
 <li class="nav-item">
-    <a id="tab-structure" class="nav-link" href="#structure" 
-    data-toggle="tab"> 
-    <i class="bi bi-door-open"></i>
-    <span class="d-none d-sm-inline">Gros et Second Oeuvre</span></a>
+    <a id="tab-structure" class="nav-link" href="#structure" data-toggle="tab">
+        <i class="bi bi-door-open"></i>
+        <span class="d-none d-sm-inline">Gros et Second Oeuvre</span>
+    </a>
 </li>
 <li class="nav-item">
-    <a id="tab-structure" class="nav-link" href="#zonage" 
-    data-toggle="tab"> 
+    <a id="tab-structure" class="nav-link" href="#zonage" data-toggle="tab">
         <i class="bi bi-geo-alt"></i>
-    <span class="d-none d-sm-inline">Zonage</span></a>
+        <span class="d-none d-sm-inline">Zonage</span>
+    </a>
 </li>
 <li class="nav-item">
-    <a id="tab-enq-pers" class="nav-link" href="#enq-pers" 
-    data-toggle="tab"> 
+    <a id="tab-enq-pers" class="nav-link" href="#enq-pers" data-toggle="tab">
         <i class="bi bi-search"></i>
-    <span class="d-none d-sm-inline">Perspectives et Enquetes</span></a>
+        <span class="d-none d-sm-inline">Perspectives et Enquetes</span>
+    </a>
 </li>
-
 {% endblock %}
-
 
 {% block before_attachments_extra_tab_content %}
 <div id="enq-pers" class="tab-pane">
     <div class="mb-3">
-
-    <div class="d-flex mb-2 align-items-center">
-        <h4 class="mb-0">Perspectives</h4>
-        <a href="{% url 'bati:perspectives_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
-    </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-            <th style="width:40%;">Date</th>
-            <th style="width:40%;">Perspective</th>
-            <th style="width:20%;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for pers in object.perspective_set.all %}
-            <tr>
-            <td>{{ pers.date }}</td>
-            <td>{{ pers.perspective.label }}</td>
-            <td>
-                <a href="{% url 'bati:perspectives_update' object.pk pers.pk %}" class="btn btn-primary">
-                    <i class="bi bi-pencil-square"></i>
-                </a>
-                <a href="{% url 'bati:perspectives_delete' object.pk pers.pk %}" class="btn btn-danger">
-                    <i class="bi bi-trash"></i>
-                </a>
-            </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <!-- Enquêtes -->
-    <div class="d-flex mb-2 align-items-center">
-        <h4 class="mb-0">Enquêtes</h4>
-        <a href="{% url 'bati:enquetes_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
-    </div>
-        <table class="table table-striped">
+        <div class="d-flex mb-2 align-items-center">
+            <h4 class="mb-0">Perspectives</h4>
+            <a href="{% url 'bati:perspectives_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
+        </div>
+        <table class="table table-striped" data-qa="perspectives-table">
             <thead>
                 <tr>
-                <th style="width:26.6%;">Personne</th>
-                <th style="width:26.6%;">Date enquête</th>
-                <th style="width:26.6%;">Date rédaction</th>
-                <th style="width:20%;">Actions</th>
+                    <th style="width:40%;">Date</th>
+                    <th style="width:40%;">Perspective</th>
+                    <th style="width:20%;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pers in object.perspective_set.all %}
+                <tr>
+                    <td data-qa="perspective-date">{{ pers.date }}</td>
+                    <td data-qa="perspective-label">{{ pers.perspective.label }}</td>
+                    <td>
+                        <a href="{% url 'bati:perspectives_update' object.pk pers.pk %}" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{% url 'bati:perspectives_delete' object.pk pers.pk %}" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center" data-qa="perspective-empty">Aucune perspective associée</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="d-flex mb-2 align-items-center">
+            <h4 class="mb-0">Enquêtes</h4>
+            <a href="{% url 'bati:enquetes_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
+        </div>
+        <table class="table table-striped" data-qa="enquetes-table">
+            <thead>
+                <tr>
+                    <th style="width:26.6%;">Personne</th>
+                    <th style="width:26.6%;">Date enquête</th>
+                    <th style="width:26.6%;">Date rédaction</th>
+                    <th style="width:20%;">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for enquete in object.enquetes.all %}
                 <tr>
-                <td>{{ enquete.personne }}</td>
-                <td>{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
-                <td>{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
-                <td>
-                    <a href="{% url 'bati:enquetes_update' object.pk enquete.pk %}" class="btn btn-primary">
-                    <i class="bi bi-pencil-square"></i>
-                    </a>
-                    <a href="{% url 'bati:enquetes_delete' object.pk enquete.pk %}" class="btn btn-danger">
-                    <i class="bi bi-trash"></i>
-                    </a>
-                </td>
+                    <td data-qa="enquete-personne">{{ enquete.personne }}</td>
+                    <td data-qa="enquete-date-enquete">{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
+                    <td data-qa="enquete-date-redaction">{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'bati:enquetes_update' object.pk enquete.pk %}" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{% url 'bati:enquetes_delete' object.pk enquete.pk %}" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
-                <td colspan="4" class="text-center">Aucune enquête associée</td>
+                    <td colspan="4" class="text-center" data-qa="enquete-empty">Aucune enquête associée</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -120,14 +119,13 @@
         <a href="{% url 'bati:demande_travaux_add' parent_pk=object.pk %}" class="btn btn-success mb-3">
             Ajouter une Demande de permis
         </a>
-        <!-- Header row for demandes -->
         <div class="row font-weight-bold border-bottom pb-2 mb-2" style="margin-right:0;">
-            <div class="col-1 text-left">Permis</div>
-            <div class="col-2 text-left">Date demande</div>
-            <div class="col-2 text-left">Autorisation</div>
-            <div class="col-2 text-left">Date permis</div>
-            <div class="col-2 text-center">Numéro</div>
-            <div class="col-3 text-right">Actions</div>
+            <div class="col-1 text-left" data-qa="demande-header-permis">Permis</div>
+            <div class="col-2 text-left" data-qa="demande-header-date-demande">Date demande</div>
+            <div class="col-2 text-left" data-qa="demande-header-autorisation">Autorisation</div>
+            <div class="col-2 text-left" data-qa="demande-header-date-permis">Date permis</div>
+            <div class="col-2 text-center" data-qa="demande-header-numero">Numéro</div>
+            <div class="col-3 text-right" data-qa="demande-header-actions">Actions</div>
         </div>
         <div class="accordion" id="demandesAccordion">
             {% for demande, travaux_list in demandes_travaux_sorted %}
@@ -139,24 +137,24 @@
                         aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
                         aria-controls="collapse{{ forloop.counter }}"
                         style="cursor: pointer;">
-                        <div class="col-1">
+                        <div class="col-1" data-qa="demande-permis">
                             {% if demande.demande_dep %}
                                 <span class="text-success">&#10003;</span>
                             {% else %}
                                 <span class="text-danger">&#10007;</span>
                             {% endif %}
                         </div>
-                        <div class="col-2">{{ demande.date_demande_permis|default:"-" }}</div>
-                        <div class="col-2">
+                        <div class="col-2" data-qa="demande-date">{{ demande.date_demande_permis|default:"-" }}</div>
+                        <div class="col-2" data-qa="demande-autorisation">
                             {% if demande.autorisation_p %}
                                 <span class="text-success">&#10003;</span>
                             {% else %}
                                 <span class="text-danger">&#10007;</span>
                             {% endif %}
                         </div>
-                        <div class="col-2">{{ demande.date_permis|default:"-" }}</div>
-                        <div class="col-2">{{ demande.num_permis|default:"-" }}</div>
-                        <div class="col-3 text-right">
+                        <div class="col-2" data-qa="demande-date-permis">{{ demande.date_permis|default:"-" }}</div>
+                        <div class="col-2" data-qa="demande-numero">{{ demande.num_permis|default:"-" }}</div>
+                        <div class="col-3 text-right" data-qa="demande-actions">
                             <a href="{% url 'bati:travaux_add' object.pk demande.pk %}" class="btn btn-sm btn-outline-secondary" title="Ajotuer un travaux">
                                 <i class="bi bi-plus"></i>
                             </a>
@@ -173,7 +171,7 @@
                 <div id="collapse{{ forloop.counter }}" class="ml-3 mb-2 mr-2 collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-parent="#demandesAccordion">
                     <div class="card-body p-0">
                         {% if travaux_list %}
-                        <table class="table table-sm table-bordered mb-0 text-center">
+                        <table class="table table-sm table-bordered mb-0 text-center" data-qa="travaux-table">
                             <thead class="table-info">
                                 <tr>
                                     <th style="width:16.66%;">Date des travaux</th>
@@ -187,18 +185,18 @@
                             <tbody>
                                 {% for travaux in travaux_list %}
                                 <tr>
-                                    <td>{{ travaux.date }}</td>
-                                    <td>
+                                    <td data-qa="travaux-date">{{ travaux.date }}</td>
+                                    <td data-qa="travaux-autorisation">
                                         {% if travaux.autorisation %}
                                             <span class="text-success">&#10003;</span>
                                         {% else %}
                                             <span class="text-danger">&#10007;</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ travaux.subvention_pne|default:"-" }}</td>
-                                    <td>{{ travaux.nature.label }}</td>
-                                    <td>{{ travaux.usage.label }}</td>
-                                    <td>
+                                    <td data-qa="travaux-subvention">{{ travaux.subvention_pne|default:"-" }}</td>
+                                    <td data-qa="travaux-nature">{{ travaux.nature.label }}</td>
+                                    <td data-qa="travaux-usage">{{ travaux.usage.label }}</td>
+                                    <td data-qa="travaux-actions">
                                         <a href="{% url 'bati:travaux_update' object.pk travaux.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
                                             <i class="bi bi-pencil"></i>
                                         </a>
@@ -209,26 +207,25 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="6" class="text-center">Aucun travaux pour cette demande</td>
+                                    <td colspan="6" class="text-center" data-qa="travaux-empty">Aucun travaux pour cette demande</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                         {% else %}
-                        <p class="text-muted mb-0 p-3">Aucun travaux pour cette demande.</p>
+                        <p class="text-muted mb-0 p-3" data-qa="travaux-empty">Aucun travaux pour cette demande.</p>
                         {% endif %}
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="alert alert-info">Aucune demande</div>
+            <div class="alert alert-info" data-qa="demande-empty">Aucune demande</div>
             {% endfor %}
         </div>
     </div>
 </div>
 <!-- Structures Section -->
 <div id="structure" class="tab-pane">
-    <!-- Structures Section -->
     <div class="mb-3">
         <h5>
             Liste des structures
@@ -246,7 +243,7 @@
                     aria-controls="collapseStruct{{ forloop.counter }}"
                     style="cursor:pointer;">
                     <div>
-                        <strong>{{ struct.type.label }}</strong>
+                        <strong data-qa="structure-type">{{ struct.type.label }}</strong>
                     </div>
                     <div>
                         <a href="{% url 'bati:structure_update' object.pk struct.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
@@ -262,8 +259,7 @@
                     aria-labelledby="headingStruct{{ forloop.counter }}"
                     data-parent="#structuresAccordion">
                     <div class="card-body border-0">
-                        <!-- Description Table -->
-                        <table class="table table-sm table-bordered mb-2">
+                        <table class="table table-sm table-bordered mb-2" data-qa="structure-description-table">
                             <thead class="table-info">
                                 <tr>
                                     <th colspan="2">Description de la structure</th>
@@ -272,11 +268,11 @@
                             <tbody>
                                 <tr>
                                     <th>Structure</th>
-                                    <td>{{ struct.type.label }}</td>
+                                    <td data-qa="structure-type-value">{{ struct.type.label }}</td>
                                 </tr>
                                 <tr>
                                     <th>Structure remarquable</th>
-                                    <td>
+                                    <td data-qa="structure-remarquable">
                                         {% if struct.est_remarquable %}
                                             <span style="color:green;">&#10003;</span>
                                         {% else %}
@@ -286,24 +282,23 @@
                                 </tr>
                                 <tr>
                                     <th>Conservation</th>
-                                    <td>{{ struct.conservation.label }}</td>
+                                    <td data-qa="structure-conservation">{{ struct.conservation.label }}</td>
                                 </tr>
                                 <tr>
                                     <th>Matériau principal</th>
-                                    <td>{{ struct.materiaux_principal.label }}</td>
+                                    <td data-qa="structure-materiaux-principal">{{ struct.materiaux_principal.label }}</td>
                                 </tr>
                                 <tr>
                                     <th>Mise en oeuvre</th>
-                                    <td>{{ struct.mise_en_oeuvre.label }}</td>
+                                    <td data-qa="structure-mise-en-oeuvre">{{ struct.mise_en_oeuvre.label }}</td>
                                 </tr>
                                 <tr>
                                     <th>Commentaire</th>
-                                    <td>{{ struct.info_structure|default:"-" }}</td>
+                                    <td data-qa="structure-commentaire">{{ struct.info_structure|default:"-" }}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <!-- Matériaux Fins / Finitions Table -->
-                        <table class="table table-sm table-bordered mb-0">
+                        <table class="table table-sm table-bordered mb-0" data-qa="structure-finitions-table">
                             <thead class="table-info">
                                 <tr>
                                     <th>Matériau fin</th>
@@ -314,8 +309,8 @@
                             <tbody>
                                 {% for mf in struct.finitions.all %}
                                 <tr>
-                                    <td>{{ mf.materiaux_fin.label }}</td>
-                                    <td>{{ mf.finition.label }}</td>
+                                    <td data-qa="structure-materiaux-fin">{{ mf.materiaux_fin.label }}</td>
+                                    <td data-qa="structure-finition">{{ mf.finition.label }}</td>
                                     <td>
                                         <a href="{% url 'bati:structure_finition_update' struct.pk bati.pk mf.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
                                             <i class="bi bi-pencil"></i>
@@ -327,7 +322,7 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="3" class="text-center">Aucun matériau fin pour cette structure</td>
+                                    <td colspan="3" class="text-center" data-qa="structure-finitions-empty">Aucun matériau fin pour cette structure</td>
                                 </tr>
                                 {% endfor %}
                                 <tr>
@@ -343,12 +338,10 @@
                 </div>
             </div>
             {% empty %}
-            <div class="alert alert-info">Aucune structure</div>
+            <div class="alert alert-info" data-qa="structure-empty">Aucune structure</div>
             {% endfor %}
         </div>
     </div>
-
-    <!-- Second Oeuvre Section -->
     <div class="mb-3">
         <h5>
             Liste des éléments de second oeuvre
@@ -366,7 +359,7 @@
                     aria-controls="collapseSO{{ forloop.counter }}"
                     style="cursor:pointer;">
                     <div>
-                        <strong>{{ so.type.label }}</strong>
+                        <strong data-qa="second-type">{{ so.type.label }}</strong>
                     </div>
                     <div>
                         <a href="{% url 'bati:second_update' object.pk so.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
@@ -382,8 +375,7 @@
                     aria-labelledby="headingSO{{ forloop.counter }}"
                     data-parent="#secondOeuvreAccordion">
                     <div class="card-body border-0">
-                        <!-- Description Table -->
-                        <table class="table table-sm table-bordered mb-2">
+                        <table class="table table-sm table-bordered mb-2" data-qa="second-description-table">
                             <thead class="table-info">
                                 <tr>
                                     <th colspan="2">Description de l'élément</th>
@@ -392,11 +384,11 @@
                             <tbody>
                                 <tr>
                                     <th>Catégorie</th>
-                                    <td>{{ so.type.label }}</td>
+                                    <td data-qa="second-type-value">{{ so.type.label }}</td>
                                 </tr>
                                 <tr>
                                     <th>Remarquable</th>
-                                    <td>
+                                    <td data-qa="second-remarquable">
                                         {% if so.est_remarquable %}
                                             <span style="color:green;">&#10003;</span>
                                         {% else %}
@@ -406,16 +398,15 @@
                                 </tr>
                                 <tr>
                                     <th>Conservation</th>
-                                    <td>{{ so.conservation.label }}</td>
+                                    <td data-qa="second-conservation">{{ so.conservation.label }}</td>
                                 </tr>
                                 <tr>
                                     <th>Commentaire</th>
-                                    <td>{{ so.commentaire|default:"-" }}</td>
+                                    <td data-qa="second-commentaire">{{ so.commentaire|default:"-" }}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <!-- Matériaux Fins / Finitions Table -->
-                        <table class="table table-sm table-bordered mb-0">
+                        <table class="table table-sm table-bordered mb-0" data-qa="second-finitions-table">
                             <thead class="table-info">
                                 <tr>
                                     <th>Matériau fin</th>
@@ -426,8 +417,8 @@
                             <tbody>
                                 {% for mf in so.second_oeuvre.all %}
                                 <tr>
-                                    <td>{{ mf.materiaux_fin.label }}</td>
-                                    <td>{{ mf.finition.label }}</td>
+                                    <td data-qa="second-materiaux-fin">{{ mf.materiaux_fin.label }}</td>
+                                    <td data-qa="second-finition">{{ mf.finition.label }}</td>
                                     <td>
                                         <a href="{% url 'bati:second_finition_update' so.pk so.bati.pk mf.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
                                             <i class="bi bi-pencil"></i>
@@ -439,7 +430,7 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="3" class="text-center">Aucun matériau fin pour cet élément</td>
+                                    <td colspan="3" class="text-center" data-qa="second-finitions-empty">Aucun matériau fin pour cet élément</td>
                                 </tr>
                                 {% endfor %}
                                 <tr>
@@ -455,7 +446,7 @@
                 </div>
             </div>
             {% empty %}
-            <div class="alert alert-info">Aucun élément de second oeuvre</div>
+            <div class="alert alert-info" data-qa="second-empty">Aucun élément de second oeuvre</div>
             {% endfor %}
         </div>
     </div>
@@ -463,16 +454,11 @@
 
 {% include "bati/bati_zoning_detail.html" %}
 
-
 {% endblock %}
-
 
 {% block extrabody %}
     {{ block.super }}
-
-
 <style>
-    /* These style make tue grag width buggy ... */
     .map-panel {
         max-width: 70%;
         min-width: 30%;
