@@ -108,7 +108,7 @@ class BatiDetail(MapEntityDetail):
                 .order_by("-date_sort")
             )
             demandes_travaux_sorted.append((demande, travaux_sorted))
-
+        print("????????", demandes_travaux_sorted)
         context["demandes_travaux_sorted"] = demandes_travaux_sorted
 
         return context

@@ -4,6 +4,36 @@
 from django.db import migrations
 
 
+def insert_filetypes(apps, schema_editor):
+    FileType = apps.get_model("mapentitycommon", "FileType")
+
+    filetypes = [
+        "PDF",
+        "Photo site",
+        "Photo facade Nord",
+        "Photo facade Est",
+        "Photo par accès itinéraire",
+        "Photo facade Sud",
+        "Photo facade Ouest",
+        "Photo avec une personne",
+        "Photo d'un détail",
+        "Photo d'intérieur",
+        "Photo de l'ancien bâtiment",
+        "Masque",
+        "Croquis",
+        "Plan masse",
+        "Plan bâtiment",
+        "Coupe",
+        "Elévation",
+        "Autre"
+    ]
+
+    for type in filetypes:
+        FileType.objects.update_or_create(
+            type=type,
+            defaults={},
+        )
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -19,4 +49,5 @@ class Migration(migrations.Migration):
             model_name="attachment",
             name="attachment_video",
         ),
+        migrations.RunPython(insert_filetypes),
     ]

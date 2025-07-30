@@ -25,3 +25,14 @@ Mapentity implémente des permissions supplémentaires aux permissions de Django
 Lancer cette commande pour avoir toutes les permissions disponible dans mapentity : 
 
     python manage.py update_permissions_mapentity
+
+
+## Développement
+
+Installer les dépendances de tests : 
+
+    pip install -r requirements-dev.in
+
+Lancer les tests : 
+
+    python manage.py tests

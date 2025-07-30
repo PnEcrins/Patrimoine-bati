@@ -178,9 +178,6 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
         commune = self.areas.filter(type__code="COM").first()
         return commune.name if commune else None
 
-    @classproperty
-    def secteurs_verbose_name(cls):
-        return "Secteur"
 
     @property
     def secteurs(self):
@@ -192,6 +189,8 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     def protection_names(self):
         protections = self.areas.filter(type__code__in=["PPN", "ZC", "PEC", "SITE_INSC", "SITE_CLASSES"])
         return ", ".join([p.name for p in protections]) if protections else None
+    
+    secteurs_verbose_name = "Secteur"
 
     @property
     def type_bat_label(self):
@@ -225,10 +224,6 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
 
         return structures_with_materials
 
-    def get_detail_url(self):
-
-        return reverse("bati:bati_detail", kwargs={"pk": self.pk})
-
     def __str__(self):
         return self.appelation if self.appelation else f"Bâtiment {self.id}"
 
@@ -254,8 +249,6 @@ class Enquetes(models.Model):
     )
 
     def get_list_url(cls):
-        from django.urls import reverse
-
         return reverse("bati:bati_list")
 
     def get_detail_url(self):

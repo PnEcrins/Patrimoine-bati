@@ -17,30 +17,18 @@ from patbati.bati.views import (
     BatiDocumentPdfPublic, BatiDocumentPdfDetail
 )
 from patbati.bati.forms import BatiForm
+from . import factories
+
+
+
 
 
 class BatiDetailViewTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        ntype = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom = Nomenclature.objects.create(id_type=ntype, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom, classe=nom)
-        self.demande = DemandeTravaux.objects.create(
-            bati=self.bati,
-            demande_dep=True,
-            autorisation_p=True,
-            date_permis="2025-01-01",
-            date_demande_permis="2024-12-01",
-            num_permis="12345"
-        )
-        self.travaux = Travaux.objects.create(
-            date="2025-02-01",
-            demande=self.demande,
-            usage=nom,
-            nature=nom,
-            autorisation=True,
-            subvention_pne=1000
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.demandes = self.bati.demandes_travaux.all()
+
 
     def test_get_context_data_sorts_demandes_and_travaux(self):
         view = BatiDetail()
@@ -55,8 +43,8 @@ class BatiDetailViewTest(TestCase):
         demandes_travaux_sorted = context["demandes_travaux_sorted"]
         self.assertTrue(len(demandes_travaux_sorted) > 0)
         demande, travaux_sorted = demandes_travaux_sorted[0]
-        self.assertEqual(demande, self.demande)
-        self.assertEqual(list(travaux_sorted)[0], self.travaux)
+        self.assertEqual(demande, self.demandes)
+        self.assertEqual(list(travaux_sorted)[0], self.demandes.travaux)
 
 class BatiListViewTest(TestCase):
     def setUp(self):
@@ -395,20 +383,8 @@ class BatiDocumentPdfDetailTest(TestCase):
 
 class StructureFinitionCreateViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="STRUCT", code="STRUCT")
-        nom = Nomenclature.objects.create(id_type=ntype, label="STRUCT_label")
-        ntype_bat = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom_bat = Nomenclature.objects.create(id_type=ntype_bat, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom_bat, classe=nom_bat)
-        self.structure = Structure.objects.create(
-            bati=self.bati,
-            conservation=nom,
-            materiaux_principal=nom,
-            type=nom,
-            mise_en_oeuvre=nom,
-            info_structure="Info",
-            est_remarquable=True
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.structure = self.bati.structures.first()
 
     def test_dispatch_sets_structure(self):
         view = StructureFinitionCreate()
