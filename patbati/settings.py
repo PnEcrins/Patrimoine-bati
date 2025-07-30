@@ -255,5 +255,5 @@ PASSWORD_HASHERS = [
 ENV = os.getenv("ENV", "prod")
 # Load custom settings file
 if ENV != "tests":
-    with open("./patbati/settings_local.py") as f:
+    with open("./patbati/local_settings.py") as f:
         exec(f.read())
