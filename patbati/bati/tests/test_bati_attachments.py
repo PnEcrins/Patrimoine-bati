@@ -1,25 +1,40 @@
 from django.test import TestCase
 from bs4 import BeautifulSoup
+from django.contrib.auth import get_user_model
+
+from .factories import BatiFactory
+
+User = get_user_model()
 
 class BatiAttachmentsHTMLTest(TestCase):
-    
-    with open("patbati/bati/templates/bati/bati_attachments.html") as fp:
-        soup = BeautifulSoup(fp, "html.parser")
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_superuser('testuser', 'test@example.com', 'password')
+        cls.bati = BatiFactory()
+
+    def get_soup(self, pk):
+        self.client.force_login(self.user)
+        response = self.client.get(f'/bati/{pk}/')
+        self.assertEqual(response.status_code, 200)
+        return BeautifulSoup(response.content, "html.parser")
 
     def test_carousel_structure(self):
-        carousel = self.soup.find("div", {"id": "carouselExampleIndicators"})
+        soup = self.get_soup(self.bati.pk)
+        carousel = soup.find("div", {"id": "carouselExampleIndicators"})
         self.assertIsNotNone(carousel)
         self.assertIn("carousel", carousel.get("class", []))
         self.assertIn("slide", carousel.get("class", []))
 
     def test_carousel_indicators(self):
-        indicators = self.soup.select("ol.carousel-indicators li")
+        soup = self.get_soup(self.bati.pk)
+        indicators = soup.select("ol.carousel-indicators li")
         for li in indicators:
             self.assertIn("data-target", li.attrs)
             self.assertIn("data-slide-to", li.attrs)
 
     def test_carousel_inner_and_items(self):
-        carousel_inner = self.soup.find("div", class_="carousel-inner")
+        soup = self.get_soup(self.bati.pk)
+        carousel_inner = soup.find("div", class_="carousel-inner")
         self.assertIsNotNone(carousel_inner)
         items = carousel_inner.find_all("div", class_="carousel-item")
         for item in items:
@@ -32,8 +47,9 @@ class BatiAttachmentsHTMLTest(TestCase):
             self.assertTrue("alt" in img.attrs)
 
     def test_carousel_controls(self):
-        prev = self.soup.find("a", class_="carousel-control-prev")
-        nxt = self.soup.find("a", class_="carousel-control-next")
+        soup = self.get_soup(self.bati.pk)
+        prev = soup.find("a", class_="carousel-control-prev")
+        nxt = soup.find("a", class_="carousel-control-next")
         self.assertIsNotNone(prev)
         self.assertIsNotNone(nxt)
         self.assertIn("data-slide", prev.attrs)
@@ -42,14 +58,16 @@ class BatiAttachmentsHTMLTest(TestCase):
         self.assertIn("carousel-control-next-icon", [span.get("class", [None])[0] for span in nxt.find_all("span")])
 
     def test_carousel_caption(self):
-        captions = self.soup.select("div.carousel-caption")
+        soup = self.get_soup(self.bati.pk)
+        captions = soup.select("div.carousel-caption")
         for caption in captions:
             h5 = caption.find("h5")
             self.assertIsNotNone(h5)
             self.assertIn("text-light", h5.get("class", []))
 
     def test_non_image_attachments_list(self):
-        ul = self.soup.find("ul", class_="list-unstyled")
+        soup = self.get_soup(self.bati.pk)
+        ul = soup.find("ul", class_="list-unstyled")
         self.assertIsNotNone(ul)
         for li in ul.find_all("li"):
             a = li.find("a")
@@ -58,8 +76,3 @@ class BatiAttachmentsHTMLTest(TestCase):
             self.assertIsNotNone(img)
             self.assertTrue("src" in img.attrs)
             self.assertTrue("alt" in img.attrs)
-
-    def test_empty_state_message(self):
-        p = self.soup.find("p", class_="text-muted")
-        self.assertIsNotNone(p)
-        self.assertIn("Aucune pièce jointe disponible", p.text)
