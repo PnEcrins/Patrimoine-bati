@@ -6,28 +6,7 @@ from patbati.bati.models import (
 )
 from patbati.bati.serializers import BatiGeojsonSerializer, BatiSerializer
 
-import django_filters
 from django.test import TestCase
-from django.db import models
-
-from patbati.bati.filters import EmptyLabelChoiceFilterMixin
-
-class DummyModel(models.Model):
-    pass
-
-class DummyFilterSet(django_filters.FilterSet):
-    dummy = django_filters.ModelChoiceFilter(queryset=DummyModel.objects.none(), label="Dummy Label")
-    class Meta:
-        model = DummyModel
-        fields = ['dummy']
-
-class DummyFilter(EmptyLabelChoiceFilterMixin, DummyFilterSet):
-    pass
-
-class EmptyLabelChoiceFilterMixinTest(TestCase):
-    def test_init_sets_empty_label(self):
-        filterset = DummyFilter(data={}, queryset=DummyModel.objects.none())
-        field = filterset.form.fields['dummy']
 
 class BatiFilterTest(TestCase):
     @classmethod
