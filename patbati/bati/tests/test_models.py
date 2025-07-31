@@ -106,7 +106,6 @@ class BatiModelTest(TestCase):
 
     def test_bati_get_structures_with_materials_property(self):
         b = self.bati1
-        print(b.get_structures_with_materials)
         self.assertIn("Escalier", b.get_structures_with_materials.keys())
         self.assertIn("Liants", b.get_structures_with_materials["Escalier"])
 

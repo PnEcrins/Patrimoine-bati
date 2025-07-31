@@ -2,9 +2,8 @@ from django.http import HttpRequest
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import AnonymousUser
 from patbati.bati.models import (
-    Bati, DemandeTravaux, Travaux, Nomenclature, NomenclatureType,
-    Structure, MateriauxFinFinitionStructure, SecondOeuvre,
-    MateriauxFinFinitionSecondOeuvre, Perspective, Enquetes
+    Bati, DemandeTravaux, Travaux, Structure, MateriauxFinFinitionStructure,
+    SecondOeuvre, MateriauxFinFinitionSecondOeuvre, Perspective, Enquetes
 )
 from patbati.bati.views import (
     BatiDetail, BatiList, BatiFormat, BatiViewSet,
@@ -17,54 +16,42 @@ from patbati.bati.views import (
     BatiDocumentPdfPublic, BatiDocumentPdfDetail
 )
 from patbati.bati.forms import BatiForm
+from django.contrib.auth import get_user_model
 from . import factories
 
-
-
-
+User = get_user_model()
 
 class BatiDetailViewTest(TestCase):
     def setUp(self):
-        self.factory = RequestFactory()
+        self.user = User.objects.create_superuser('testuser', 'test@example.com', 'password')
         self.bati = factories.BatiFactory(appelation="Test")
-        self.demande = self.bati.demandes_travaux.first()
 
+    def test_detail_view_returns_200(self):
+        self.client.force_login(self.user)
+        response = self.client.get(self.bati.get_detail_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Test", response.content)
 
 class BatiListViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom = Nomenclature.objects.create(id_type=ntype, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom, classe=nom)
+        self.bati = factories.BatiFactory(appelation="Test")
 
     def test_list_columns(self):
         view = BatiList()
         self.assertIn("appelation", view.columns)
         self.assertIn("secteurs", view.columns)
         self.assertIn("appelation", view.searchable_columns)
-        
+
 class BatiCreateViewTest(TestCase):
     def setUp(self):
-        # Create all needed NomenclatureTypes
-        types = {}
-        for code in [
-            "TYPE_BAT", "CL_ARCHI", "IMPLA", "FAITAGE", "EXPO", "NOTE_PAT",
-            "CONSERVATION", "MASQUE", "PERSP"
-        ]:
-            types[code], _ = NomenclatureType.objects.get_or_create(label=code, code=code)
-        noms = {}
-        for code, typ in types.items():
-            noms[code] = Nomenclature.objects.create(id_type=typ, label=f"{code}_label")
-
-        # Create ManyToMany objects
-        masque = noms["MASQUE"]
-        perspective = noms["PERSP"]
+        self.bati = factories.BatiFactory()
 
         self.data = {
             "appelation": "Bâtiment A",
-            "type_bat": noms["TYPE_BAT"].pk,
-            "classe": noms["CL_ARCHI"].pk,
-            "implantation": noms["IMPLA"].pk,
-            "faitage": noms["FAITAGE"].pk,
+            "type_bat": self.bati.type_bat.pk,
+            "classe": self.bati.classe.pk,
+            "implantation": self.bati.implantation.pk,
+            "faitage": self.bati.faitage.pk,
             "indivision": True,
             "proprietaire": "Alice",
             "cadastre": "CadA",
@@ -74,27 +61,26 @@ class BatiCreateViewTest(TestCase):
             "y": 2.2,
             "situation_geo": "SituA",
             "denivelle": 10.5,
-            "exposition": noms["EXPO"].pk,
+            "exposition": self.bati.exposition.pk,
             "pente": 15.0,
             "capacite": 100.0,
             "bat_suppr": False,
-            "notepatri": noms["NOTE_PAT"].pk,
+            "notepatri": self.bati.notepatri.pk,
             "patrimonialite": "PatriA",
             "ancien_index": 1.23,
-            "conservation": noms["CONSERVATION"].pk,
+            "conservation": self.bati.conservation.pk,
             "commentaire_masque": "MasqueA",
             "remarque_risque": "RisqueA",
             "geom": "POINT(1 2)",
             "remarque_generale": "RemarqueA",
-            "masques": [masque.pk],
-            "perspectives": [perspective.pk],
+            "masques": [m.pk for m in self.bati.masques.all()],
+            "perspectives": [p.pk for p in self.bati.perspectives.all()],
         }
 
     def test_create_form(self):
         form = BatiForm(data=self.data)
-        print(form.errors)
         self.assertTrue(form.is_valid())
-        
+
 class BatiFormatViewTest(TestCase):
     def test_format_inherits(self):
         view = BatiFormat()
@@ -102,9 +88,7 @@ class BatiFormatViewTest(TestCase):
 
 class BatiViewSetTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom = Nomenclature.objects.create(id_type=ntype, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom, classe=nom)
+        self.bati = factories.BatiFactory(appelation="Test")
 
     def test_viewset_queryset(self):
         viewset = BatiViewSet()
@@ -113,12 +97,8 @@ class BatiViewSetTest(TestCase):
 
 class EnquetesViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="PERSONNES", code="PERSONNES")
-        nom = Nomenclature.objects.create(id_type=ntype, label="PERSONNES_label")
-        ntype_bat = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom_bat = Nomenclature.objects.create(id_type=ntype_bat, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom_bat, classe=nom_bat)
-        self.enquete = Enquetes.objects.create(personne=nom, bati=self.bati)
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.enquete = factories.EnqueteFactory(bati=self.bati)
 
     def test_enquetes_create(self):
         view = EnquetesCreate()
@@ -138,12 +118,8 @@ class EnquetesViewTest(TestCase):
 
 class PerspectiveViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="PERSP", code="PERSP")
-        nom = Nomenclature.objects.create(id_type=ntype, label="PERSP_label")
-        ntype_bat = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom_bat = Nomenclature.objects.create(id_type=ntype_bat, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom_bat, classe=nom_bat)
-        self.perspective = Perspective.objects.create(perspective=nom, bati=self.bati)
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.perspective = factories.PerspectiveFactory(bati=self.bati)
 
     def test_perspective_create(self):
         view = PerspectiveCreate()
@@ -162,17 +138,8 @@ class PerspectiveViewTest(TestCase):
 
 class DemandeTravauxViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom = Nomenclature.objects.create(id_type=ntype, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom, classe=nom)
-        self.demande = DemandeTravaux.objects.create(
-            bati=self.bati,
-            demande_dep=True,
-            autorisation_p=True,
-            date_permis="2025-01-01",
-            date_demande_permis="2024-12-01",
-            num_permis="12345"
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.demande = self.bati.demandes_travaux.first()
 
     def test_demande_create(self):
         view = DemandeTravauxCreate()
@@ -191,25 +158,9 @@ class DemandeTravauxViewTest(TestCase):
 
 class TravauxViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom = Nomenclature.objects.create(id_type=ntype, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom, classe=nom)
-        self.demande = DemandeTravaux.objects.create(
-            bati=self.bati,
-            demande_dep=True,
-            autorisation_p=True,
-            date_permis="2025-01-01",
-            date_demande_permis="2024-12-01",
-            num_permis="12345"
-        )
-        self.travaux = Travaux.objects.create(
-            date="2025-02-01",
-            demande=self.demande,
-            usage=nom,
-            nature=nom,
-            autorisation=True,
-            subvention_pne=1000
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.demande = self.bati.demandes_travaux.first()
+        self.travaux = self.demande.travaux.first()
 
     def test_dispatch_sets_demande(self):
         view = TravauxCreate()
@@ -250,28 +201,12 @@ class TravauxViewTest(TestCase):
         view.demande = self.demande
         url = view.get_success_url()
         self.assertEqual(url, self.bati.get_detail_url())
-        
+
 class StructureFinitionViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="STRUCT", code="STRUCT")
-        nom = Nomenclature.objects.create(id_type=ntype, label="STRUCT_label")
-        ntype_bat = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom_bat = Nomenclature.objects.create(id_type=ntype_bat, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom_bat, classe=nom_bat)
-        self.structure = Structure.objects.create(
-            bati=self.bati,
-            conservation=nom,
-            materiaux_principal=nom,
-            type=nom,
-            mise_en_oeuvre=nom,
-            info_structure="Info",
-            est_remarquable=True
-        )
-        self.mff_structure = MateriauxFinFinitionStructure.objects.create(
-            structure=self.structure,
-            materiaux_fin=nom,
-            finition=nom
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.structure = self.bati.structure.first()
+        self.mff_structure = self.structure.finitions.first()
 
     def test_structure_finition_create(self):
         view = StructureFinitionCreate()
@@ -290,18 +225,8 @@ class StructureFinitionViewTest(TestCase):
 
 class SecondOeuvreViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="SO", code="SO")
-        nom = Nomenclature.objects.create(id_type=ntype, label="SO_label")
-        ntype_bat = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom_bat = Nomenclature.objects.create(id_type=ntype_bat, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom_bat, classe=nom_bat)
-        self.second_oeuvre = SecondOeuvre.objects.create(
-            bati=self.bati,
-            type=nom,
-            conservation=nom,
-            commentaire="Commentaire",
-            est_remarquable=True
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.second_oeuvre = self.bati.second_oeuvre.first()
 
     def test_second_oeuvre_create(self):
         view = SecondOeuvreCreate()
@@ -320,23 +245,9 @@ class SecondOeuvreViewTest(TestCase):
 
 class SecondOeuvreFinitionViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="SO", code="SO")
-        nom = Nomenclature.objects.create(id_type=ntype, label="SO_label")
-        ntype_bat = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom_bat = Nomenclature.objects.create(id_type=ntype_bat, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom_bat, classe=nom_bat)
-        self.second_oeuvre = SecondOeuvre.objects.create(
-            bati=self.bati,
-            type=nom,
-            conservation=nom,
-            commentaire="Commentaire",
-            est_remarquable=True
-        )
-        self.mff_second_oeuvre = MateriauxFinFinitionSecondOeuvre.objects.create(
-            second_oeuvre=self.second_oeuvre,
-            materiaux_fin=nom,
-            finition=nom
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.second_oeuvre = self.bati.second_oeuvre.first()
+        self.mff_second_oeuvre = self.second_oeuvre.materiaux_fin.first()
 
     def test_second_oeuvre_finition_create(self):
         view = SecondOeuvreFinitionCreate()
@@ -368,7 +279,7 @@ class BatiDocumentPdfDetailTest(TestCase):
 class StructureFinitionCreateViewTest(TestCase):
     def setUp(self):
         self.bati = factories.BatiFactory(appelation="Test")
-        self.structure = self.bati.structures.first()
+        self.structure = self.bati.structure.first()
 
     def test_dispatch_sets_structure(self):
         view = StructureFinitionCreate()
@@ -399,25 +310,9 @@ class StructureFinitionCreateViewTest(TestCase):
 
 class StructureFinitionUpdateViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="STRUCT", code="STRUCT")
-        nom = Nomenclature.objects.create(id_type=ntype, label="STRUCT_label")
-        ntype_bat = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom_bat = Nomenclature.objects.create(id_type=ntype_bat, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom_bat, classe=nom_bat)
-        self.structure = Structure.objects.create(
-            bati=self.bati,
-            conservation=nom,
-            materiaux_principal=nom,
-            type=nom,
-            mise_en_oeuvre=nom,
-            info_structure="Info",
-            est_remarquable=True
-        )
-        self.mff_structure = MateriauxFinFinitionStructure.objects.create(
-            structure=self.structure,
-            materiaux_fin=nom,
-            finition=nom
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.structure = self.bati.structure.first()
+        self.mff_structure = self.structure.finitions.first()
 
     def test_dispatch_sets_structure(self):
         view = StructureFinitionUpdate()
@@ -451,21 +346,10 @@ class StructureFinitionUpdateViewTest(TestCase):
         url = view.get_success_url()
         self.assertEqual(url, self.structure.get_detail_url())
 
-
 class SecondOeuvreFinitionCreateViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="SO", code="SO")
-        nom = Nomenclature.objects.create(id_type=ntype, label="SO_label")
-        ntype_bat = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom_bat = Nomenclature.objects.create(id_type=ntype_bat, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom_bat, classe=nom_bat)
-        self.second_oeuvre = SecondOeuvre.objects.create(
-            bati=self.bati,
-            type=nom,
-            conservation=nom,
-            commentaire="Commentaire",
-            est_remarquable=True
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.second_oeuvre = self.bati.second_oeuvre.first()
 
     def test_dispatch_sets_second_oeuvre(self):
         view = SecondOeuvreFinitionCreate()
@@ -496,23 +380,9 @@ class SecondOeuvreFinitionCreateViewTest(TestCase):
 
 class SecondOeuvreFinitionUpdateViewTest(TestCase):
     def setUp(self):
-        ntype = NomenclatureType.objects.create(label="SO", code="SO")
-        nom = Nomenclature.objects.create(id_type=ntype, label="SO_label")
-        ntype_bat = NomenclatureType.objects.create(label="TYPE_BAT", code="TYPE_BAT")
-        nom_bat = Nomenclature.objects.create(id_type=ntype_bat, label="TYPE_BAT_label")
-        self.bati = Bati.objects.create(appelation="Test", type_bat=nom_bat, classe=nom_bat)
-        self.second_oeuvre = SecondOeuvre.objects.create(
-            bati=self.bati,
-            type=nom,
-            conservation=nom,
-            commentaire="Commentaire",
-            est_remarquable=True
-        )
-        self.mff_second_oeuvre = MateriauxFinFinitionSecondOeuvre.objects.create(
-            second_oeuvre=self.second_oeuvre,
-            materiaux_fin=nom,
-            finition=nom
-        )
+        self.bati = factories.BatiFactory(appelation="Test")
+        self.second_oeuvre = self.bati.second_oeuvre.first()
+        self.mff_second_oeuvre = factories.MateriauxFinFinitionSecondOeuvreFactory(second_oeuvre=self.second_oeuvre)
 
     def test_dispatch_sets_second_oeuvre(self):
         view = SecondOeuvreFinitionUpdate()
