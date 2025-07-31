@@ -4,7 +4,17 @@ AUTHENTICATION_BACKENDS += ['authent.backend.DatabaseBackend']
 AUTHENT_DATABASE = 'authent'
 AUTHENT_TABLENAME = 'utilisateurs.ma_table'
 
-DATABASES['authent'] = {
+DATABASES = {
+    "default": {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "5432"),
+        "OPTIONS": {"options": "-c search_path=public,ref_geo"},
+    },
+    "authent": {
     'ENGINE': 'django.contrib.gis.db.backends.postgis',
     'NAME': '',
     'USER': '',
@@ -12,8 +22,9 @@ DATABASES['authent'] = {
     'HOST': '',
     'PORT': '',
     'OPTIONS' : {'options': '-c search_path=public,utilisateurs'}
-
+    }
 }
+
 
 #AUTHENT_DEFAULT_USER_GROUP_NAME = "test"
 ZONING_CONFIG = {
