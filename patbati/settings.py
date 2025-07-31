@@ -183,8 +183,7 @@ THUMBNAIL_ALIASES = {
 THUMBNAIL_PROCESSORS = (*easy_thumbnails_defaults.THUMBNAIL_PROCESSORS,)
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = BASE_DIR / "static"
 
 LANGUAGES = (
     ("en", "English"),
