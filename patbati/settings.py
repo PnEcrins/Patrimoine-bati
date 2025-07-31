@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     "patbati.bati",
     "authent",
     "django_filters",
-    "codecov",
 ]
 
 MIDDLEWARE = [
