@@ -11,6 +11,7 @@ from pathlib import Path
 from patbati.bati.models import (
     Bati,
     ClasseArchiNature,
+    Enquetes,
     MateriauGeMiseEnOeuvre,
     MateriauxFinFinition,
     Nomenclature,
@@ -362,7 +363,6 @@ class Command(BaseCommand):
                         normalized_name = unicodedata.normalize('NFKD', fichier_source.name).encode('ASCII', 'ignore').decode('ASCII')
                         dest_filename = normalized_name.lower().replace(" ", "").replace("..", ".")
                         dest_path = paperclip / str(bati.id) / dest_filename
-                        print(dest_filename)
                         shutil.copy(docs_nas / doc.fichier_source, dest_path)
 
                         pdf = FileType.objects.filter(type="PDF").first()
@@ -402,6 +402,29 @@ class Command(BaseCommand):
                     )
                     persp.save()
 
+                # ENQUETES
+                cursor.execute("SELECT codepersonne, personne FROM patbati.bib_personnes")
+                personnes_map = {row.codepersonne: row.personne for row in namedtuplefetchall(cursor)}
+
+                enquetes_sql = """
+                SELECT *
+                FROM patbati.enquetes
+                JOIN patbati.bib_personnes USING(codepersonne)   
+                where indexbatiment = %s 
+                """
+                cursor.execute(enquetes_sql, [r.indexbatiment])
+                enquetes = namedtuplefetchall(cursor)
+                for e in enquetes: 
+                    label = personnes_map.get(e.codepersonne)
+                    personne_nomenclature = get_nomenclature(label, "PERSONNES")
+                    enq = Enquetes(
+                        personne=personne_nomenclature,
+                        bati=bati,
+                        date_enquete=e.date_enquete,
+                        date_redaction=e.date_redaction,
+                    )
+                    enq.save()
+                
                 # STRUCTURES
                 structure_sql = """
                     SELECT * 
