@@ -360,7 +360,7 @@ class Command(BaseCommand):
                         import unicodedata
 
                         normalized_name = unicodedata.normalize('NFKD', fichier_source.name).encode('ASCII', 'ignore').decode('ASCII')
-                        dest_filename = normalized_name.lower().replace(" ", "-").replace("..", ".")
+                        dest_filename = normalized_name.lower().replace(" ", "").replace("..", ".")
                         dest_path = paperclip / str(bati.id) / dest_filename
                         print(dest_filename)
                         shutil.copy(docs_nas / doc.fichier_source, dest_path)

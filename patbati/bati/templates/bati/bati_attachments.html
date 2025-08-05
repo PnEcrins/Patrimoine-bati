@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<ul class="list-unstyled">
+{% comment %} <ul class="list-unstyled">
   {% for att in my_attachments %}
     {% if not att.is_image %}
       <li class="mb-2">
@@ -55,7 +55,7 @@
       </li>
     {% endif %}
   {% endfor %}
-</ul>
+</ul> {% endcomment %}
 {% else %}
   <p class="text-muted">Aucune pièce jointe disponible.</p>
 {% endif %}
