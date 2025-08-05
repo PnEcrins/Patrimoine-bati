@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "patbati.bati",
     "authent",
     "django_filters",
+    "ssoauth",
 ]
 
 MIDDLEWARE = [
@@ -243,3 +244,18 @@ ENV = os.getenv("ENV", "prod")
 if ENV != "tests":
     with open("./patbati/settings_local.py") as f:
         exec(f.read())
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    }
+}
+
+# AUTHLIB CLIENTS
+AUTHLIB_OAUTH_CLIENTS = {
+    'keycloak': {
+        'client_id': os.getenv('SSO_CLIENT_ID'),
+        'client_secret': os.getenv('SSO_CLIENT_SECRET'),
+    }
+}

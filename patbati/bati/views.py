@@ -1,20 +1,12 @@
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
+from django.shortcuts import get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from mapentity.views.generic import (
     MapEntityList,
     MapEntityDetail,
     MapEntityFormat,
     MapEntityCreate,
-    MapEntityUpdate,
-    MapEntityDocument,
-    MapEntityDelete,
 )
-from django.db.models.functions import Coalesce
-from django.db.models import Value, DateField
 from mapentity.views.api import MapEntityViewSet
-from mapentity.views.mixins import ModelViewMixin
 from patbati.bati.filters import BatiFilterSet
 
 from patbati.bati.forms import (
@@ -40,16 +32,10 @@ from .models import (
     Travaux,
 )
 from .serializers import BatiSerializer, BatiGeojsonSerializer
-from patbati.mapentitycommon.forms import FormsetMixin
 from patbati.mapentitycommon.views import ChildFormViewMixin, ChildDeleteViewMixin
 from mapentity.views import MapEntityFilter
 
 # Create your views here.
-
-
-def home(request):
-    return HttpResponse("YEP")
-
 
 class BatiFilter(MapEntityFilter):
     model = Bati
