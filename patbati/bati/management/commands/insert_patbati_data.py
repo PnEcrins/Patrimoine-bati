@@ -73,9 +73,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("path", type=str, help="path where medias are stored")
+        parser.add_argument("admin_user", type=str, help="User need for media insertion")
+
 
     def handle(self, *args, **options):
         MEDIA_PATH = options["path"]
+        user_admin = options["admin_user"]
         with connections["default"].cursor() as cursor:
             # PERSONNES
             sqlquery = "SELECT * FROM patbati.bib_personnes"
@@ -294,7 +297,7 @@ class Command(BaseCommand):
                 illustrations = namedtuplefetchall(cursor)
                 
                 content_type = ContentType.objects.filter(model="bati").first()
-                user = User.objects.filter(username="admin").first()
+                user = User.objects.filter(username=user_admin).first()
                 nas = Path(MEDIA_PATH) / "images"
                 paperclip = Path(settings.BASE_DIR) / "media/paperclip/bati_bati"
                 
