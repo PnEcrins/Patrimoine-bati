@@ -295,7 +295,7 @@ class Command(BaseCommand):
                 content_type = ContentType.objects.filter(model="bati").first()
                 user = User.objects.filter(username="admin").first()
                 nas = Path(MEDIA_PATH) / "images"
-                paperclip = Path(settings.BASE_DIR + '/media/paperclip/bati_bati')
+                paperclip = Path(settings.BASE_DIR) / "media/paperclip/bati_bati"
                 
                 for ill in illustrations:
                     from PIL import Image
