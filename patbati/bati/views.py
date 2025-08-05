@@ -65,7 +65,6 @@ class BatiList(MapEntityList):
         "type_bat",
         "notepatri",
         "conservation",
-        "secteurs",
     ]
     searchable_columns = [
         "appelation",

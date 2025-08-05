@@ -9,7 +9,6 @@ class BatiSerializer(serializers.ModelSerializer):
     type_bat = serializers.CharField(source="type_bat_label")
     conservation = serializers.CharField()
     notepatri = serializers.CharField()
-    secteurs = serializers.CharField()
 
     class Meta:
         fields = "__all__"

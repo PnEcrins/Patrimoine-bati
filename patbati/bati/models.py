@@ -190,7 +190,7 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
         protections = self.areas.filter(type__code__in=["PPN", "ZC", "PEC", "SITE_INSC", "SITE_CLASSES"])
         return ", ".join([p.name for p in protections]) if protections else None
     
-    secteurs_verbose_name = "Secteur"
+    # secteurs_verbose_name = "Secteur"
 
     @property
     def type_bat_label(self):
