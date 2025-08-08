@@ -72,7 +72,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "patbati.urls"
-from pathlib import Path
 
 TEMPLATES = [
     {
@@ -192,7 +191,8 @@ LANGUAGES = (
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
+LOGIN_REDIRECT_URL = "/bati/list/"
+LOGOUT_REDIRECT_URL = "/bati/list/"
 
 MAPENTITY_CONFIG = {
     "MAPENTITY_WEASYPRINT": True,
