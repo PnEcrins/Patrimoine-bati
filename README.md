@@ -4,22 +4,44 @@
 
 ## Installation
 
-python3-pip python3-venv libpq-dev python3-dev binutils libproj-dev gdal-bin
-libjpeg62 zlib1g-dev libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
-postgresql-15-postgis-3
-desampler le settings_local
+Avant d’installer l’application, il est nécessaire d’installer les bibliothèques suivantes :
 
-TODO : tout mettre dans le settings_local
+- python3-pip
+- python3-venv
+- libpq-dev
+- python3-dev
+- binutils
+- libproj-dev
+- gdal-bin
+- libjpeg62
+- zlib1g-dev
+- libcairo2
+- libpango-1.0-0
+- libpangocairo-1.0-0
+- libgdk-pixbuf2.0-0
+- libffi-dev
+- shared-mime-info
+- postgresql-15-postgis-3
+
+Pour automatiser cette étape, vous pouvez utiliser le script suivant :
+
+```bash
+bash install_deps.sh
+``` 
 
 creer l'extension postgis dans la BDD
-create extension postgis;
 
+```SQL
+CREATE EXTENSION postgis;
+```
 
 ## Deploiement prod
 
 Installer gunicorn
 
 pip install gunicorn
+
+Installation systemd
 
 #### Référentiel géographique
 
@@ -50,3 +72,14 @@ Installer les dépendances de tests :
 Lancer les tests : 
 
     python manage.py tests
+
+
+## Configuration
+Configurer les paramètres de la base de données dans le settings_local
+
+Possibilité d'utiliser le SSO avec OpenIDConnect et Authlib dans settings_local.py:
+
+    changer SSO_LOGIN_ENABLED = True
+
+    remplir le CLIENT_ID, CLIENT SECRET, SSO_ENDPOINT de votre Identity and Access Management
+
