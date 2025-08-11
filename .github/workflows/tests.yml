@@ -40,6 +40,12 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Make script executable
+        run: chmod +x install_deps.sh
+
+      - name: Run install_deps.sh
+        run: ./install_deps.sh
+        
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
