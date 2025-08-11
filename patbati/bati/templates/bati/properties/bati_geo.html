@@ -1,0 +1,31 @@
+{% load mapentity_tags common_tags %}
+
+<!-- Collapsible card for Géographie -->
+<div class="content mb-3">
+  <div class="card">
+    <div class="card-header text-center d-flex justify-content-between align-items-center"
+        data-toggle="collapse"
+        data-target="#collapseGeo"
+        aria-expanded="false"
+        aria-controls="collapseGeo"
+        style="cursor:pointer; position: relative;">
+      <span>Géographie</span>
+      <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
+    </div>
+    <div id="collapseGeo" class="collapse">
+      <div class="card-body p-0">
+        <table class="table table-striped table-bordered mb-0">
+          <tbody>
+            <tr><th>Secteur</th><td>{{ object.secteurs }}</td></tr>
+            <tr><th>Lieu-dit</th><td>{{ object.lieu_dit }}</td></tr>
+            <tr><th>Cadastre</th><td>{{ object.cadastre }}</td></tr>
+            <tr><th>Coordonnée X</th><td>{{ object.x }}</td></tr>
+            <tr><th>Coordonnée Y</th><td>{{ object.y }}</td></tr>
+            <tr><th>Altitude</th><td>{{ object.altitude|default:"-" }}</td></tr>
+            <tr><th>Dénivelé</th><td>{{ object.denivelle|default:"-" }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

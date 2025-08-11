@@ -1,0 +1,115 @@
+{% load mapentity_tags common_tags %}
+
+<div id="travaux" class="tab-pane">
+    <div class="mb-3">
+        <h5>Demande de permis (ou absence de demande)</h5>
+        <a href="{% url 'bati:demande_travaux_add' parent_pk=object.pk %}" class="btn btn-success mb-3">
+            Ajouter une Demande de permis
+        </a>
+        <div class="row font-weight-bold border-bottom pb-2 mb-2" style="margin-right:0;">
+            <div class="col-1 text-left" data-qa="demande-header-permis">Permis</div>
+            <div class="col-2 text-left" data-qa="demande-header-date-demande">Date demande</div>
+            <div class="col-2 text-left" data-qa="demande-header-autorisation">Autorisation</div>
+            <div class="col-2 text-left" data-qa="demande-header-date-permis">Date permis</div>
+            <div class="col-2 text-center" data-qa="demande-header-numero">Numéro</div>
+            <div class="col-3 text-right" data-qa="demande-header-actions">Actions</div>
+        </div>
+        <div class="accordion" id="demandesAccordion">
+            {% for demande in object.demandes_travaux.all %}
+            <div class="card mb-2 shadow-sm">
+                <div class="card-header p-2" id="heading{{ forloop.counter }}">
+                    <div class="row align-items-center"
+                        data-toggle="collapse"
+                        data-target="#collapse{{ forloop.counter }}"
+                        aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                        aria-controls="collapse{{ forloop.counter }}"
+                        style="cursor: pointer;">
+                        <div class="col-1" data-qa="demande-permis">
+                            {% if demande.demande_dep %}
+                                <span class="text-success">&#10003;</span>
+                            {% else %}
+                                <span class="text-danger">&#10007;</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-2" data-qa="demande-date">{{ demande.date_demande_permis|default:"-" }}</div>
+                        <div class="col-2" data-qa="demande-autorisation">
+                            {% if demande.autorisation_p %}
+                                <span class="text-success">&#10003;</span>
+                            {% else %}
+                                <span class="text-danger">&#10007;</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-2" data-qa="demande-date-permis">{{ demande.date_permis|default:"-" }}</div>
+                        <div class="col-2" data-qa="demande-numero">{{ demande.num_permis|default:"-" }}</div>
+                        <div class="col-3 text-right" data-qa="demande-actions">
+                            <a href="{% url 'bati:travaux_add' object.pk demande.pk %}" class="btn btn-sm btn-outline-secondary" title="Ajotuer un travaux">
+                                <i class="bi bi-plus"></i>
+                            </a>
+                            <a href="{% url 'bati:demande_travaux_update' object.pk demande.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'bati:demande_travaux_delete' object.pk demande.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            <i class="bi bi-chevron-down ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="collapse{{ forloop.counter }}" class="ml-3 mb-2 mr-2 collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}">
+                    <div class="card-body p-0">
+                        {% with travaux_list=demande.travaux.all %}
+                            {% if travaux_list %}
+                            <table class="table table-sm table-bordered mb-0 text-center" data-qa="travaux-table">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th style="width:16.66%;">Date des travaux</th>
+                                        <th style="width:16.66%;">Autorisation du parc</th>
+                                        <th style="width:16.66%;">Subvention accordée</th>
+                                        <th style="width:16.66%;">Nature des Travaux</th>
+                                        <th style="width:16.66%;">Nouvel usage</th>
+                                        <th style="width:16.66%;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for travaux in travaux_list %}
+                                    <tr>
+                                        <td data-qa="travaux-date">{{ travaux.date }}</td>
+                                        <td data-qa="travaux-autorisation">
+                                            {% if travaux.autorisation %}
+                                                <span class="text-success">&#10003;</span>
+                                            {% else %}
+                                                <span class="text-danger">&#10007;</span>
+                                            {% endif %}
+                                        </td>
+                                        <td data-qa="travaux-subvention">{{ travaux.subvention_pne|default:"-" }}</td>
+                                        <td data-qa="travaux-nature">{{ travaux.nature.label }}</td>
+                                        <td data-qa="travaux-usage">{{ travaux.usage.label }}</td>
+                                        <td data-qa="travaux-actions">
+                                            <a href="{% url 'bati:travaux_update' object.pk travaux.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="{% url 'bati:travaux_delete' object.pk travaux.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center" data-qa="travaux-empty">Aucun travaux pour cette demande</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                            <p class="text-muted mb-0 p-3" data-qa="travaux-empty">Aucun travaux pour cette demande.</p>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="alert alert-info" data-qa="demande-empty">Aucune demande</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

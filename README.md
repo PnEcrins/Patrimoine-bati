@@ -1,3 +1,10 @@
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
+[![Django](https://img.shields.io/badge/Django-5.2-success)](https://www.djangoproject.com/)
+[![Mapentity](https://img.shields.io/badge/Mapentity-12.8.3-success)](https://github.com/makinacorpus/django-mapentity)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)](https://www.postgresql.org/)
+[![Last Commit](https://img.shields.io/github/last-commit/PnEcrins/Patrimoine-bati)](https://github.com/PnEcrins/Patrimoine-batu/commits/main)
+[![Issues](https://img.shields.io/github/issues/PnEcrins/Patrimoine-bati)](https://github.com/PnEcrins/Patrimoine-bati/issues)
+
 # Application Patrimoine bati
 
 ## Installation :

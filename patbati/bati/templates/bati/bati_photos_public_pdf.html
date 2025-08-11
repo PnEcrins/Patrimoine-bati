@@ -1,0 +1,110 @@
+{% load static attachments_tags %}
+
+<section>
+  <h2> Photos :</h2>
+  {% get_attachments_for object as "my_attachments" %}
+
+  {# 2 Photo site #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 2 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 5 Photo par accès itinéraire #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 5 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 3 Photo facade Nord #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 3 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 4 Photo facade Est #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 4 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 6 Photo facade Sud #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 6 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 7 Photo facade Ouest #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 7 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 11 Photo de l'ancien bâtiment #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 11 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 15 Plan bâtiment #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 15 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 14 Plan masse #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 14 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 12 Masque #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 12 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 13 Croquis #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 13 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 16 Coupe #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 16 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+
+  {# 17 Elévation #}
+  {% for att in my_attachments %}
+    {% if att.is_image and att.filetype.id == 17 %}
+      <p>{{ att.filetype }}</p>
+      <img src="{% get_media_prefix %}{{ att.attachment_file }}" alt="" style="height:50%; width:50%;">
+    {% endif %}
+  {% endfor %}
+</section>

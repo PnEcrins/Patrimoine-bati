@@ -1,0 +1,75 @@
+{% load mapentity_tags common_tags %}
+
+<div id="enq-pers" class="tab-pane">
+    <div class="mb-3">
+        <div class="d-flex mb-2 align-items-center">
+            <h4 class="mb-0">Perspectives</h4>
+            <a href="{% url 'bati:perspectives_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
+        </div>
+        <table class="table table-striped" data-qa="perspectives-table">
+            <thead>
+                <tr>
+                    <th style="width:40%;">Date</th>
+                    <th style="width:40%;">Perspective</th>
+                    <th style="width:20%;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pers in object.perspective_set.all %}
+                <tr>
+                    <td data-qa="perspective-date">{{ pers.date }}</td>
+                    <td data-qa="perspective-label">{{ pers.perspective.label }}</td>
+                    <td>
+                        <a href="{% url 'bati:perspectives_update' object.pk pers.pk %}" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{% url 'bati:perspectives_delete' object.pk pers.pk %}" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center" data-qa="perspective-empty">Aucune perspective associée</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="d-flex mb-2 align-items-center">
+            <h4 class="mb-0">Enquêtes</h4>
+            <a href="{% url 'bati:enquetes_add' parent_pk=object.pk %}" class="btn btn-success ml-2">+</a>
+        </div>
+        <table class="table table-striped" data-qa="enquetes-table">
+            <thead>
+                <tr>
+                    <th style="width:26.6%;">Personne</th>
+                    <th style="width:26.6%;">Date enquête</th>
+                    <th style="width:26.6%;">Date rédaction</th>
+                    <th style="width:20%;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enquete in object.enquetes.all %}
+                <tr>
+                    <td data-qa="enquete-personne">{{ enquete.personne }}</td>
+                    <td data-qa="enquete-date-enquete">{{ enquete.date_enquete|date:"d/m/Y H:i" }}</td>
+                    <td data-qa="enquete-date-redaction">{{ enquete.date_redaction|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'bati:enquetes_update' object.pk enquete.pk %}" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{% url 'bati:enquetes_delete' object.pk enquete.pk %}" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center" data-qa="enquete-empty">Aucune enquête associée</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

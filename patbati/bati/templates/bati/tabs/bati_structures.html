@@ -1,0 +1,118 @@
+{% load mapentity_tags common_tags %}
+
+<div class="mb-3">
+    <h5>
+        Liste des structures
+        <a href="{% url 'bati:structure_add' object.pk %}" class="btn btn-sm btn-success ml-2" title="Ajouter une structure">
+            <i class="bi bi-plus"></i>
+        </a>
+    </h5>
+    <div class="accordion" id="structuresAccordion">
+        {% for struct in object.structure.all %}
+        <div class="card mb-2 shadow-sm">
+            <div class="card-header p-2 d-flex justify-content-between align-items-center"
+                data-toggle="collapse"
+                data-target="#collapseStruct{{ forloop.counter }}"
+                aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-controls="collapseStruct{{ forloop.counter }}"
+                style="cursor:pointer;">
+                <div>
+                    <strong data-qa="structure-type">{{ struct.type.label }}</strong>
+                </div>
+                <div>
+                    <a href="{% url 'bati:structure_update' object.pk struct.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="{% url 'bati:structure_delete' object.pk struct.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            </div>
+            <div id="collapseStruct{{ forloop.counter }}"
+                class="collapse {% if forloop.first %}show{% endif %}"
+                aria-labelledby="headingStruct{{ forloop.counter }}">
+                <div class="card-body border-0">
+                    <table class="table table-sm table-bordered mb-2" data-qa="structure-description-table">
+                        <thead class="table-info">
+                            <tr>
+                                <th colspan="2">Description de la structure</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Structure</th>
+                                <td data-qa="structure-type-value">{{ struct.type.label }}</td>
+                            </tr>
+                            <tr>
+                                <th>Structure remarquable</th>
+                                <td data-qa="structure-remarquable">
+                                    {% if struct.est_remarquable %}
+                                        <span style="color:green;">&#10003;</span>
+                                    {% else %}
+                                        <span style="color:red;">&#10007;</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Conservation</th>
+                                <td data-qa="structure-conservation">{{ struct.conservation.label }}</td>
+                            </tr>
+                            <tr>
+                                <th>Matériau principal</th>
+                                <td data-qa="structure-materiaux-principal">{{ struct.materiaux_principal.label }}</td>
+                            </tr>
+                            <tr>
+                                <th>Mise en oeuvre</th>
+                                <td data-qa="structure-mise-en-oeuvre">{{ struct.mise_en_oeuvre.label }}</td>
+                            </tr>
+                            <tr>
+                                <th>Commentaire</th>
+                                <td data-qa="structure-commentaire">{{ struct.info_structure|default:"-" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered mb-0" data-qa="structure-finitions-table">
+                        <thead class="table-info">
+                            <tr>
+                                <th>Matériau fin</th>
+                                <th>Finition</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mf in struct.finitions.all %}
+                            <tr>
+                                <td data-qa="structure-materiaux-fin">{{ mf.materiaux_fin.label }}</td>
+                                <td data-qa="structure-finition">{{ mf.finition.label }}</td>
+                                <td>
+                                    <a href="{% url 'bati:structure_finition_update' struct.pk bati.pk mf.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'bati:structure_finition_delete' struct.pk bati.pk mf.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center" data-qa="structure-finitions-empty">Aucun matériau fin pour cette structure</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="3" class="text-center">
+                                    <a href="{% url 'bati:structure_finition_add' struct.pk bati.pk  %}" class="btn btn-sm btn-success">
+                                        <i class="bi bi-plus"></i> Ajouter un matériau fin
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info" data-qa="structure-empty">Aucune structure</div>
+        {% endfor %}
+    </div>
+</div>
+
