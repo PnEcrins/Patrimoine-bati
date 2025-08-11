@@ -2,29 +2,16 @@
 
 ## Installation :
 
-Avant d’installer l’application, il est nécessaire d’installer les bibliothèques suivantes :
-
-- python3-pip
-- python3-venv
-- libpq-dev
-- python3-dev
-- binutils
-- libproj-dev
-- gdal-bin
-- libjpeg62
-- zlib1g-dev
-- libcairo2
-- libpango-1.0-0
-- libpangocairo-1.0-0
-- libgdk-pixbuf2.0-0
-- libffi-dev
-- shared-mime-info
-- postgresql-15-postgis-3
-
-Pour automatiser cette étape, vous pouvez utiliser le script suivant :
+Avant d’installer l’application, il est nécessaire d’installer les bibliothèques nécéssaires avec le script suivant :
 
 ```bash
 bash install_deps.sh
+```
+
+Créer la base de données PostgreSQL (vous pouvez choisir le nom que vous souhaitez, par exemple patbati) :
+
+```SQL
+CREATE DATABASE patbati;
 ```
 
 Créer l'extension postgis dans la BDD :
@@ -62,12 +49,6 @@ Effectuer les migrations de la base de données :
 python manage.py migrate
 ```
 
-Collecter les fichiers statiques :
-
-```bash
-python manage.py collectstatic
-```
-
 Créer un superutilisateur Django :
 
 ```bash
@@ -91,13 +72,15 @@ pip install gunicorn
 Configurer un service systemd pour gunicorn (voir documentation Django/gunicorn).
 
 Regroupez tous les fichiers statiques à un seul endroit :
-
-      python manage.py collectstatic
+```bash
+python manage.py collectstatic
+```
 
 Modifiez les paramètres dans `settings_local.py` :
-
-      ALLOWED_HOSTS = ["myhost"]
-      CSRF_TRUSTED_ORIGINS = ["http://myhost"]
+```bash
+ALLOWED_HOSTS = ["myhost"]
+CSRF_TRUSTED_ORIGINS = ["http://myhost"]
+```
 
 *Créer un service systemd*
 
@@ -130,22 +113,27 @@ Le service est maintenant démarré !
 Créez une configuration dans `/etc/apache2/sites-available` :
 
       <VirtualHost *:80>
-         ServerName patbati
+		#ServerName <SERVER_NAME>
 
-         Alias "/static/" "/home/patbati/patbati/static/"
-         <Directory "/home/patbati/patbati/static">
-            Require all granted
-         </Directory>
+		Alias "/static/" "/var/www/html/patbati/static/"
+		<Directory "/var/www/html/patbati/static/">
+			Require all granted
+		</Directory>
 
-         <Location "/">
-            ProxyPass http://127.0.0.1:8000/
-            ProxyPassReverse http://127.0.0.1:8000/
-            ProxyPreserveHost On
-         </Location>
+		Alias "/media/" /var/www/html/patbati/media/"
+		<Directory "/var/www/html/patbati/media/">
+		Require all granted
+		</Directory>
 
-         <Location "/static">
-            ProxyPass !
-         </Location>
+		<Location "/">
+			ProxyPass http://127.0.0.1:8000/
+			ProxyPassReverse http://127.0.0.1:8000/
+			ProxyPreserveHost On
+		</Location>
+
+		<Location "/static">
+			ProxyPass !
+		</Location>
       </VirtualHost>
 
 
