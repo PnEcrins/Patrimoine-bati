@@ -17,7 +17,7 @@ media/
 *.mo
 coverage.xml
 /patbati/local_settings.py
-*.sh
+run.sh
 .env
 
 paperclip/*

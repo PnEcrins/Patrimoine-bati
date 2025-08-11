@@ -15,12 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 from rest_framework.reverse import reverse_lazy
 from django.contrib.auth import views as auth_views
-
 
 admin.autodiscover()
 
@@ -35,11 +35,13 @@ urlpatterns = [
     path("paperclip/", include("paperclip.urls")),
     path("admin/", admin.site.urls),
     path("i18n/", include("django.conf.urls.i18n")),
-    path("login/", auth_views.LoginView.as_view(), name="login"),
-    path(
-        "logout/",
-        auth_views.LogoutView.as_view(),
-        {"next_page": "/"},
-        name="logout",
-    ),
 ]
+
+if settings.SSO_LOGIN_ENABLED:
+    urlpatterns += [path("", include("ssoauth.urls")),]
+else:
+    urlpatterns += [
+        path('login/', auth_views.LoginView.as_view(), name='login'),
+        path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/'}, name='logout',),
+    ]
+    
