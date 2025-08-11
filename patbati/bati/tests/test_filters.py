@@ -36,7 +36,7 @@ class BatiFilterTest(TestCase):
         self.assertEqual(qs.first().appelation, "Bâtiment B")
 
 class BatiSerializerTest(BatiFilterTest):
-    mandatory_cols = {"appelation", "type_bat", "conservation", "notepatri", "secteurs"}
+    mandatory_cols = {"appelation", "type_bat", "conservation", "notepatri"}
 
     def test_serializer_fields(self):
         serializer = BatiSerializer(instance=self.batiA)

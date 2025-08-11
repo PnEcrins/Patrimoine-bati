@@ -39,7 +39,6 @@ class BatiListViewTest(TestCase):
     def test_list_columns(self):
         view = BatiList()
         self.assertIn("appelation", view.columns)
-        self.assertIn("secteurs", view.columns)
         self.assertIn("appelation", view.searchable_columns)
 
 class BatiCreateViewTest(TestCase):

@@ -7,6 +7,9 @@
 
 # Application Patrimoine bati
 
+![Interface](media/img/list.png)
+![Detail](media/img/detail_properties.png)
+
 ## Installation :
 
 Avant d’installer l’application, il est nécessaire d’installer les bibliothèques nécéssaires avec le script suivant :

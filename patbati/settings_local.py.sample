@@ -1,10 +1,13 @@
+# Backend d'auth externe
 AUTHENTICATION_BACKENDS += ['authent.backend.DatabaseBackend']
 
-
+# Nom BDD et table auth externe
 AUTHENT_DATABASE = 'authent'
 AUTHENT_TABLENAME = 'utilisateurs.ma_table'
 
+# Bases de données
 DATABASES = {
+    # Base principale : PostGIS pour Django
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": os.getenv("DB_NAME"),
@@ -12,30 +15,40 @@ DATABASES = {
         "PASSWORD": os.getenv("DB_PASSWORD"),
         "HOST": os.getenv("DB_HOST", "localhost"),
         "PORT": os.getenv("DB_PORT", "5432"),
+        # Schémas utilisés par défaut
         "OPTIONS": {"options": "-c search_path=public,ref_geo"},
     },
     "authent": {
-    'ENGINE': 'django.contrib.gis.db.backends.postgis',
-    'NAME': '',
-    'USER': '',
-    'PASSWORD': '',
-    'HOST': '',
-    'PORT': '',
-    'OPTIONS' : {'options': '-c search_path=public,utilisateurs'}
+        # Base d'authentification externe
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+        # Schéma utilisé pour l'authentification
+        'OPTIONS': {'options': '-c search_path=public,utilisateurs'}
     }
 }
 
-
+# Groupe par défaut (optionnel)
 #AUTHENT_DEFAULT_USER_GROUP_NAME = "test"
+
+# Config zoning
 ZONING_CONFIG = {
-    "LOCAL_SRID":  2154,
+    "LOCAL_SRID": 2154,
+    # Type de zonage sur les fiches détails
     "AREA_TYPE_LIMITED": [],
+    # Type de zonage administratif (utilisé pour classer les type de zonages sur les fiches détails)
     "ADMINISTRATIVE_AREAS": ["COM", "SEC"],
-    "REGULATORY_AREAS": ["ZC", "RNN", "RNR", "ZPS", "SIC", "SITE_CLASSES", "SITE_INSC", "PPN", "ZNIEFF2", "ZNIEFF1" ],
+    # Type de zones reglementé (utilisé dans les filtres)
+    "REGULATORY_AREAS": ["ZC", "RNN", "RNR", "ZPS", "SIC", "SITE_CLASSES", "SITE_INSC", "PPN", "ZNIEFF2", "ZNIEFF1"],
 }
 
+# SSO activé ou non (permet de se connecter à un système d'authentication externe type Keycloak)
 SSO_LOGGIN_ENABLED = False
 
-SSO_CLIENT_SECRET="YOUR CLIENT SECRET"
-SSO_CLIENT_ID="YOUR CLIENT ID"
-SSO_ENDPOINT="YOUR REDIRECT URI"
+# Infos SSO
+SSO_CLIENT_SECRET = "YOUR CLIENT SECRET"
+SSO_CLIENT_ID = "YOUR CLIENT ID"
+SSO_ENDPOINT = "YOUR
