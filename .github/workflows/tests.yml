@@ -12,7 +12,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgis/postgis:15-3.5
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -39,15 +39,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11.2"
-
-      - name: Make script executable
-        run: chmod +x install_deps.sh
-
-      - name: Run install_deps.sh
-        run: ./install_deps.sh
         
       - name: Install dependencies
         run: |
+          sudo apt install -y libjpeg62 zlib1g-dev libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev 
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
