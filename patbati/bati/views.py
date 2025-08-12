@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404
+from django_weasyprint import WeasyTemplateResponseMixin
+
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from mapentity.views.generic import (
     MapEntityList,
@@ -323,20 +325,13 @@ class SecondOeuvreFinitionDelete(ChildDeleteViewMixin, DeleteView):
 
 
 
-from mapentity.views.generic import MapEntityDocumentWeasyprint
-
-
-class BatiDocumentPdfPublic(MapEntityDocumentWeasyprint):
-    model = Bati
-
+class BatiDocumentPdfPublic(WeasyTemplateResponseMixin, BatiDetail):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.template_name = "bati/bati_public_pdf.html"
 
 
-class BatiDocumentPdfDetail(MapEntityDocumentWeasyprint):
-    model = Bati
-
+class BatiDocumentPdfDetail(WeasyTemplateResponseMixin, BatiDetail):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.template_name = "bati/bati_detail_pdf.html"
