@@ -48,7 +48,7 @@ jobs:
 
       - name: Prepare settings_local.py for CI
         run: |
-          cp settings_local.py.sample settings_local.py
+          cp patbati/settings_local.py.sample patbati/settings_local.py
    
       - name: Run migrations
         run: python manage.py migrate
