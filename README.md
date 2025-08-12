@@ -152,7 +152,7 @@ Créez une configuration dans `/etc/apache2/sites-available` :
 			Require all granted
 		</Directory>
 
-		Alias "/media/" /var/www/html/patbati/media/"
+		Alias "/media/" "/var/www/html/patbati/media/"
 		<Directory "/var/www/html/patbati/media/">
 		Require all granted
 		</Directory>
@@ -164,6 +164,10 @@ Créez une configuration dans `/etc/apache2/sites-available` :
 		</Location>
 
 		<Location "/static">
+			ProxyPass !
+		</Location>
+
+		<Location "/media">
 			ProxyPass !
 		</Location>
       </VirtualHost>
