@@ -1,0 +1,30 @@
+"id_type","label","definition","code"
+9,conservation,etat de conservation,CONSERVATION
+10,duree,duree,DUREE
+11,faitage,,FAITAGE
+15,finition,,FIN
+16,implantation,,IMPLA
+17,masque,,MASQUE
+20,nature,,NATURE_TRAVAUX
+21,personnes,,PERSONNES
+22,perspective,,PERSP
+23,protection,,PROT
+24,risquenat,risque naturel,RISQUE
+25,structure,,STRUCT
+26,type_equipement,type d'équipement,TYPE_EQUIP
+28,usage,,USAGE_TRAVAUX
+7,classe_archi,classe architecturale,CL_ARCHI
+13,note_patri,,NOTE_PAT
+29,equipement,,EQUIP
+30,element_paysager,élélement paysager,ELEM_PAYS
+31,naturel_ou_construits,element paysager naturel ou construit,NAT_CONS
+32,mat_fins,materiaux utilisés pour la finition,MAT_FIN
+33,type_mat_fins,types de materiaux pour la finition,TYPE_MAT_FIN
+35,second_oeuvre,second oeuvre,SO
+34,type_so,type seconde oeuvre,TYPE_SO
+18,materiaux_ge,materaux généraux,MAT_GE
+12,exposition,exposition N/S/O/E,EXPO
+14,secteur,secteur,SECTEUR
+19,meoeuvre,mise en oeuvre,MEOEUVRE
+36,type_illustration,type d'illustrations,TYPE_ILLUSTRATION
+37,type_batiment,type du batiment,TYPE_BAT

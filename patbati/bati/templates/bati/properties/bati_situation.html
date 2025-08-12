@@ -1,0 +1,29 @@
+{% load mapentity_tags common_tags %}
+
+<!-- Collapsible card for Situation -->
+<div class="content mb-3">
+  <div class="card">
+    <div class="card-header text-center d-flex justify-content-between align-items-center"
+        data-toggle="collapse"
+        data-target="#collapseSituation"
+        aria-expanded="false"
+        aria-controls="collapseSituation"
+        style="cursor:pointer; position: relative;">
+      <span>Situation</span>
+      <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
+    </div>
+    <div id="collapseSituation" class="collapse">
+      <div class="card-body p-0">
+        <table class="table table-striped table-bordered mb-0">
+          <tbody>
+            <tr><th>Implantation</th><td>{{ object.implantation|default:"-" }}</td></tr>
+            <tr><th>Faitage</th><td>{{ object.faitage|default:"-" }}</td></tr>
+            <tr><th>Situation géographique</th><td>{{ object.situation_geo|default:"-" }}</td></tr>
+            <tr><th>Exposition</th><td>{{ object.exposition|default:"-" }}</td></tr>
+            <tr><th>Pente</th><td>{{ object.pente|default:"-" }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

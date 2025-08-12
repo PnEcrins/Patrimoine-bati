@@ -1,0 +1,76 @@
+{% extends "mapentity/mapentity_detail.html" %}
+{% load static mapentity_tags %}
+
+{% block download %}
+  </div>
+   <div class="btn-group pull-right">
+    <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_detail' object.pk %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Fiche</a>
+    <a class="btn btn-light btn-sm" href="{% url 'bati:pdf_export_public' object.pk %}" target="_blank"><img src="{% static "paperclip/fileicons/pdf.png" %}"/> Fiche resumé</a>
+{% endblock download %}
+
+{% block attachmentspanel %}
+{% include "bati/bati_attachments.html" %}
+{{ block.super }}
+{% endblock %}
+
+{% block before_attachments_extra_tab_nav %}
+<li class="nav-item">
+    <a id="tab-travaux" class="nav-link" href="#travaux" data-toggle="tab">
+        <i class="bi bi-cone-striped"></i>
+        <span class="d-none d-sm-inline">Travaux</span>
+    </a>
+</li>
+<li class="nav-item">
+    <a id="tab-structure" class="nav-link" href="#structure" data-toggle="tab">
+        <i class="bi bi-door-open"></i>
+        <span class="d-none d-sm-inline">Gros et Second Oeuvre</span>
+    </a>
+</li>
+<li class="nav-item">
+    <a id="tab-structure" class="nav-link" href="#zonage" data-toggle="tab">
+        <i class="bi bi-geo-alt"></i>
+        <span class="d-none d-sm-inline">Zonage</span>
+    </a>
+</li>
+<li class="nav-item">
+    <a id="tab-enq-pers" class="nav-link" href="#enq-pers" data-toggle="tab">
+        <i class="bi bi-search"></i>
+        <span class="d-none d-sm-inline">Perspectives et Enquetes</span>
+    </a>
+</li>
+{% endblock %}
+
+{% block before_attachments_extra_tab_content %}
+
+{% include "bati/tabs/bati_enquetes_perspectives.html" %}
+
+{% include "bati/tabs/bati_travaux.html" %}
+
+<div id="structure" class="tab-pane">
+    {% include "bati/tabs/bati_structures.html" %}
+    {% include "bati/tabs/bati_second_oeuvre.html" %}
+</div>
+
+{% include "bati/tabs/bati_zoning_detail.html" %}
+
+{% endblock %}
+
+{% block extrabody %}
+    {{ block.super }}
+<style>
+    .map-panel {
+        max-width: 70%;
+        min-width: 30%;
+        width: 30%!important;
+    }
+    .details-panel {
+        max-width: 70%;
+        min-width: 30%;
+        width: 70%!important;
+    }
+
+    #tab-related-objects {
+        display: None !important;
+    }
+</style>
+{% endblock extrabody %}

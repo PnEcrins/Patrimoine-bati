@@ -1,2 +1,6 @@
 django
 mapentity
+dotenv
+psycopg2
+bcrypt
+Authlib

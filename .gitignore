@@ -1,5 +1,5 @@
 settings_local.py
-
+venv/*
 *.pyc
 __pycache__
 /database.db
@@ -10,9 +10,14 @@ __pycache__
 /build/
 /dist/
 /static/
-/media/
+media/
 /docs/_build/
 /README.html
 /.coverage
 *.mo
 coverage.xml
+/patbati/local_settings.py
+run.sh
+.env
+
+paperclip/*

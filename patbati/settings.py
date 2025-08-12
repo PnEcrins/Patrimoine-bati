@@ -9,18 +9,25 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+
 import os
 from pathlib import Path
 
+from easy_thumbnails.conf import Settings as easy_thumbnails_defaults
+from dotenv import load_dotenv
+
+# load .env file for DB config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-l*!ia^zpm6go(*qjylfe&4@bt6#f*-cwm7-pw8+ir3@oh(9e8r"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -36,18 +43,22 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'paperclip',
-    'compressor',
-    'easy_thumbnails',
-    'crispy_forms',
-    'crispy_bootstrap4',
-    'rest_framework',
-    'embed_video',
-    'modeltranslation',
-    'mapentity',  # Make sure mapentity settings are loaded before leaflet ones
-    'leaflet',
-    'patbati.mapentitycommon',
-    'patbati.bati',
+    "paperclip",
+    "compressor",
+    "easy_thumbnails",
+    "crispy_forms",
+    "crispy_bootstrap4",
+    "rest_framework",
+    "embed_video",
+    "modeltranslation",
+    "mapentity",  # Make sure mapentity settings are loaded before leaflet ones
+    "leaflet",
+    "patbati.mapentitycommon",
+    "zoning",
+    "patbati.bati",
+    "authent",
+    "django_filters",
+    "ssoauth",
 ]
 
 MIDDLEWARE = [
@@ -58,8 +69,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'django.middleware.locale.LocaleMiddleware',
-
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = "patbati.urls"
@@ -67,7 +77,7 @@ ROOT_URLCONF = "patbati.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [Path(BASE_DIR) / "mapentitycommon/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -86,7 +96,6 @@ WSGI_APPLICATION = "patbati.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 
 
 # Password validation
@@ -130,45 +139,123 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': "patbati",
-        'USER':"geonatadmin",
-        'PASSWORD': "monpassachanger",
-        'HOST': "localhost",
-        'PORT': 5432,
-
-    }
-}
-
 # config lié à l'install de mapentity et ses dépendances
 
-PAPERCLIP_ENABLE_VIDEO = True
-PAPERCLIP_ENABLE_LINK = True
-PAPERCLIP_FILETYPE_MODEL = 'mapentitycommon.FileType'
-PAPERCLIP_LICENSE_MODEL = 'mapentitycommon.License'
-PAPERCLIP_ATTACHMENT_MODEL = 'mapentitycommon.Attachment'
+PAPERCLIP_ENABLE_VIDEO = False
+PAPERCLIP_ENABLE_LINK = False
+PAPERCLIP_FILETYPE_MODEL = "mapentitycommon.FileType"
+PAPERCLIP_LICENSE_MODEL = "mapentitycommon.License"
+PAPERCLIP_ATTACHMENT_MODEL = "mapentitycommon.Attachment"
+PAPERCLIP_RANDOM_SUFFIX_SIZE = 0
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+PAPERCLIP_ALLOWED_EXTENSIONS = [
+    "jpeg",
+    "jpg",
+    "mp3",
+    "mp4",
+    "odt",
+    "pdf",
+    "png",
+    "svg",
+    "txt",
+    "gif",
+    "tiff",
+    "tif",
+    "docx",
+    "webp",
+    "bmp",
+    "flac",
+    "mpeg",
+    "doc",
+    "ods",
+    "gpx",
+    "xls",
+    "xlsx",
+    "odg",
+]
+
+THUMBNAIL_ALIASES = {
+    "": {
+        "thumbnail": {"size": (150, 150)},
+    },
+}
+
+THUMBNAIL_PROCESSORS = (*easy_thumbnails_defaults.THUMBNAIL_PROCESSORS,)
+
+
+STATIC_ROOT = BASE_DIR / "static"
 
 LANGUAGES = (
-    ('en', 'English'),
-    ('fr', 'French'),
+    ("en", "English"),
+    ("fr", "French"),
 )
 
-MEDIA_URL = '/media/'
-MAPENTITY_CONFIG = {}
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+LOGIN_REDIRECT_URL = "/bati/list/"
+LOGOUT_REDIRECT_URL = "/bati/list/"
+
+MAPENTITY_CONFIG = {
+    "MAPENTITY_WEASYPRINT": False,
+}
 
 LEAFLET_CONFIG = {
-    'SRID': 3857,
-    'TILES': [
-        ('OSM', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', '(c) OpenStreetMap Contributors'),
-        ('OSM N&B', 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', '(c) OpenStreetMap Contributors'),
+    "SRID": 3857,
+    "TILES": [
+        (
+            "OpenTopoMap",
+            "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+            {
+                "attribution": 'map data: © <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | map style: © <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+                "maxNativeZoom": 17,
+                "maxZoom": 22,
+            },
+        ),
+        (
+            "OpenStreetMap",
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                "attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">Contributeurs d\'OpenStreetMap</a>',
+                "maxNativeZoom": 19,
+                "maxZoom": 22,
+            },
+        ),
+        (
+            "OSM N&B",
+            "http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png",
+            "(c) OpenStreetMap Contributors",
+        ),
     ],
     # 'SPATIAL_EXTENT': (1.3, 43.7, 1.5, 43.5),
 }
 
-from patbati import settings_local
+AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.BCryptPasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
+
+ENV = os.getenv("ENV", "prod")
+# Load custom settings file
+if ENV != "tests":
+    with open("./patbati/settings_local.py") as f:
+        exec(f.read())
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    }
+}
+
+# AUTHLIB CLIENTS
+AUTHLIB_OAUTH_CLIENTS = {
+    'keycloak': {
+        'client_id': os.getenv('SSO_CLIENT_ID'),
+        'client_secret': os.getenv('SSO_CLIENT_SECRET'),
+    }
+}

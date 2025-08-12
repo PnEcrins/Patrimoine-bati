@@ -1,0 +1,109 @@
+{% load mapentity_tags common_tags %}
+
+<div class="mb-3">
+    <h5>
+        Liste des éléments de second oeuvre
+        <a href="{% url 'bati:second_add' object.pk %}" class="btn btn-sm btn-success ml-2" title="Ajouter un élément de second oeuvre">
+            <i class="bi bi-plus"></i>
+        </a>
+    </h5>
+    <div class="accordion" id="secondOeuvreAccordion">
+        {% for so in object.second_oeuvre.all %}
+        <div class="card mb-2 shadow-sm">
+            <div class="card-header p-2 d-flex justify-content-between align-items-center"
+                data-toggle="collapse"
+                data-target="#collapseSO{{ forloop.counter }}"
+                aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-controls="collapseSO{{ forloop.counter }}"
+                style="cursor:pointer;">
+                <div>
+                    <strong data-qa="second-type">{{ so.type.label }}</strong>
+                </div>
+                <div>
+                    <a href="{% url 'bati:second_update' object.pk so.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="{% url 'bati:second_delete' object.pk so.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            </div>
+            <div id="collapseSO{{ forloop.counter }}"
+                class="collapse {% if forloop.first %}show{% endif %}"
+                aria-labelledby="headingSO{{ forloop.counter }}">
+                <div class="card-body border-0">
+                    <table class="table table-sm table-bordered mb-2" data-qa="second-description-table">
+                        <thead class="table-info">
+                            <tr>
+                                <th colspan="2">Description de l'élément</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Catégorie</th>
+                                <td data-qa="second-type-value">{{ so.type.label }}</td>
+                            </tr>
+                            <tr>
+                                <th>Remarquable</th>
+                                <td data-qa="second-remarquable">
+                                    {% if so.est_remarquable %}
+                                        <span style="color:green;">&#10003;</span>
+                                    {% else %}
+                                        <span style="color:red;">&#10007;</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Conservation</th>
+                                <td data-qa="second-conservation">{{ so.conservation.label }}</td>
+                            </tr>
+                            <tr>
+                                <th>Commentaire</th>
+                                <td data-qa="second-commentaire">{{ so.commentaire|default:"-" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered mb-0" data-qa="second-finitions-table">
+                        <thead class="table-info">
+                            <tr>
+                                <th>Matériau fin</th>
+                                <th>Finition</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mf in so.second_oeuvre.all %}
+                            <tr>
+                                <td data-qa="second-materiaux-fin">{{ mf.materiaux_fin.label }}</td>
+                                <td data-qa="second-finition">{{ mf.finition.label }}</td>
+                                <td>
+                                    <a href="{% url 'bati:second_finition_update' so.pk so.bati.pk mf.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'bati:second_finition_delete' so.pk so.bati.pk mf.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center" data-qa="second-finitions-empty">Aucun matériau fin pour cet élément</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="3" class="text-center">
+                                    <a href="{% url 'bati:second_finition_add' so.pk so.bati.pk %}" class="btn btn-sm btn-success">
+                                        <i class="bi bi-plus"></i> Ajouter un matériau fin
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info" data-qa="second-empty">Aucun élément de second oeuvre</div>
+        {% endfor %}
+    </div>
+</div>

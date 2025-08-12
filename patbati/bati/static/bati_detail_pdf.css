@@ -1,0 +1,80 @@
+body {
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 9pt;
+  color: #000;
+  margin: 1em;
+}
+
+h1.title {
+  font-size: 14pt;
+  color: #86257b;
+  margin-bottom: 0.3em;
+}
+
+h2 {
+  font-size: 11pt;
+  color: #86257b;
+  text-transform: uppercase;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.1em;
+  margin-top: 1.2em;
+  margin-bottom: 0.7em;
+}
+
+h3 {
+  font-size: 9pt;
+  color: #86257b;
+  text-transform: uppercase;
+  margin-top: 1em;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.2em;
+  margin-bottom: 0.5em;
+}
+
+table.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+  font-size: 8pt;
+}
+
+table.table th,
+table.table td {
+  border: 1px solid #ccc;
+  vertical-align: top;
+  padding: 0.15em 0.3em;
+}
+
+table.table th {
+  background-color: #f4f4f4;
+  width: 35%;
+  font-weight: bold;
+}
+
+.text-muted {
+  color: #666;
+  font-style: italic;
+}
+
+.images-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
+
+.images-flex .image-block {
+  flex: 0 0 48%;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+}
+
+.images-flex img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 1px;
+  display: block;
+}

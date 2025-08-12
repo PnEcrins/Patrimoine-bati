@@ -1,0 +1,107 @@
+{% load static mapentity_tags attachments_tags %}
+
+{% get_attachments_for object as "my_attachments" %}
+
+{# Carousel for PHOTOS (images with filetype.id NOT between 12 and 17) #}
+{% if my_attachments %}
+<div style="max-width: 700px; margin: 0 auto;">
+  <h5>Photos</h5>
+  <div id="carouselPhotos" class="carousel slide mb-3" data-ride="carousel">
+    <ol class="carousel-indicators">
+      {% with image_index=0 %}
+        {% for att in my_attachments %}
+          {% if att.is_image %}
+            {% if att.filetype.id < 12 or att.filetype.id > 17 %}
+              <li data-target="#carouselPhotos" data-slide-to="{{ image_index }}" class="{% if image_index == 0 %}active{% endif %}"></li>
+              {% widthratio image_index|add:"1" 1 1 as image_index %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    </ol>
+    <div class="carousel-inner">
+      {% with image_index=0 %}
+        {% for att in my_attachments %}
+          {% if att.is_image %}
+            {% if att.filetype.id < 12 or att.filetype.id > 17 %}
+              <div class="carousel-item {% if image_index == 0 %}active{% endif %}">
+                <a href="{{ att.attachment_file.url }}" target="_blank">
+                  <img class="d-block w-100" style="max-height:400px;object-fit:contain;" src="{% get_media_prefix %}{{ att.attachment_file }}" alt="{{ att.title|default:att.filename }}">
+                  <div class="carousel-caption d-none d-md-block rounded px-2 py-2" style="background: rgba(60, 60, 60, 0.65);">
+                    <h5 class="text-light mb-0">{{ att.filetype }}</h5>
+                  </div>
+                </a>
+              </div>
+              {% widthratio image_index|add:"1" 1 1 as image_index %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    </div>
+    <a class="carousel-control-prev" href="#carouselPhotos" role="button" data-slide="prev"
+      style="width:50px; background: rgba(60, 60, 60, 0.5); border-radius: 0.5rem;">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselPhotos" role="button" data-slide="next"
+      style="width:50px; background: rgba(60, 60, 60, 0.5); border-radius: 0.5rem;">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+  </div>
+</div>
+{% endif %}
+
+{# Carousel for PLANS (images with filetype.id between 12 and 17) #}
+{% if my_attachments %}
+<div style="max-width: 700px; margin: 0 auto;">
+  <h5>Plans et documents techniques</h5>
+  <div id="carouselPlans" class="carousel slide mb-3" data-ride="carousel">
+    <ol class="carousel-indicators">
+      {% with plan_index=0 %}
+        {% for att in my_attachments %}
+          {% if att.is_image %}
+            {% if att.filetype.id >= 12 and att.filetype.id <= 17 %}
+              <li data-target="#carouselPlans" data-slide-to="{{ plan_index }}" class="{% if plan_index == 0 %}active{% endif %}"></li>
+              {% widthratio plan_index|add:"1" 1 1 as plan_index %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    </ol>
+    <div class="carousel-inner">
+      {% with plan_index=0 %}
+        {% for att in my_attachments %}
+          {% if att.is_image %}
+            {% if att.filetype.id >= 12 and att.filetype.id <= 17 %}
+              <div class="carousel-item {% if plan_index == 0 %}active{% endif %}">
+                <a href="{{ att.attachment_file.url }}" target="_blank">
+                  <img class="d-block w-100" style="max-height:400px;object-fit:contain;" src="{% get_media_prefix %}{{ att.attachment_file }}" alt="{{ att.title|default:att.filename }}">
+                  <div class="carousel-caption d-none d-md-block rounded px-2 py-2" style="background: rgba(60, 60, 60, 0.65);">
+                    <h5 class="text-light mb-0">{{ att.filetype }}</h5>
+                  </div>
+                </a>
+              </div>
+              {% widthratio plan_index|add:"1" 1 1 as plan_index %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    </div>
+    <a class="carousel-control-prev" href="#carouselPlans" role="button" data-slide="prev"
+      style="width:50px; background: rgba(60, 60, 60, 0.5); border-radius: 0.5rem;">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselPlans" role="button" data-slide="next"
+      style="width:50px; background: rgba(60, 60, 60, 0.5); border-radius: 0.5rem;">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+  </div>
+</div>
+{% endif %}
+
+{% if not my_attachments %}
+  <p class="text-muted">Aucune pièce jointe disponible.</p>
+{% endif %}

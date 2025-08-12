@@ -1,0 +1,31 @@
+
+{% load mapentity_tags common_tags %}
+
+{% settings_value "ZONING_CONFIG" as zoning_config %}
+
+<div id="zonage" class="tab-pane">
+    <h3> Zonages administratifs</h3>
+
+    <table class="table table-striped">
+        {% for area in object.areas %}
+            {% if area.type.code in zoning_config.ADMINISTRATIVE_AREAS %}
+                <tr>
+                    <th>{{area.type.name}}</th>
+                    <td>{{area.name}}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+
+    <h3> Zonages réglementaires</h3>
+    <table class="table table-striped">
+        {% for area in object.areas %}
+            {% if area.type.code in zoning_config.REGULATORY_AREAS %}
+                <tr>
+                    <th>{{area.type.name}}</th>
+                    <td>{{area.name}}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+</div>

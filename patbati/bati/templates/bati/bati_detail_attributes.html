@@ -1,0 +1,30 @@
+{% extends "mapentity/mapentity_detail_attributes.html" %} 
+{% load i18n static mapentity_tags %}
+{% block attributes %}
+
+{% include "bati/properties/bati_renseignements.html" %}
+
+{% include "bati/properties/bati_geo.html" %}
+
+{% include "bati/properties/bati_situation.html" %}
+
+{% include "bati/properties/bati_context_naturel.html" %}
+
+{% include "bati/properties/bati_equipements.html" %}
+
+{% include "bati/properties/bati_elements_pays.html" %}
+
+{{ block.super }} 
+{% endblock attributes %}
+
+{% block extrabody %}
+{{ block.super }}
+<style>
+  .card-header[data-toggle="collapse"] { cursor: pointer; }
+  .chevron-icon { transition: transform 0.2s; }
+  .collapse.show ~ .card-header .chevron-icon,
+  .card-header[aria-expanded="true"] .chevron-icon {
+    transform: rotate(180deg);
+  }
+</style>
+{% endblock extrabody %}

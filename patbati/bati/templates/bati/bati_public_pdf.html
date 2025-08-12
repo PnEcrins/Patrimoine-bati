@@ -1,0 +1,65 @@
+{% load static attachments_tags %}
+<link rel="stylesheet" href="{% static 'bati_public_pdf.css' %}">
+
+{% block content %}
+<title>{{ object.appelation }}</title>
+
+<h1 class="title">{{ object.appelation }}</h1>
+<p class="subtitle">
+  <strong> Secteur : {{ object.secteurs|default:"-" }}</strong> 
+</p>
+
+<section>
+  <h2>Informations générales</h2>
+  <ul class="info-list">
+    <li><span class="label">Coordonnées (Lambert93) : </span> x: {{ object.geom.x|floatformat:5 }} y: {{ object.geom.y|floatformat:5 }}</li>
+    <li><span class="label">Altitude : </span>
+      {% if object.altitude %}
+      {{ object.altitude|floatformat:"-2"|cut:".00" }} m
+      {% else %}
+      -
+      {% endif %}
+    </li>
+    <li><span class="label">Réglementation : </span> {{ object.protection_names|default:"-" }}</li>
+    <br><br>
+    <li><span class="label">Commune : </span> {{ object.commune_name|default:"-" }}</li>
+    <li><span class="label">Classe : </span> {{ object.classe }}</li>
+    <li><span class="label">N° de parcelle cadastrale : </span> {{ object.cadastre|default:"-" }}</li>
+    <br><br>
+    <li><span class="label">État général : </span> {{ object.conservation }}</li>
+    <li><span class="label">Perspective : </span> 
+      {% for pers in object.perspective_set.all %} 
+      {{ pers.perspective.label }}
+      {% if not forloop.last %}, {% endif %}
+      {% empty %}
+      Aucune Perspective
+      {% endfor %}</li>
+    <li>
+      <span class="label">Date derniers travaux :</span>
+      {% if object.dernier_travaux %}
+        {{ object.dernier_travaux.date|date:"d/m/Y" }}
+      {% else %}
+        Aucun travaux
+      {% endif %}
+    </li>
+
+    <br><br>
+    <li><span class="label">Valeur patrimoniale :</span> {{ object.notepatri }}/6</li>
+    <li><span class="label">Commentaire :</span> {{ object.patrimonialite|default:"-" }}</li>
+  </ul>
+</section>
+
+<section>
+  <h2 class="section-title">STRUCTURES PORTEUSES</h2>
+  <ul class="info-list">
+    {% for struct_type, materials in object.get_structures_with_materials.items %}
+      <li>
+        <strong>{{ struct_type }}:</strong> {{ materials }}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+{% include "bati/bati_photos_public_pdf.html"%}
+
+{% endblock %}
