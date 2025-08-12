@@ -165,7 +165,11 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
 
     remarque_generale = models.TextField(null=True, blank=True)
 
-    perspectives = models.ManyToManyField(Nomenclature, through="Perspective")
+    perspectives = models.ManyToManyField(
+        Nomenclature, 
+        limit_choices_to={"id_type__code": "PERSP"},
+        through="Perspective"
+    )
 
     def appelation_link(self):
         return f'<a data-pk="{self.pk}" href="{self.get_detail_url()}" title="{self.appelation}">{self.appelation}</a>'
