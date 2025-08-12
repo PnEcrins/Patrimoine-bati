@@ -239,11 +239,9 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
-ENV = os.getenv("ENV", "prod")
 # Load custom settings file
-if ENV != "tests":
-    with open("./patbati/settings_local.py") as f:
-        exec(f.read())
+with open("./patbati/settings_local.py") as f:
+    exec(f.read())
 
 CACHES = {
     "default": {
