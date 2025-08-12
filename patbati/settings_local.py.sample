@@ -46,7 +46,7 @@ ZONING_CONFIG = {
 }
 
 # SSO activé ou non (permet de se connecter à un système d'authentication externe type Keycloak)
-SSO_LOGGIN_ENABLED = False
+SSO_LOGIN_ENABLED = False
 
 # Infos SSO
 SSO_CLIENT_SECRET = "YOUR CLIENT SECRET"
