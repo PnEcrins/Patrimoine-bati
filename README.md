@@ -7,6 +7,24 @@
 
 # Application Patrimoine bati
 
+Version 2 de l'application Patrimoine bati développée en été 2025 par @glebiskava et @TheoLechemia.  
+La version 1 a été développée en 2010 en PostgreSQL, PHP Symfony et ExtJS : https://github.com/PnEcrins/PatBati.
+
+Cette version 2 est une refonte complète avec PostGIS, Python et Django (avec la librairie [Django-mapentity](https://github.com/makinacorpus/django-mapentity). L'ensemble de la base de données a été conservée mais sa structure a été simplifiée et optimisée, notamment en regroupant toutes les typologies dans une table centrale de nomenclatures.
+
+Cette application web permet de réaliser un inventaire détaillé du patrimoine bâti d'un territoire : 
+
+- Informations générales
+- Environnement
+- Travaux
+- Gros oeuvre
+- Second oeuvre
+- Equipements
+- Eléments paysagers
+- Illustrations (photos et croquis)
+- Documents
+- Etat et perspectives
+
 ## Page d'accueil :
 ![Interface](docs/img/list.png)
 ## Page détail :
@@ -153,8 +171,8 @@ Créez une configuration dans `/etc/apache2/sites-available` :
 
 #### Référentiel géographique : 
 
-L'application doit être connectée à un référentiel géographique pour afficher et filtrer les zonages intersectés (communes, sites d'intérêt, etc.). L'application est fournie avec une app django (`zoning`) qui s'appuie sur deux tables `l_areas` et `bib_areas_type`. Django s'attend à les trouver dans le schéma public.  
-Pour le déploiement en production, on crée un schéma `ref_geo` en FDW (voir doc/fdw.md) vers la base de référentiel, puis on crée des vues dans le schéma public pour les besoins de l'application : 
+L'application doit être connectée à un référentiel géographique pour afficher et filtrer les zonages intersectés (communes, sites d'intérêt, etc.). L'application est fournie avec une app django (`zoning`) qui s'appuie sur deux tables `l_areas` et `bib_areas_type`. Django s'attend à les trouver dans le schéma `public`.  
+Pour le déploiement en production au PNE, on a choisi de créer un schéma `ref_geo` en Foreign data wrapper (voir [docs/fdw.md](docs/fdw.md)) vers notre base de données existante du référentiel géographique, puis on créé des vues dans le schéma `public` pour les besoins de l'application : 
 
 ```sql
 CREATE VIEW public.bib_areas_types AS 
@@ -166,7 +184,7 @@ SELECT * FROM ref_geo.l_areas;
 
 #### Mise à jour des permissions : 
 
-Mapentity implémente des permissions supplémentaires aux permissions de Django. De plus, la permission "view" est appelée "read" dans mapentity.
+Django-mapentity implémente des permissions supplémentaires aux permissions de Django. De plus, la permission "view" est appelée "read" dans mapentity.  
 Lancer cette commande pour avoir toutes les permissions disponibles dans mapentity : 
 
 ```bash
@@ -189,9 +207,9 @@ python manage.py tests
 
 ## Configuration : 
 
-Configurer les paramètres de la base de données dans le `settings_local.py`.
+Configurer les paramètres de la base de données dans le fichier `settings_local.py`.
 
-Possibilité d'utiliser le SSO avec OpenIDConnect et Authlib dans `settings_local.py` :
+Possibilité d'utiliser le SSO avec OpenIDConnect et Authlib dans le fichier `settings_local.py` :
 
 - Changer `SSO_LOGIN_ENABLED = True`
 - Remplir le `CLIENT_ID`, `CLIENT_SECRET`, `SSO_ENDPOINT` de votre Identity and Access Management
