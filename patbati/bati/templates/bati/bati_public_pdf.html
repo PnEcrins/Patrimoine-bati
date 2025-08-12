@@ -12,7 +12,7 @@
 <section>
   <h2>Informations générales</h2>
   <ul class="info-list">
-    <li><span class="label">Coordonnées (Lambert93) : </span> x: {{ object.x|default:"-" }} y: {{ object.y|default:"-" }}</li>
+    <li><span class="label">Coordonnées (Lambert93) : </span> x: {{ object.geom.x|floatformat:5 }} y: {{ object.geom.y|floatformat:5 }}</li>
     <li><span class="label">Altitude : </span>
       {% if object.altitude %}
       {{ object.altitude|floatformat:"-2"|cut:".00" }} m
