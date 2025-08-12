@@ -7,8 +7,12 @@
 
 # Application Patrimoine bati
 
+## Page d'accueil :
 ![Interface](docs/img/list.png)
+## Page détail :
 ![Detail](docs/img/detail_properties.png)
+## Example du Tab Gros et Second Oeuvre :
+![GrosEtSO](docs/img/gr_so.png)
 
 ## Installation :
 

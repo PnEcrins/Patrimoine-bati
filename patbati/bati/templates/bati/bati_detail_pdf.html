@@ -20,7 +20,7 @@
   <tr><th>N° de parcelle cadastrale : </th><td>{{ object.cadastre|default:"-" }}</td></tr>
   <tr><th>Lieu-dit</th><td>{{ object.lieu_dit|default:"-" }}</td></tr>
   <tr><th>Altitude</th><td>{{ object.altitude|default:"-" }}</td></tr>
-  <tr><th>Coordonnées Lambert 93 : </th><td>x: {{ object.x|default:"-" }}<br> y: {{ object.y|default:"-" }}</td></tr>
+  <tr><th>Coordonnées Lambert 93 : </th><td>x: {{ object.geom.x|floatformat:5 }}<br> y: {{ object.geom.y|floatformat:5 }}</td></tr>
   <tr><th>Situation géographique</th><td>{{ object.situation_geo|default:"-" }}</td></tr>
   <tr><th>Capacité</th><td>{{ object.capacite|default:"-" }}</td></tr>
   <tr><th>Pente</th><td>{{ object.pente|default:"-" }}</td></tr>
