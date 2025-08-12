@@ -4,3 +4,4 @@ dotenv
 psycopg2
 bcrypt
 Authlib
+factory-boy
