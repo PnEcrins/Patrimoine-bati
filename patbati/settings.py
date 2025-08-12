@@ -265,3 +265,10 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     "compressor.finders.CompressorFinder"
 ]
+
+ZONING_CONFIG = {
+    "LOCAL_SRID":  2154,
+    "AREA_TYPE_LIMITED": [],
+    "ADMINISTRATIVE_AREAS": [],
+    "REGULATORY_AREAS": [],
+}
