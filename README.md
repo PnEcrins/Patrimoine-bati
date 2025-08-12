@@ -7,8 +7,8 @@
 
 # Application Patrimoine bati
 
-![Interface](media/img/list.png)
-![Detail](media/img/detail_properties.png)
+![Interface](docs/img/list.png)
+![Detail](docs/img/detail_properties.png)
 
 ## Installation :
 

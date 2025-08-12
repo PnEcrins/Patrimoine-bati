@@ -97,7 +97,6 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     situation_geo = models.CharField(
         max_length=200, blank=True, null=True
     )  # description de la situation géographique
-    denivelle = models.FloatField(blank=True, null=True)  # dénivellé
 
     # exposition
     exposition = models.ForeignKey(
@@ -130,7 +129,6 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     patrimonialite = models.CharField(
         max_length=500, blank=True, null=True
     )  # patrimonialité
-    ancien_index = models.FloatField(blank=True, null=True)  # ancien_index
 
     # codeconservation
     conservation = models.ForeignKey(
@@ -197,7 +195,7 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
         return self.type_bat.label if self.type_bat else ""
 
     def secteur_label(self):
-        return self.secteur.label if self.secteur else "aaa"
+        return self.secteur.label if self.secteur else ""
 
     @property
     def dernier_travaux(self):
