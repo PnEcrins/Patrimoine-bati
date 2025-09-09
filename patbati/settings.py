@@ -250,14 +250,6 @@ CACHES = {
     }
 }
 
-# AUTHLIB CLIENTS
-AUTHLIB_OAUTH_CLIENTS = {
-    'keycloak': {
-        'client_id': os.getenv('SSO_CLIENT_ID'),
-        'client_secret': os.getenv('SSO_CLIENT_SECRET'),
-    }
-}
-
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",

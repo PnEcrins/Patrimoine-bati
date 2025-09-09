@@ -216,4 +216,6 @@ Configurer les paramètres de la base de données dans le fichier `settings_loca
 Possibilité d'utiliser le SSO avec OpenIDConnect et Authlib dans le fichier `settings_local.py` :
 
 - Changer `SSO_LOGIN_ENABLED = True`
-- Remplir le `CLIENT_ID`, `CLIENT_SECRET`, `SSO_ENDPOINT` de votre Identity and Access Management
+- remplir le dictionnaire `AUTHLIB_OAUTH_CLIENTS` avec vos informations de connexion
+Dans le champs `SSO_ENDPOINT` il est necessaire de mettre l'URL d'accès au métadonnée du serveur d'authentification. Dans le cas de keycloak cela correspond à l'URL suivante : 
+`https://<URL_KEYCLOAK>/realms/<NOM DU REALM>/.well-known/openid-configuration`
