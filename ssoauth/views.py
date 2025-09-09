@@ -5,6 +5,7 @@ from django.conf import settings
 # Create your views here.
 from authlib.integrations.django_client import OAuth
 from django.contrib.auth import login, logout, get_user_model
+from django.contrib.auth.models import Group
 from django.urls import reverse
 import requests
 
@@ -35,6 +36,8 @@ def auth(request):
             'last_name': userinfo.get('family_name', ''),
         }
     )
+    default_group = Group.objects.get(name=settings.SSO_DEFAULT_GROUP) 
+    default_group.user_set.add(user)
     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     return redirect('/')
 

@@ -239,9 +239,6 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
-# Load custom settings file
-with open("./patbati/settings_local.py") as f:
-    exec(f.read())
 
 CACHES = {
     "default": {
@@ -262,3 +259,7 @@ ZONING_CONFIG = {
     "ADMINISTRATIVE_AREAS": [],
     "REGULATORY_AREAS": [],
 }
+
+# Load custom settings file
+with open("./patbati/settings_local.py") as f:
+    exec(f.read())

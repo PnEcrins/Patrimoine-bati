@@ -93,6 +93,12 @@ Lancer le serveur de développement :
 python manage.py runserver
 ```
 
+Lancer la commande de création des permissions de mapentity
+
+```bash
+python manage.py update_permissions_mapentity
+```
+
 ## Deploiement prod :
 
 Installer gunicorn
@@ -216,6 +222,7 @@ Configurer les paramètres de la base de données dans le fichier `settings_loca
 Possibilité d'utiliser le SSO avec OpenIDConnect et Authlib dans le fichier `settings_local.py` :
 
 - Changer `SSO_LOGIN_ENABLED = True`
+- Remplir la variable `SSO_DEFAULT_GROUP` avec le nom du groupe dans lesquels les nouveaux utilisateurs seront affecté automatiquement. Au préalable, il est nécessaire d'avoir créer ce groupe et de lui avoir donné les permissions voulues.
 - remplir le dictionnaire `AUTHLIB_OAUTH_CLIENTS` avec vos informations de connexion
 Dans le champs `SSO_ENDPOINT` il est necessaire de mettre l'URL d'accès au métadonnée du serveur d'authentification. Dans le cas de keycloak cela correspond à l'URL suivante : 
 `https://<URL_KEYCLOAK>/realms/<NOM DU REALM>/.well-known/openid-configuration`
