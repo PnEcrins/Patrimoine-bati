@@ -1,5 +1,11 @@
 # Changelog
 
+## 03.10.2025 : 2.0.1
+
+## 🐛 Correction : 
+
+- Mise à jour vers Django 5.2.7 suite à une faille de sécurité
+
 ## 11.08.2025 : 2.0.0 
 
 Cette version 2.0.0 marque une refonte complète de l’application Patrimoine Bâti.  

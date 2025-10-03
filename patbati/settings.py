@@ -239,11 +239,6 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
-ENV = os.getenv("ENV", "prod")
-# Load custom settings file
-if ENV != "tests":
-    with open("./patbati/settings_local.py") as f:
-        exec(f.read())
 
 CACHES = {
     "default": {
@@ -252,10 +247,19 @@ CACHES = {
     }
 }
 
-# AUTHLIB CLIENTS
-AUTHLIB_OAUTH_CLIENTS = {
-    'keycloak': {
-        'client_id': os.getenv('SSO_CLIENT_ID'),
-        'client_secret': os.getenv('SSO_CLIENT_SECRET'),
-    }
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder"
+]
+
+ZONING_CONFIG = {
+    "LOCAL_SRID":  2154,
+    "AREA_TYPE_LIMITED": [],
+    "ADMINISTRATIVE_AREAS": [],
+    "REGULATORY_AREAS": [],
 }
+
+# Load custom settings file
+with open("./patbati/settings_local.py") as f:
+    exec(f.read())

@@ -46,9 +46,15 @@ ZONING_CONFIG = {
 }
 
 # SSO activé ou non (permet de se connecter à un système d'authentication externe type Keycloak)
-SSO_LOGGIN_ENABLED = False
+SSO_LOGIN_ENABLED = False
 
 # Infos SSO
-SSO_CLIENT_SECRET = "YOUR CLIENT SECRET"
-SSO_CLIENT_ID = "YOUR CLIENT ID"
-SSO_ENDPOINT = "YOUR
+AUTHLIB_OAUTH_CLIENTS = {
+    'keycloak': {
+        'client_id': "<MY_CLIENT_ID>",
+        'client_secret': "<MY_CLIENT_SECRET>",
+    }
+}
+SSO_ENDPOINT = "https://<URL_KEYCLOAK>/realms/<NOM DU REALM>/.well-known/openid-configuration"
+# Nom du group par defaut dans lequel l'utilisateur sera mis. Obligatoire si `SSO_LOGIN_ENABLED = True`
+SSO_DEFAULT_GROUP = "default_group"
