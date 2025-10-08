@@ -164,6 +164,8 @@ Créez une configuration dans `/etc/apache2/sites-available` :
 		</Directory>
 
 		<Location "/">
+			# RequestHeader necessaire pour le HTTPS
+			# RequestHeader set X-Forwarded-Proto 'https' env=HTTPS
 			ProxyPass http://127.0.0.1:8000/
 			ProxyPassReverse http://127.0.0.1:8000/
 			ProxyPreserveHost On
@@ -178,6 +180,8 @@ Créez une configuration dans `/etc/apache2/sites-available` :
 		</Location>
       </VirtualHost>
 
+
+En HTTPS, il est 
 
 #### Référentiel géographique : 
 
