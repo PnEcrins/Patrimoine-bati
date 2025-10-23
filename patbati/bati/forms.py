@@ -5,7 +5,7 @@ from django.forms.models import inlineformset_factory
 
 from mapentity.forms import MapEntityForm
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Div, HTML, Fieldset
 
 from patbati.mapentitycommon.forms import ChildFormHelper
 from .models import (
@@ -52,11 +52,66 @@ class TravauxForm(ChildFormHelper):
         exclude = ["demande"]
 
 
-
+from .widgets import SelectWithTitle
 class BatiForm(MapEntityForm):
+
+    fieldslayout = [
+        Div(
+            "appelation",
+            "type_bat"
+        ),
+        Div(
+            Fieldset(
+                "Description du batiment",
+                "classe",
+                "annee_construction",
+                "implantation",
+                "faitage",
+                "surface",
+                "conservation",
+                "notepatri",
+                "patrimonialite",
+            )
+        ),
+        Div(
+            Fieldset(
+                "Info propriétaire",
+                "proprietaire",
+                "type_prioprietaire",
+                "indivision",
+                "periode_utilisation",
+                "comment_proprio"
+            )
+        ),
+        Div(
+            Fieldset(
+                "Localisation",
+                "cadastre",
+                "lieu_dit",
+                "altitude",
+                "exposition",
+                "masques",
+                "commentaire_masque",
+                "risques_nat",
+                "remarque_risque",
+                "situation_geo",
+            )
+        ),
+        Div(
+            Fieldset(
+                "Autre",
+                "perspectives",
+                "remarque_generale",
+                "valide"
+            )
+        )
+    ]
+
+    
     class Meta:
         model = Bati
-        exclude = ["x", "y", "bat_suppr", "date_insert", "date_update"]
+        exclude = ["x", "y", "bat_suppr", "date_update"]
+
 
 
 class StructureForm(ChildFormHelper):

@@ -1,0 +1,39 @@
+{% extends "mapentity/base.html" %}
+
+{% block container %}
+    {{block.super}}
+    <div class="container">
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th>Date des travaux</th>
+                <th> {{object.date}}</th>
+            </tr>
+            <tr>
+                <th>Nature des travaux</th>
+                <th> {{object.nature}}</th>
+            </tr>
+            <tr>
+                <th>Usage </th>
+                <th> {{object.usage}}</th>
+            </tr>
+            <tr>
+                <th>Agence d'architecture</th>
+                <th> {{object.agence_archi}}</th>
+            </tr>
+            <tr>
+                <th>Entreprise(s)</th>
+                <th> {{object.entreprises}}</th>
+            </tr>
+            <tr>
+                <th>Autorisation</th>
+                <th> {{object.autorisation}}</th>
+            </tr>
+            <tr>
+                <th>Subvention PNE</th>
+                <th> {{object.subvention_pne}}</th>
+            </tr>
+        </table>
+
+    </div>
+
+{% endblock %}

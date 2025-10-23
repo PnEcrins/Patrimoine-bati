@@ -92,6 +92,9 @@
                                             <a href="{% url 'bati:travaux_delete' object.pk travaux.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
                                                 <i class="bi bi-trash"></i>
                                             </a>
+                                            <a href="{% url 'bati:travaux_detail' travaux.pk %}" class="btn btn-sm btn-outline-primary" title="Voir">
+                                                <i class="bi bi-info-circle-fill"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                     {% empty %}

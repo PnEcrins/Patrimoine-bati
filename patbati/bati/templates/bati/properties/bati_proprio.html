@@ -1,0 +1,26 @@
+{% load mapentity_tags common_tags %}
+
+<!-- Table renseignements (expanded by default) -->
+<div class="content mb-3">
+  <div class="card">
+    <div class="card-header text-center d-flex justify-content-between align-items-center" 
+         data-toggle="collapse" data-target="#collapseProprio"
+         aria-expanded="false" aria-controls="collapseProprio" style="cursor:pointer; position: relative;">
+      <span>Information propriétaire</span>
+      <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
+    </div>
+    <div id="collapseProprio" class="collapse">
+      <div class="card-body p-0">
+        <table class="table table-striped table-bordered mb-0">
+          <tbody>
+            <tr><th>Propriétaire</th><td>{{ object.proprietaire|default:"-" }}</td></tr>
+            <tr><th>Type de propriétaire</th><td>{{ object.type_prioprietaire|default:"-" }}</td></tr>
+            <tr><th data-qa="indiv">Bâtiment en indivision</th><td>{{ object.indivision|yesno:"Oui,Non" }}</td></tr>
+            <tr><th>Période d'utilisation </th><td>{{ object.periode_utilisation|default:"-" }}</td></tr>
+            <tr><th>Commentaire propriétaire</th><td>{{ object.comment_proprio|default:"-" }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

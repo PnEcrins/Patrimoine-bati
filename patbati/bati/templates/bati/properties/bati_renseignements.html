@@ -17,10 +17,10 @@
             <tr><th data-qa="valeurPat">Valeur patrimoniale</th><td>{{ object.notepatri|default:"-" }}</td></tr>
             <tr><th>Patrimonialité</th><td>{{ object.patrimonialite|default:"-" }}</td></tr>
             <tr><th>Classe d'architecture</th><td>{{ object.classe|default:"-" }}</td></tr>
-            <tr><th>Propriétaire</th><td>{{ object.proprietaire|default:"-" }}</td></tr>
-            <tr><th data-qa="indiv">Bâtiment en indivision</th><td>{{ object.indivision|yesno:"Oui,Non" }}</td></tr>
+            <tr><th>Année de construction</th><td>{{ object.annee_construction|default:"-" }}</td></tr>
             <tr><th>Type de batiment</th><td>{{ object.type_bat|default:"-" }}</td></tr>
             <tr><th>Capacité</th><td>{{ object.capacite|default:"-" }}</td></tr>
+            <tr><th>Surface</th><td>{{ object.surface|default:"-" }}</td></tr>
             <tr><th data-qa="date">Date d'insertion</th><td>{{ object.date_insert|default:"-" }}</td></tr>
             <tr><th>Date de mise à jour</th><td>{{ object.date_update|default:"-" }}</td></tr>
             <tr><th>Etat général</th><td>{{ object.conservation|default:"-" }}</td></tr>

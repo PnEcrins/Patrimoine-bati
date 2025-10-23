@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django_weasyprint import WeasyTemplateResponseMixin
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView
 from mapentity.views.generic import (
     MapEntityList,
     MapEntityDetail,
@@ -72,6 +73,7 @@ class BatiDetail(MapEntityDetail):
 class BatiCreate(MapEntityCreate):
     model = Bati
     form_class = BatiForm
+
 
 class BatiUpdate(MapEntityUpdate):
     model = Bati
@@ -193,6 +195,10 @@ class TravauxDelete(ChildDeleteViewMixin, DeleteView):
     model = Travaux
     parent_model = Bati
 
+
+class TravauxDetail(DetailView):
+    model = Travaux
+    template_name = "nogeo_detail.html"
 
 class StructureCreate(ChildFormViewMixin, CreateView):
     model = Structure

@@ -30,6 +30,7 @@ from patbati.bati.views import (
     TravauxCreate,
     TravauxDelete,
     TravauxUpdate,
+    TravauxDetail
 )
 
 app_name = "bati"
@@ -85,6 +86,11 @@ urlpatterns += [
         "bati/<int:parent_pk>/demande_travaux/<int:pk>/travaux/add/",
         TravauxCreate.as_view(),
         name="travaux_add",
+    ),
+    path(
+        "travaux/<int:pk>/",
+        TravauxDetail.as_view(),
+        name="travaux_detail",
     ),
     path(
         "bati/<int:parent_pk>/travaux/<int:pk>/update/",

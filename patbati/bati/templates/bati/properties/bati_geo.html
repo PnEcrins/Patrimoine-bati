@@ -9,7 +9,7 @@
         aria-expanded="false"
         aria-controls="collapseGeo"
         style="cursor:pointer; position: relative;">
-      <span>Géographie</span>
+      <span>Localisation</span>
       <span class="chevron-icon"><i class="bi bi-chevron-down"></i></span>
     </div>
     <div id="collapseGeo" class="collapse">
@@ -17,11 +17,13 @@
         <table class="table table-striped table-bordered mb-0">
           <tbody>
             <tr><th>Secteur</th><td>{{ object.secteurs|default:"-" }}</td></tr>
+            <tr><th>Commune</th><td>{{ object.commune_name|default:"-" }}</td></tr>
             <tr><th>Lieu-dit</th><td>{{ object.lieu_dit|default:"-" }}</td></tr>
             <tr><th>Cadastre</th><td>{{ object.cadastre|default:"-" }}</td></tr>
             <tr><th>Coordonnée X</th><td>{{ object.geom.x|floatformat:5 }}</td></tr>
             <tr><th>Coordonnée Y</th><td>{{ object.geom.y|floatformat:5 }}</td></tr>
             <tr><th>Altitude</th><td>{{ object.altitude|default:"-" }}</td></tr>
+            <tr><th>Situation géographique</th><td>{{ object.situation_geo|default:"-" }}</td></tr>
           </tbody>
         </table>
       </div>

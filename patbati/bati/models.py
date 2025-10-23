@@ -41,7 +41,7 @@ class Nomenclature(models.Model):
 class Bati(AreaPropertyMixin, MapEntityMixin):
     AREA_GEOM_COLUMN = "geom_4326"
 
-    appelation = models.CharField(max_length=200, blank=True, null=True)  # appellation
+    appelation = models.CharField(max_length=200, blank=False, null=False)  # appellation
     # type de batiment
     type_bat = models.ForeignKey(
         Nomenclature,
@@ -54,10 +54,9 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     notepatri = models.ForeignKey(
         Nomenclature,
         on_delete=models.CASCADE,
-        null=True,
         limit_choices_to={"id_type__code": "NOTE_PAT"},
         related_name="batiments_notepatri",
-        verbose_name="Note patrimoniale"
+        verbose_name="Note patrimoniale",
     )
 
     patrimonialite = models.CharField(
@@ -80,6 +79,12 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
         null=False,
         limit_choices_to={"id_type__code": "CL_ARCHI"},
         related_name="batiments_classe",
+        verbose_name="Classe architecturale"
+    )
+    annee_construction = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name="Année de construction"
     )
 
     # codepem / Implantation
@@ -103,18 +108,34 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     )
 
     proprietaire = models.CharField(
-        max_length=100, blank=True, null=True
+        max_length=100, blank=True, null=True,
+        verbose_name="Propriétaire"
     )  # propriétaire
+    type_prioprietaire = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        limit_choices_to={"id_type__code": "TYPE_PROPRIO"},
+        related_name="type_proprietaire",
+        verbose_name="Type de propriétaire"
+    )
+    comment_proprio = models.TextField(blank=True, null=True, verbose_name="Commenataire propriétaire")
     indivision = models.BooleanField(default=False, null=True)  # indivision
+    surface = models.IntegerField(blank=True, null=True, verbose_name="Surface", help_text="Surface en m²")
     capacite = models.FloatField(blank=True, null=True)  # capacité
     cadastre = models.CharField(max_length=100, blank=True, null=True)  # cadastre
     lieu_dit = models.CharField(max_length=100, blank=True, null=True)  # lieu-dit
     altitude = models.FloatField(blank=True, null=True)  # altitude
     x = models.FloatField(blank=True, null=True)  # x
     y = models.FloatField(blank=True, null=True)  # y
-    situation_geo = models.CharField(
-        max_length=200, blank=True, null=True
+    situation_geo = models.TextField(
+        blank=True, null=True,
+        verbose_name="Situation géographique"
     )  # description de la situation géographique
+    periode_utilisation = models.CharField(
+        blank=True, null=True, verbose_name="Periode approxmiative d'utilisation"
+    )  
 
     # exposition
     exposition = models.ForeignKey(
@@ -154,19 +175,23 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
         limit_choices_to={"id_type__code": "RISQUE"},
         blank=True,
         related_name="batiments_risquenat",
+        verbose_name="Risques naturels"
     )
 
     remarque_risque = models.CharField(
-        max_length=500, blank=True, null=True
+        max_length=500, blank=True, null=True,
+        verbose_name="Remarque sur les risques naturels"
     )  # remarque
     geom = gis_models.PointField()  # geom
 
     remarque_generale = models.TextField(null=True, blank=True)
 
     perspectives = models.ManyToManyField(
-        Nomenclature, 
+        Nomenclature,
         limit_choices_to={"id_type__code": "PERSP"},
-        through="Perspective"
+        through="Perspective",
+        null=True,
+        blank=True
     )
     valide = models.BooleanField(
         default=False, null=True, verbose_name="Validé"
@@ -319,6 +344,8 @@ class Travaux(models.Model):
         limit_choices_to={"id_type__code": "NATURE_TRAVAUX"},
         related_name="nature_travaux",
     )
+    agence_archi = models.CharField(null=True, blank=True, verbose_name="Agence d'architecture")
+    entreprises = models.CharField(null=True, blank=True, verbose_name="Entreprises")
     autorisation = models.BooleanField(null=True)
     subvention_pne = models.IntegerField(null=True, blank=True)
 
