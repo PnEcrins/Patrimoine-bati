@@ -1,13 +1,35 @@
 {% extends "mapentity/mapentity_form.html" %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags static %}
 
 <!-- <form method="post">
   
 </form> -->
 {% block mainform %}
 <div class="container">
-  <h2> {{add_label}} {{modelname}} pour {{ title }}</h2>
+  <h2> {{add_label}}  pour {{ title }}</h2>
   {% crispy form %}
   </div>
 {% endblock mainform %}
 
+{% block extrabody %}
+<script type="text/javascript"
+        src="{% static 'mapentity/vendor/bootstrap-4.6.0/js/bootstrap.bundle.min.js' %}"></script>
+<script type="text/javascript"
+  src="{% static 'mapentity/vendor/bootstrap-datepicker-1.9.0/js/bootstrap-datepicker.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'mapentity/vendor/bootstrap-4.6.0/css/bootstrap.min.css' %}"/>
+<link rel="stylesheet" type="text/css"
+  href="{% static 'mapentity/vendor/bootstrap-datepicker-1.9.0/css/bootstrap-datepicker.min.css' %}">
+
+    <script type="text/javascript">
+      const date_fields = {{date_fields|safe}};
+      date_fields.forEach(field => {
+        $(`#id_${field}`).datepicker({
+          autoclose: true,
+          language: "fr",
+          format: 'dd/mm/yyyy',
+        });
+      })
+      
+    </script>
+
+{% endblock %}

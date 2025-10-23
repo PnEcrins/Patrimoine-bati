@@ -3,26 +3,10 @@
 
 {% block mainform %}
     <form id="mainform" action="{% if object.pk %}{{ object.get_update_url }}{% else %}{{ object.get_add_url }}{% endif %}" class="form-horizontal" method="POST">
-        <!-- {% for field in form %}
-    <div class="fieldWrapper">
-        {{ field.errors }}
-        {{ field.label_tag }} {{ field }}
-    </div>
-{% endfor %} -->
-    {% crispy form %}
+
+        {% crispy form %}
 
 
-
-        <!-- <fieldset class="formset">
-            {{ demande_travaux_formset.management_form }}
-            {% for demande_travaux_form in demande_travaux_formset.forms %}
-                <div class="form-row inline inlinecontrols controls-row {{ manday_from.prefix }}">
-                {% if demande_travaux_form.instance.pk %} {{ demande_travaux_form.DELETE }} {% endif %}
-                {% crispy demande_travaux_form %}
-                </div>
-            {% endfor %}
-        </fieldset> -->
-    
     </form>
 
 
@@ -45,7 +29,8 @@
                 deleteCssClass: 'delete-row',
                 addText: 'Ajouter',
                 deleteText: 'Supprimer', 
-            });            
+            });   
+    
         });
     </script>
 {% endblock extrabody %}

@@ -7,6 +7,7 @@ from mapentity.views.generic import (
     MapEntityDetail,
     MapEntityFormat,
     MapEntityCreate,
+    MapEntityUpdate
 )
 from mapentity.views.api import MapEntityViewSet
 from patbati.bati.filters import BatiFilterSet
@@ -68,14 +69,11 @@ class BatiDetail(MapEntityDetail):
     model = Bati
 
 
-# class BatiCreate(FormsetMixin, MapEntityCreate):
-#     model = Bati
-#     context_name = 'demande_travaux_formset'
-#     form_class = BatiForm
-#     formset_class = DemandeTravauxFormSet
-
-
 class BatiCreate(MapEntityCreate):
+    model = Bati
+    form_class = BatiForm
+
+class BatiUpdate(MapEntityUpdate):
     model = Bati
     form_class = BatiForm
 

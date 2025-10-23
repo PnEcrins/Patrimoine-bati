@@ -41,18 +41,36 @@ class Nomenclature(models.Model):
 class Bati(AreaPropertyMixin, MapEntityMixin):
     AREA_GEOM_COLUMN = "geom_4326"
 
-    valide = models.BooleanField(
-        default=False, null=True, verbose_name="Validé"
-    )  # validé
-
+    appelation = models.CharField(max_length=200, blank=True, null=True)  # appellation
     # type de batiment
     type_bat = models.ForeignKey(
         Nomenclature,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.DO_NOTHING,
         limit_choices_to={"id_type__code": "TYPE_BAT"},
         related_name="batiments_type",
+        verbose_name="Type de batiment"
+    )
+    # notepatri
+    notepatri = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        null=True,
+        limit_choices_to={"id_type__code": "NOTE_PAT"},
+        related_name="batiments_notepatri",
+        verbose_name="Note patrimoniale"
+    )
+
+    patrimonialite = models.CharField(
+        max_length=500, blank=True, null=True
+    )  # patrimonialité
+
+    # codeconservation
+    conservation = models.ForeignKey(
+        Nomenclature,
+        on_delete=models.CASCADE,
+        null=True,
+        limit_choices_to={"id_type__code": "CONSERVATION"},
+        related_name="batiments_conservation",
     )
 
     # code_classe / classe archi
@@ -84,11 +102,11 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
         related_name="batiments_faitage",
     )
 
-    appelation = models.CharField(max_length=200, blank=True, null=True)  # appellation
-    indivision = models.BooleanField(default=False, null=True)  # indivision
     proprietaire = models.CharField(
         max_length=100, blank=True, null=True
     )  # propriétaire
+    indivision = models.BooleanField(default=False, null=True)  # indivision
+    capacite = models.FloatField(blank=True, null=True)  # capacité
     cadastre = models.CharField(max_length=100, blank=True, null=True)  # cadastre
     lieu_dit = models.CharField(max_length=100, blank=True, null=True)  # lieu-dit
     altitude = models.FloatField(blank=True, null=True)  # altitude
@@ -108,7 +126,7 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     )
 
     pente = models.FloatField(blank=True, null=True)  # pente
-    capacite = models.FloatField(blank=True, null=True)  # capacité
+
     date_insert = models.DateTimeField(
         default=django.utils.timezone.now, blank=True, null=True
     )  # date d'insertion
@@ -117,33 +135,13 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     )  # date de mise à jour
     bat_suppr = models.BooleanField(default=False, null=True)  # bâtiment supprimé
 
-    # notepatri
-    notepatri = models.ForeignKey(
-        Nomenclature,
-        on_delete=models.CASCADE,
-        null=True,
-        limit_choices_to={"id_type__code": "NOTE_PAT"},
-        related_name="batiments_notepatri",
-    )
-
-    patrimonialite = models.CharField(
-        max_length=500, blank=True, null=True
-    )  # patrimonialité
-
-    # codeconservation
-    conservation = models.ForeignKey(
-        Nomenclature,
-        on_delete=models.CASCADE,
-        null=True,
-        limit_choices_to={"id_type__code": "CONSERVATION"},
-        related_name="batiments_conservation",
-    )
-
     # masques
     masques = models.ManyToManyField(
         Nomenclature,
         limit_choices_to={"id_type__code": "MASQUE"},
         related_name="batiments_info_masque",
+        blank=True, null=True,
+        help_text="Element(s) masquant le batiment"
     )
 
     commentaire_masque = models.CharField(
@@ -161,7 +159,7 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
     remarque_risque = models.CharField(
         max_length=500, blank=True, null=True
     )  # remarque
-    geom = gis_models.PointField(blank=True, null=True)  # geom
+    geom = gis_models.PointField()  # geom
 
     remarque_generale = models.TextField(null=True, blank=True)
 
@@ -170,6 +168,10 @@ class Bati(AreaPropertyMixin, MapEntityMixin):
         limit_choices_to={"id_type__code": "PERSP"},
         through="Perspective"
     )
+    valide = models.BooleanField(
+        default=False, null=True, verbose_name="Validé"
+    )  # validé
+
 
     def appelation_link(self):
         return f'<a data-pk="{self.pk}" href="{self.get_detail_url()}" title="{self.appelation}">{self.appelation}</a>'
@@ -275,11 +277,12 @@ class DemandeTravaux(models.Model):
         null=False,
         related_name="demandes_travaux",
     )
-    demande_dep = models.BooleanField(null=False, default=False)
-    autorisation_p = models.BooleanField(null=True, default=False)
-    date_permis = models.DateField(null=True)
-    date_demande_permis = models.DateField(null=True)
-    num_permis = models.CharField()
+    demande_dep = models.BooleanField(null=False, default=False, verbose_name="Demande déja déposée ?")
+    autorisation_p = models.BooleanField(null=True, default=False, verbose_name="Autorisation accordée ?")
+    date_permis = models.DateField(null=True, help_text="Au format JJ/MM/AAA")
+    date_demande_permis = models.DateField(null=True, help_text="Au format JJ/MM/AAA")
+    num_permis = models.CharField(verbose_name="Numéro de permis", null=True, blank=True)
+    remarque = models.TextField(verbose_name="Remarque", null=True, blank=True)
 
     def __str__(self):
         return f"Demande de travaux du {self.date_demande_permis} pour {self.bati.appelation if self.bati else 'Bâtiment inconnu'}"
@@ -291,6 +294,7 @@ class Travaux(models.Model):
 
     date = models.DateField(
         null=False,
+        help_text="Au format JJ/MM/AAA",
         db_comment="Ce champs est non null depuis la v2, remplie avec 1800-01-01 quand l'info était absente",
     )
     demande = models.ForeignKey(
@@ -585,7 +589,7 @@ class Perspective(models.Model):
         limit_choices_to={"id_type__code": "PERSP"},
         related_name="perspective_bati",
     )
-    date = models.DateField(null=True)
+    date = models.DateField(null=True, help_text="Au format JJ/MM/AAA")
     bati = models.ForeignKey(
         "Bati",
         on_delete=models.CASCADE,

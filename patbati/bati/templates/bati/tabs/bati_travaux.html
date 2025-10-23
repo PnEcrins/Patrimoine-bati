@@ -2,7 +2,7 @@
 
 <div id="travaux" class="tab-pane">
     <div class="mb-3">
-        <h5>Demande de permis (ou absence de demande)</h5>
+        <h5>Demande de permis </h5>
         <a href="{% url 'bati:demande_travaux_add' parent_pk=object.pk %}" class="btn btn-success mb-3">
             Ajouter une Demande de permis
         </a>
@@ -11,8 +11,8 @@
             <div class="col-2 text-left" data-qa="demande-header-date-demande">Date demande</div>
             <div class="col-2 text-left" data-qa="demande-header-autorisation">Autorisation</div>
             <div class="col-2 text-left" data-qa="demande-header-date-permis">Date permis</div>
-            <div class="col-2 text-center" data-qa="demande-header-numero">Numéro</div>
-            <div class="col-3 text-right" data-qa="demande-header-actions">Actions</div>
+            <div class="col-2" data-qa="demande-header-numero">Numéro</div>
+            <div class="col-3 text-right" data-qa="demande-header-actions"></div>
         </div>
         <div class="accordion" id="demandesAccordion">
             {% for demande in object.demandes_travaux.all %}
@@ -51,7 +51,8 @@
                             <a href="{% url 'bati:demande_travaux_delete' object.pk demande.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
                                 <i class="bi bi-trash"></i>
                             </a>
-                            <i class="bi bi-chevron-down ml-2"></i>
+                            <i class="bi bi-info-circle-fill" data-toggle="tooltip" data-placement="left" title="{{demande.remarque}}"></i>
+                            <i class="bi bi-chevron-down ml-2" ></i>
                         </div>
                     </div>
                 </div>

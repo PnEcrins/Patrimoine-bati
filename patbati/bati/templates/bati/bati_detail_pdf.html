@@ -27,7 +27,6 @@
   <tr><th>Exposition</th><td>{{ object.exposition.label|default:"-" }}</td></tr>
   <tr><th>Date d'insertion</th><td>{{ object.date_insert|date:"d/m/Y" }}</td></tr>
   <tr><th>Date de mise à jour</th><td>{{ object.date_update|date:"d/m/Y" }}</td></tr>
-  <tr><th>Bâtiment supprimé</th><td>{{ object.bat_suppr|yesno:"Oui,Non" }}</td></tr>
   <tr><th>Valeur patrimoniale</th><td>{{ object.notepatri.label|default:"-" }}/6</td></tr>
   <tr><th>Patrimonialité</th><td>{{ object.patrimonialite|default:"-" }}</td></tr>
   <tr><th>État général</th><td>{{ object.conservation.label|default:"-" }}</td></tr>
@@ -96,6 +95,7 @@
         <th>Autorisation</th>
         <th>Date permis</th>
         <th>Numéro</th>
+        <th>Remarque</th>
       </tr>
     </thead>
     <tbody>
@@ -105,6 +105,7 @@
         <td>{{ demande.autorisation_p|yesno:"Oui,Non" }}</td>
         <td>{{ demande.date_permis|date:"d/m/Y"|default:"-" }}</td>
         <td>{{ demande.num_permis|default:"-" }}</td>
+        <td>{{ demande.remarque|default:"-" }}</td>
       </tr>
     </tbody>
   </table>

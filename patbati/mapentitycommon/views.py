@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.db import models
 
 
 class ChildFormViewMixin:
@@ -33,6 +33,7 @@ class ChildFormViewMixin:
         parent_model = self.get_parent_model()
 
         if parent_model and self.model:
+            context["date_fields"] = [field.name for field in self.model._meta.fields if isinstance(field, models.DateField)]
             context["model"] = parent_model
             context["appname"] = parent_model._meta.app_label.lower()
             context["app_verbose_name"] = parent_model._meta.app_config.verbose_name
