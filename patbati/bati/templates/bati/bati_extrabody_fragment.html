@@ -1,2 +1,8 @@
-{% load static %}
+{% load static zoning_tags %}
 <script type="text/javascript" src="{% static 'bati/color.js' %}"></script>
+
+<script type="text/javascript" src="{% static "zoning/main.js" %}"></script>
+<script type="application/json" id="areas_type">
+    {% areas_type as areas_type %}
+    {{areas_type|safe}}
+</script>

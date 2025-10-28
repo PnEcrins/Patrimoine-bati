@@ -32,6 +32,7 @@ urlpatterns = [
     ),
     path("", include("patbati.bati.urls")),
     path("", include("mapentity.urls")),
+    path("zoning/", include("zoning.urls")),
     path("paperclip/", include("paperclip.urls")),
     path("admin/", admin.site.urls),
     path("i18n/", include("django.conf.urls.i18n")),

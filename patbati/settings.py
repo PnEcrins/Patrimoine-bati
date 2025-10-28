@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap4",
     "rest_framework",
+    "rest_framework_gis",
     "embed_video",
     "modeltranslation",
     "mapentity",  # Make sure mapentity settings are loaded before leaflet ones
