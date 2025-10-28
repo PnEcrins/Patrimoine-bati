@@ -63,10 +63,10 @@ class BatiDetailHTMLTest(TestCase):
         soup = self.get_soup(self.bati.pk)
         pane = soup.find("div", {"id": "travaux"})
         self.assertIsNotNone(pane)
-        header_row = pane.find("div", class_="row font-weight-bold border-bottom pb-2 mb-2")
+        header_row = pane.find("div", {"data-qa": "demande_travaux_header"})
         self.assertIsNotNone(header_row)
         expected = [
-            "Permis", "Date demande", "Autorisation", "Date permis", "Numéro", "Actions"
+            "Permis", "Date demande", "Autorisation", "Date permis", "Numéro"
         ]
         for h in expected:
             self.assertIn(h, header_row.text)

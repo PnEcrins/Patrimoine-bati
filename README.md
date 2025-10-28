@@ -216,7 +216,7 @@ pip install -r requirements-dev.in
 Lancer les tests : 
 
 ```bash
-python manage.py tests
+python manage.py test
 ```
 
 ## Configuration : 

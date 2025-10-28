@@ -6,7 +6,7 @@
         <a href="{% url 'bati:demande_travaux_add' parent_pk=object.pk %}" class="btn btn-success mb-3">
             Ajouter une Demande de permis
         </a>
-        <div class="row font-weight-bold border-bottom pb-2 mb-2" style="margin-right:0;">
+        <div data-qa="demande_travaux_header" class="row font-weight-bold border-bottom pb-2 mb-2" style="margin-right:0;">
             <div class="col-1 text-left" data-qa="demande-header-permis">Permis</div>
             <div class="col-2 text-left" data-qa="demande-header-date-demande">Date demande</div>
             <div class="col-2 text-left" data-qa="demande-header-autorisation">Autorisation</div>

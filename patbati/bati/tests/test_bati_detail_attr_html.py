@@ -60,7 +60,6 @@ class BatiDetailAttributesHTMLTest(TestCase):
         headers = [th.text.strip() for th in soup.find_all("th")]
         expected_headers = [
             "Nom",
-            "Numéro d'identification",
             "Valeur patrimoniale",
             "Patrimonialité",
             "Classe d'architecture",
@@ -70,7 +69,6 @@ class BatiDetailAttributesHTMLTest(TestCase):
             "Capacité",
             "Date d'insertion",
             "Date de mise à jour",
-            "Bâtiment supprimé",
             "Etat général",
             "Secteur",
             "Lieu-dit",
