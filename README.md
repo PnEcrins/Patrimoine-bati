@@ -12,7 +12,7 @@ La version 1 a été développée en 2010 en PostgreSQL, PHP Symfony et ExtJS : 
 
 Cette version 2 est une refonte complète avec PostGIS, Python et Django (avec la librairie [Django-mapentity](https://github.com/makinacorpus/django-mapentity). L'ensemble de la base de données a été conservée mais sa structure a été simplifiée et optimisée, notamment en regroupant toutes les typologies dans une table centrale de nomenclatures.
 
-Cette application web permet de réaliser un inventaire détaillé du patrimoine bâti d'un territoire : 
+Cette application web permet de réaliser un inventaire détaillé du patrimoine bâti d'un territoire :
 
 - Informations générales
 - Environnement
@@ -26,10 +26,15 @@ Cette application web permet de réaliser un inventaire détaillé du patrimoine
 - Etat et perspectives
 
 ## Page d'accueil :
+
 ![Interface](docs/img/list.png)
+
 ## Page détail :
+
 ![Detail](docs/img/detail_properties.png)
+
 ## Example du Tab Gros et Second Oeuvre :
+
 ![GrosEtSO](docs/img/gr_so.png)
 
 ## Installation :
@@ -110,17 +115,19 @@ pip install gunicorn
 Configurer un service systemd pour gunicorn (voir documentation Django/gunicorn).
 
 Regroupez tous les fichiers statiques à un seul endroit :
+
 ```bash
 python manage.py collectstatic
 ```
 
 Modifiez les paramètres dans `settings_local.py` :
+
 ```bash
 ALLOWED_HOSTS = ["myhost"]
 CSRF_TRUSTED_ORIGINS = ["http://myhost"]
 ```
 
-*Créer un service systemd*
+_Créer un service systemd_
 
 Copiez et adaptez le fichier d’exemple `patbati.service` dans `/etc/systemd/system/patbati.service`
 
@@ -141,8 +148,7 @@ sudo systemctl start patbati.service
 
 Le service est maintenant démarré !
 
-
-*Configurer Apache*
+_Configurer Apache_
 
       apt install apache2
       a2enmod proxy
@@ -151,75 +157,74 @@ Le service est maintenant démarré !
 Créez une configuration dans `/etc/apache2/sites-available` :
 
       <VirtualHost *:80>
-		#ServerName <SERVER_NAME>
+    	#ServerName <SERVER_NAME>
 
-		Alias "/static/" "/var/www/html/patbati/static/"
-		<Directory "/var/www/html/patbati/static/">
-			Require all granted
-		</Directory>
+    	Alias "/static/" "/var/www/html/patbati/static/"
+    	<Directory "/var/www/html/patbati/static/">
+    		Require all granted
+    	</Directory>
 
-		Alias "/media/" "/var/www/html/patbati/media/"
-		<Directory "/var/www/html/patbati/media/">
-		Require all granted
-		</Directory>
+    	Alias "/media/" "/var/www/html/patbati/media/"
+    	<Directory "/var/www/html/patbati/media/">
+    	Require all granted
+    	</Directory>
 
-		<Location "/">
-			# RequestHeader necessaire pour le HTTPS
-			# RequestHeader set X-Forwarded-Proto 'https' env=HTTPS
-			ProxyPass http://127.0.0.1:8000/
-			ProxyPassReverse http://127.0.0.1:8000/
-			ProxyPreserveHost On
-		</Location>
+    	<Location "/">
+    		# RequestHeader necessaire pour le HTTPS
+    		# RequestHeader set X-Forwarded-Proto 'https' env=HTTPS
+    		ProxyPass http://127.0.0.1:8000/
+    		ProxyPassReverse http://127.0.0.1:8000/
+    		ProxyPreserveHost On
+    	</Location>
 
-		<Location "/static">
-			ProxyPass !
-		</Location>
+    	<Location "/static">
+    		ProxyPass !
+    	</Location>
 
-		<Location "/media">
-			ProxyPass !
-		</Location>
+    	<Location "/media">
+    		ProxyPass !
+    	</Location>
       </VirtualHost>
 
+En HTTPS, il est
 
-En HTTPS, il est 
-
-#### Référentiel géographique : 
+#### Référentiel géographique :
 
 L'application doit être connectée à un référentiel géographique pour afficher et filtrer les zonages intersectés (communes, sites d'intérêt, etc.). L'application est fournie avec une app django (`zoning`) qui s'appuie sur deux tables `l_areas` et `bib_areas_type`. Django s'attend à les trouver dans le schéma `public`.  
-Pour le déploiement en production au PNE, on a choisi de créer un schéma `ref_geo` en Foreign data wrapper (voir [docs/fdw.md](docs/fdw.md)) vers notre base de données existante du référentiel géographique, puis on créé des vues dans le schéma `public` pour les besoins de l'application : 
+Pour le déploiement en production au PNE, on a choisi de créer un schéma `ref_geo` en Foreign data wrapper (voir [docs/fdw.md](docs/fdw.md)) vers notre base de données existante du référentiel géographique, puis on créé des vues dans le schéma `public` pour les besoins de l'application :
 
 ```sql
-CREATE VIEW public.bib_areas_types AS 
+CREATE VIEW public.bib_areas_types AS
 SELECT * FROM ref_geo.bib_areas_types;
 
-CREATE VIEW public.l_areas AS 
+CREATE VIEW public.l_areas AS
 SELECT * FROM ref_geo.l_areas;
 ```
 
-#### Mise à jour des permissions : 
+#### Mise à jour des permissions :
 
 Django-mapentity implémente des permissions supplémentaires aux permissions de Django. De plus, la permission "view" est appelée "read" dans mapentity.  
-Lancer cette commande pour avoir toutes les permissions disponibles dans mapentity : 
+Lancer cette commande pour avoir toutes les permissions disponibles dans mapentity :
 
 ```bash
 python manage.py update_permissions_mapentity
 ```
 
-## Développement : 
+## Développement :
 
-Installer les dépendances de tests : 
+Installer les dépendances de tests :
 
 ```bash
 pip install -r requirements-dev.in
 ```
 
-Lancer les tests : 
+Lancer les tests :
 
 ```bash
 python manage.py test
 ```
 
-## Configuration : 
+## Configuration :
 
 Configurer les paramètres de la base de données dans le fichier `settings_local.py`.
 
@@ -228,5 +233,5 @@ Possibilité d'utiliser le SSO avec OpenIDConnect et Authlib dans le fichier `se
 - Changer `SSO_LOGIN_ENABLED = True`
 - Remplir la variable `SSO_DEFAULT_GROUP` avec le nom du groupe dans lesquels les nouveaux utilisateurs seront affecté automatiquement. Au préalable, il est nécessaire d'avoir créer ce groupe et de lui avoir donné les permissions voulues.
 - remplir le dictionnaire `AUTHLIB_OAUTH_CLIENTS` avec vos informations de connexion
-Dans le champs `SSO_ENDPOINT` il est necessaire de mettre l'URL d'accès au métadonnée du serveur d'authentification. Dans le cas de keycloak cela correspond à l'URL suivante : 
-`https://<URL_KEYCLOAK>/realms/<NOM DU REALM>/.well-known/openid-configuration`
+  Dans le champs `SSO_ENDPOINT` il est necessaire de mettre l'URL d'accès au métadonnée du serveur d'authentification. Dans le cas de keycloak cela correspond à l'URL suivante :
+  `https://<URL_KEYCLOAK>/realms/<NOM DU REALM>/.well-known/openid-configuration`
