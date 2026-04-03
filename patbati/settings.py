@@ -238,6 +238,7 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
     "django.contrib.auth.hashers.Argon2PasswordHasher",
     "django.contrib.auth.hashers.ScryptPasswordHasher",
+    "authent.hashers.NativeBcryptPasswordHasher",
 ]
 
 
@@ -251,11 +252,11 @@ CACHES = {
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "compressor.finders.CompressorFinder"
+    "compressor.finders.CompressorFinder",
 ]
 
 ZONING_CONFIG = {
-    "LOCAL_SRID":  2154,
+    "LOCAL_SRID": 2154,
     "AREA_TYPE_LIMITED": [],
     "ADMINISTRATIVE_AREAS": [],
     "REGULATORY_AREAS": [],

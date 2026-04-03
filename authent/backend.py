@@ -22,8 +22,12 @@ class DatabaseBackend(ModelBackend):
     """
 
     def authenticate(self, request=None, username=None, password=None):
+        print("ENTER LA ???")
         credentials = self.query_credentials(username)
-        if credentials and check_password(password, credentials.password):
+        if not credentials:
+            return None
+        password_with_prefix = f"bcrypt_native${credentials.password}"
+        if check_password(password, password_with_prefix):
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
