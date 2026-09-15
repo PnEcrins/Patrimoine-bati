@@ -57,17 +57,16 @@ Créer l'extension postgis dans la BDD :
 CREATE EXTENSION postgis;
 ```
 
-Créer et activer un environnement virtuel Python :
+Installer les dépendances avec uv:
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+uv sync
 ```
 
-Installer les dépendances Python du projet :
+Pour les dépendances de développement :
 
 ```bash
-pip install -r requirements.txt
+uv sync --all-extras
 ```
 
 Configurer la base de données PostgreSQL (utilisateur, base, droits).
@@ -109,7 +108,7 @@ python manage.py update_permissions_mapentity
 Installer gunicorn
 
 ```bash
-pip install gunicorn
+uv pip install gunicorn
 ```
 
 Configurer un service systemd pour gunicorn (voir documentation Django/gunicorn).
@@ -215,7 +214,7 @@ python manage.py update_permissions_mapentity
 Installer les dépendances de tests :
 
 ```bash
-pip install -r requirements-dev.in
+uv sync --all-extras
 ```
 
 Lancer les tests :

@@ -1,7 +1,0 @@
-django
-mapentity==8.13.2
-dotenv
-psycopg2
-bcrypt
-Authlib
-factory-boy

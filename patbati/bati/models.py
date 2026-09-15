@@ -41,6 +41,9 @@ class Nomenclature(models.Model):
 class Bati(AreaPropertyMixin, MapEntityMixin):
     AREA_GEOM_COLUMN = "geom_4326"
 
+    class Meta:
+        permissions = (("read_bati", "Can read bati"),)
+
     appelation = models.CharField(max_length=200, blank=False, null=False)  # appellation
     # type de batiment
     type_bat = models.ForeignKey(
